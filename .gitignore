@@ -72,6 +72,3 @@ crashlytics-build.properties
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# ===== 팀원 전달 패키지 보관 폴더 (repo에 올리지 않음) =====
-/_Incoming/
