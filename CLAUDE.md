@@ -32,7 +32,7 @@
 
 ## 협업 방식
 
-- GitHub는 hermit만 사용합니다. 이 repo가 메인 프로젝트입니다.
+- 이 repo가 메인 프로젝트입니다.
 - 팀원은 작업물을 `.unitypackage`로 hermit에게 전달하고, hermit이 메인 프로젝트로 옮깁니다.
 - 세부 규칙: [Docs/CONVENTIONS.md](Docs/CONVENTIONS.md) (대부분 TBD)
 
