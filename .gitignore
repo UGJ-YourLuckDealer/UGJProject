@@ -68,6 +68,10 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# ===== Unity Version Control (Plastic) 잔여 파일 =====
+/.plastic/
+/ignore.conf
+
 # ===== OS =====
 .DS_Store
 Thumbs.db
