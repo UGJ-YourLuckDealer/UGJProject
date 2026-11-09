@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ObjectDragManager : MonoBehaviour
@@ -82,17 +82,17 @@ public class ObjectDragManager : MonoBehaviour
             {
                 draggingObject = null;
 
-                // ³»·Á³õÀº Àç·á 1°³¸¸Å­ Àç·áºñ Â÷°¨ (±âÈ¹: ¸ğµç Àç·á $1)
+                // ë‚´ë ¤ë†“ì€ ì¬ë£Œ 1ê°œë§Œí¼ ì¬ë£Œë¹„ ì°¨ê° (ê¸°íš: ëª¨ë“  ì¬ë£Œ $1)
                 CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
                 if (capital != null)
                 {
                     float before = capital.Current;
                     capital.Add(-1f);
-                    Debug.Log($"[Àç·áºñ Â÷°¨] {before:0.00} ¡æ {capital.Current:0.00} (-1.00)");
+                    Debug.Log($"[ì¬ë£Œë¹„ ì°¨ê°] {before:0.00} â†’ {capital.Current:0.00} (-1.00)");
                 }
                 else
                 {
-                    Debug.LogWarning("[Àç·áºñ Â÷°¨] ¾À¿¡ CapitalSystemÀÌ ¾ø½À´Ï´Ù. GameSystems ÇÁ¸®ÆÕÀ» ¹èÄ¡ÇØ ÁÖ¼¼¿ä.");
+                    Debug.LogWarning("[ì¬ë£Œë¹„ ì°¨ê°] ì”¬ì— CapitalSystemì´ ì—†ìŠµë‹ˆë‹¤. GameSystems í”„ë¦¬íŒ¹ì„ ë°°ì¹˜í•´ ì£¼ì„¸ìš”.");
                 }
             }
         }

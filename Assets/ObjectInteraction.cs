@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ObjectInteraction : MonoBehaviour
 {
@@ -28,6 +29,37 @@ public class ObjectInteraction : MonoBehaviour
         Vector3 targetScale = isHovering ? originalScale * hoverScale : originalScale;
 
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * 10f);
+
+
+        if (Mouse.current == null) return;
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x,
+            mousePosition.y, Camera.main.transform.position.z));
+
+        Collider2D hit = Physics2D.OverlapPoint(worldPosition);
+
+        bool isOver = hit != null && hit.gameObject == gameObject;
+
+        if (isOver && !isHovering) //Enter
+        {
+            isHovering = true;
+            outlineObject.SetActive(true);
+        }
+
+        if (!isOver && isHovering) //Exit
+        {
+            isHovering = false;
+            outlineObject.SetActive(false);
+        }
+
+        if (isOver && Mouse.current.leftButton.wasPressedThisFrame) // OnMouseDown
+        {
+            if (dragManager == null || heldPrefab == null) return;
+
+            dragManager.StartDrag(heldPrefab);
+        }
     }
 
     void CreateOutline()
@@ -47,24 +79,5 @@ public class ObjectInteraction : MonoBehaviour
         outlineRenderer.sortingOrder = spriteRenderer.sortingOrder -1;
 
         outlineObject.SetActive(false);
-    }
-
-    private void OnMouseEnter()
-    {
-        isHovering = true;
-        outlineObject.SetActive(true);
-    }
-
-    private void OnMouseExit()
-    {
-        isHovering = false;
-        outlineObject.SetActive(false);
-    }
-
-    private void OnMouseDown()
-    {
-        if(dragManager == null || heldPrefab == null) return;
-
-        dragManager.StartDrag(heldPrefab);
     }
 }
