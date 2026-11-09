@@ -1,0 +1,46 @@
+using System;
+using UnityEngine;
+
+/// <summary>
+/// 시스템 간 연결 규칙 (hermit ↔ macro). 보내는 쪽은 Raise...를 호출하고, 받는 쪽은 이벤트를 구독한다.
+/// 씬 참조 없이 연결되므로 팀원 패키지를 그대로 붙일 수 있다.
+/// 구독한 MonoBehaviour는 OnDisable/OnDestroy에서 반드시 구독 해제한다.
+/// </summary>
+public static class GameEvents
+{
+    // ---- 손님/키링 제작 → 게임 흐름·자본·판정 (macro → hermit) ----
+
+    /// <summary>손님 주문 수락. 레시피 판매가 선지급에 사용.</summary>
+    public static event Action<CustomerData> OrderAccepted;
+
+    /// <summary>재료를 키링에 달았음 = 재료비 차감 요청.</summary>
+    public static event Action<IngredientData> IngredientUsed;
+
+    /// <summary>서빙 버튼: 제작된 키링 정보(재료·개수)를 판정으로 전달.</summary>
+    public static event Action<CustomerData, KeyringData> KeyringServed;
+
+    /// <summary>손님 1명 처리 완료 (판정 후 반응 대사까지 끝남). 게임 흐름이 다음 손님/종료로 진행.</summary>
+    public static event Action<CustomerData> CustomerFinished;
+
+    // ---- 판정 → 손님·UI (hermit → macro) ----
+
+    /// <summary>판정 결과. 손님 반응 대사·팁 표시에 사용.</summary>
+    public static event Action<CustomerData, JudgementResult> KeyringJudged;
+
+    public static void RaiseOrderAccepted(CustomerData customer) => OrderAccepted?.Invoke(customer);
+    public static void RaiseIngredientUsed(IngredientData ingredient) => IngredientUsed?.Invoke(ingredient);
+    public static void RaiseKeyringServed(CustomerData customer, KeyringData keyring) => KeyringServed?.Invoke(customer, keyring);
+    public static void RaiseCustomerFinished(CustomerData customer) => CustomerFinished?.Invoke(customer);
+    public static void RaiseKeyringJudged(CustomerData customer, JudgementResult result) => KeyringJudged?.Invoke(customer, result);
+
+    // 프로젝트가 Enter Play Mode에서 Domain Reload를 끄고 있어 static 이벤트가 Play 간에 남는다. Play 시작마다 초기화.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetOnPlay()
+    {
+        OrderAccepted = null;
+        IngredientUsed = null;
+        KeyringServed = null;
+        CustomerFinished = null;
+        KeyringJudged = null;
+    }
+}
