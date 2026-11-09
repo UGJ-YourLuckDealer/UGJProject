@@ -43,6 +43,24 @@ GameEvents.RaiseKeyringServed(currentCustomer, keyring);
 
 > 이 프로젝트는 Enter Play Mode에서 Domain Reload가 꺼져 있어, `GameEvents`는 Play 시작마다 구독을 자동으로 비웁니다.
 
+### 게임 흐름·자본 → 화면/UI (화면 전환 담당 팀원용)
+
+| 신호 | 내용 |
+|---|---|
+| `PhaseChanged(GamePhase)` | **화면 전환 요청.** `Classroom` = 교실 View, `Crafting` = 키링 작업 View, `GameOver` = 결과 화면. 게임 시작 시 `Classroom`이 한 번 옵니다 |
+| `CapitalChanged(float)` | 현재 자본 (재화 텍스트용) |
+| `GameEnded(GameResult)` | 손님 3명 처리 후 종료. `isWin`, `capital`, `customersFinished` |
+
+흐름: `Classroom` →(OrderAccepted)→ `Crafting` →(KeyringServed)→ `Classroom` →(CustomerFinished)→ 다음 손님 … 3명째 `CustomerFinished` → `GameOver` + `GameEnded`
+주문을 거절해 제작 중에 `CustomerFinished`가 와도 `Classroom`으로 돌아갑니다.
+
+## 2-1. 시스템 배치
+
+- `Assets/Prefabs/GameSystems.prefab` (`CapitalSystem` + `GameFlowManager`)를 게임 씬에 하나 둡니다.
+  - `CapitalSystem.startingCapital` = $10, `GameFlowManager.customersPerGame` = 3 (Inspector에서 변경)
+  - 승패 (v0.0.1): 종료 시 자본 ≥ 0 이면 승리
+- 개발용 `FlowDebugKeys` (Game 씬에 붙어 있음): 1 주문 / 2 재료 / 3 정답 서빙 / 4 오답 서빙 / 5 손님 완료. 실제 시스템이 붙으면 제거
+
 ## 3. 판정 (`KeyringJudge.Judge(recipe, keyring)`)
 
 구현비율 = (일치 개수 − 불일치 개수) / 레시피 총 개수 · 체인은 판정에서 제외

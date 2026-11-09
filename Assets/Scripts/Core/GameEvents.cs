@@ -27,6 +27,21 @@ public static class GameEvents
     /// <summary>판정 결과. 손님 반응 대사·팁 표시에 사용.</summary>
     public static event Action<CustomerData, JudgementResult> KeyringJudged;
 
+    // ---- 게임 흐름·자본 → 화면/UI (hermit → 화면 전환·UI 담당) ----
+
+    /// <summary>흐름 단계 변경 = 화면(View) 전환 요청. Classroom: 교실 View, Crafting: 키링 작업 View, GameOver: 결과.</summary>
+    public static event Action<GamePhase> PhaseChanged;
+
+    /// <summary>현재 자본이 바뀜 (재화 표시용).</summary>
+    public static event Action<float> CapitalChanged;
+
+    /// <summary>손님을 모두 처리해 게임 종료. 승패·남은 자본.</summary>
+    public static event Action<GameResult> GameEnded;
+
+    public static void RaisePhaseChanged(GamePhase phase) => PhaseChanged?.Invoke(phase);
+    public static void RaiseCapitalChanged(float capital) => CapitalChanged?.Invoke(capital);
+    public static void RaiseGameEnded(GameResult result) => GameEnded?.Invoke(result);
+
     public static void RaiseOrderAccepted(CustomerData customer) => OrderAccepted?.Invoke(customer);
     public static void RaiseIngredientUsed(IngredientData ingredient) => IngredientUsed?.Invoke(ingredient);
     public static void RaiseKeyringServed(CustomerData customer, KeyringData keyring) => KeyringServed?.Invoke(customer, keyring);
@@ -42,5 +57,8 @@ public static class GameEvents
         KeyringServed = null;
         CustomerFinished = null;
         KeyringJudged = null;
+        PhaseChanged = null;
+        CapitalChanged = null;
+        GameEnded = null;
     }
 }
