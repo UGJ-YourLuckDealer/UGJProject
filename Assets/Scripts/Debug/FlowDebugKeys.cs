@@ -44,15 +44,37 @@ public class FlowDebugKeys : MonoBehaviour
         var kb = Keyboard.current;
         if (kb == null) return;
 
-        if (kb.digit1Key.wasPressedThisFrame) { GameEvents.RaiseOrderAccepted(customer); lastLog = "Order accepted (+$6 prepaid)"; }
-        if (kb.digit2Key.wasPressedThisFrame) { GameEvents.RaiseIngredientUsed(clover); lastLog = "Ingredient used (-$1)"; }
+        // 실제 손님·제작 시스템처럼 현재 단계에 맞는 신호만 보낸다.
+        if (kb.digit1Key.wasPressedThisFrame)
+        {
+            if (!InPhase(GamePhase.Classroom, "Order")) return;
+            GameEvents.RaiseOrderAccepted(customer); lastLog = "Order accepted (+$6 prepaid)";
+        }
+        if (kb.digit2Key.wasPressedThisFrame)
+        {
+            if (!InPhase(GamePhase.Crafting, "Ingredient")) return;
+            GameEvents.RaiseIngredientUsed(clover); lastLog = "Ingredient used (-$1)";
+        }
         if (kb.digit3Key.wasPressedThisFrame) Serve(chain, oRing, clover);
         if (kb.digit4Key.wasPressedThisFrame) Serve(chain, dRing, clover);
-        if (kb.digit5Key.wasPressedThisFrame) { GameEvents.RaiseCustomerFinished(customer); lastLog = "Customer finished"; }
+        if (kb.digit5Key.wasPressedThisFrame)
+        {
+            if (flowManager != null && flowManager.Phase == GamePhase.GameOver) { lastLog = "Finish ignored (game over)"; return; }
+            GameEvents.RaiseCustomerFinished(customer); lastLog = "Customer finished";
+        }
+    }
+
+    private bool InPhase(GamePhase phase, string action)
+    {
+        if (flowManager == null || flowManager.Phase == phase) return true;
+        lastLog = $"{action} ignored (phase: {flowManager.Phase})";
+        return false;
     }
 
     private void Serve(params IngredientData[] items)
     {
+        if (!InPhase(GamePhase.Crafting, "Serve")) return;
+
         var keyring = new KeyringData();
         foreach (var i in items) keyring.Add(i);
         GameEvents.RaiseKeyringServed(customer, keyring);
