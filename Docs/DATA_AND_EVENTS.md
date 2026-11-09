@@ -56,7 +56,9 @@ GameEvents.RaiseKeyringServed(currentCustomer, keyring);
 
 ## 2-1. 시스템 배치
 
-- `Assets/Prefabs/GameSystems.prefab` (`CapitalSystem` + `GameFlowManager`)를 게임 씬에 하나 둡니다.
+- `Assets/Prefabs/GameSystems.prefab` (`CapitalSystem` + `GameFlowManager` + `JudgementSystem`)를 게임 씬에 하나 둡니다.
+  - `JudgementSystem`: `OrderAccepted`로 받은 손님의 `KeyringServed`만 판정해 `KeyringJudged`를 보냅니다. 주문 없는 서빙·중복 서빙은 무시합니다. 서빙 전에 반드시 `RaiseOrderAccepted`를 보내 주세요.
+  - `TipFeedback` (Game 씬 임시 UI): 판정 결과 중 **팁 유무만** 2초간 표시 (`Tip!` / `No Tip`)
   - `CapitalSystem.startingCapital` = $10, `GameFlowManager.customersPerGame` = 3 (Inspector에서 변경)
   - 승패 (v0.0.1): 종료 시 자본 ≥ 0 이면 승리
 - 개발용 `FlowDebugKeys` (Game 씬에 붙어 있음): 1 주문 / 2 재료 / 3 정답 서빙 / 4 오답 서빙 / 5 손님 완료. 실제 시스템이 붙으면 제거

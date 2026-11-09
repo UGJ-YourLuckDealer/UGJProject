@@ -35,8 +35,17 @@ public class FlowDebugKeys : MonoBehaviour
         customer.recipe = recipe;
     }
 
-    private void OnEnable() => GameEvents.GameEnded += OnGameEnded;
-    private void OnDisable() => GameEvents.GameEnded -= OnGameEnded;
+    private void OnEnable()
+    {
+        GameEvents.GameEnded += OnGameEnded;
+        GameEvents.KeyringJudged += OnJudged;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.GameEnded -= OnGameEnded;
+        GameEvents.KeyringJudged -= OnJudged;
+    }
     private void OnGameEnded(GameResult r) => result = r;
 
     private void Update()
@@ -77,11 +86,12 @@ public class FlowDebugKeys : MonoBehaviour
 
         var keyring = new KeyringData();
         foreach (var i in items) keyring.Add(i);
-        GameEvents.RaiseKeyringServed(customer, keyring);
+        lastLog = "Served (no judgement - JudgementSystem missing?)";
+        GameEvents.RaiseKeyringServed(customer, keyring); // 판정은 JudgementSystem이 하고 KeyringJudged로 알려 준다
+    }
 
-        // 판정 연결(Task 5) 전 임시: 직접 판정해서 결과를 보낸다.
-        var judged = KeyringJudge.Judge(customer.recipe, keyring);
-        GameEvents.RaiseKeyringJudged(customer, judged);
+    private void OnJudged(CustomerData c, JudgementResult judged)
+    {
         lastLog = $"Served → {judged.grade} ({judged.CapitalDelta:+0.00;-0.00;0})";
     }
 
