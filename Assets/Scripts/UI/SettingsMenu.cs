@@ -48,6 +48,10 @@ public class SettingsMenu : MonoBehaviour
         {
             titleButton.gameObject.SetActive(showTitleButton);
             titleButton.onClick.AddListener(GoToTitle);
+
+            // Title 버튼을 숨기면 Quit 버튼을 그 자리로 올려 빈 공간을 없앤다
+            if (!showTitleButton && quitButton != null)
+                ((RectTransform)quitButton.transform).anchoredPosition = ((RectTransform)titleButton.transform).anchoredPosition;
         }
         if (quitButton != null)
         {
