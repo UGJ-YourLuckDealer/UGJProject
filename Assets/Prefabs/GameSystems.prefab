@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5008780225704578415}
   - component: {fileID: 8764344088290829089}
   - component: {fileID: 5857559756935090218}
+  - component: {fileID: 3743709862935503939}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -74,3 +75,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6739a7716fce847ad2d00e2631a2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JudgementSystem
+--- !u!114 &3743709862935503939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026818077915998541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 735e5f63cf920af47b8e110f5d0255ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PersistentSystems
