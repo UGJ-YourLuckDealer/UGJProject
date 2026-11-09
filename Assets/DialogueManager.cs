@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -65,9 +66,11 @@ public class DialogueManager : MonoBehaviour
             color.a = 255f;
             color.b = color.g = color.r = 255f;
             characterImage.color = color;
+
+            return;
         }
 
-        
+        SceneManager.LoadScene("Making");
     }
     void DisplayDialogue()
     {
