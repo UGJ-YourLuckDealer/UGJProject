@@ -77,7 +77,7 @@ public class GameFlowManager : MonoBehaviour
             customersFinished = flow.CustomersFinished,
         };
 
-        string message = $"{(result.isWin ? "WIN" : "LOSE")}  ${money:0.00}";
+        string message = $"{(result.isWin ? "WIN" : "LOSE")}  {money.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}";
         Debug.Log($"[GameFlow] Game over: {message} ({result.customersFinished} customers)");
         if (resultText != null)
         {
