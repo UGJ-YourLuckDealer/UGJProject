@@ -1,100 +1,96 @@
-# UGJProject
+# Unity Game Jam Menu Template
+* Basic UI with:
+  * Start/Options/Quit buttons
+  * Pause screen with volume controls.
 
-> **Official Unity Game Jam 2026** 출품 프로젝트 (2D)
-> 게임 타이틀: **High School: Your luck dealer** · 잼 주제: **TBD**
+#### Source
+* Unity Asset Store: https://www.assetstore.unity3d.com/en/#!/content/40465
+* Live training Tutorial: [Video](http://unity3d.com/learn/tutorials/modules/beginner/live-training-archive/game-jam-template?playlist=17111)
 
-학교 친구들의 행운의 숫자(Lucky Number)에 맞게 키링을 파는 2D 경영 게임입니다. (기획서 기준)
+# README
+Game Jam Template 
 
-> ℹ️ 이 문서는 **현재 확정된 사실만** 적습니다. 팀 논의가 필요한 항목은 `TBD`로 두고, 정해지는 대로 갱신합니다.
 
----
+The intent of this package is to eliminate some of the less exciting work of creating a small working game including title screen menu, pause menu and basic audio options.
 
-## 📌 확정 정보
 
-| 항목 | 내용 |
-|---|---|
-| 엔진 | **Unity 6.3 LTS (6000.3.27f2)** |
-| 템플릿 | **Universal 2D** |
-| 메인 메뉴 | [antfarmar/Unity-Game-Jam-Menu-Template](https://github.com/antfarmar/Unity-Game-Jam-Menu-Template) 기반 |
-| 코딩 도구 | Cursor + Claude ([AI 명세서](CLAUDE.md)) |
-| 제출처 | itch.io — https://itch.io/jam/official-unity-game-jam-2026 |
-| 제출 마감 | **2026-11-14(토) 21:00 KST** (연장 없음) |
-| 커뮤니티 평가 / 결과 발표 | 11/14 ~ 11/28 / 12/10 |
-| 빌드 플랫폼 | TBD |
+Setup guide:
 
-## 🎮 게임 개요 (기획서 기준, 2026-11-07 수정)
 
-> 출처: 기획서(2026-11-07 수정본). 팀 논의에 따라 바뀔 수 있습니다.
+1. Import the Game Jam Template Package.
 
-- **타이틀**: High School: Your luck dealer
-- **장르**: 캐주얼, 타이쿤, 시뮬레이션 (학원 장르 포함 여부 TBD)
-- **컨셉**: 친구들을 위해 행운의 키링을 만들어 주는 사업을 하는 멋있는 나(선글라스). 학교 친구들이 "행운의 숫자"를 추측할 수 있는 텍스트를 주면, 플레이어가 추리해서 재료를 **드래그앤드롭**으로 넣어 키링을 만든다.
-- **원하는 유저 경험**: 학교 생활, 학생의 풋풋함, 텍스트를 통한 추리의 쾌감
-- **하루 흐름**
-  1. 쉬는 시간 시작 (수업 후 쉬는 시간 10분 — 시간 제한은 일단 제거해 보기로 함, 적용 여부 TBD)
-  2. 손님 방문 → 행운의 숫자 힌트 제시 (인내심 게이지는 일단 없이)
-  3. 행운의 키링 제작: 고정 레시피 + 약간 변형. 재료 예시: 무지개/삼색 사탕(유리병에서 꺼내기), 숫자 1~9 스티커(넘겨서 고르기), 삼각형·사각형 도형 조각
-  4. 검사 → 기준 이상이면 팁, 과하게 틀리면 환불 (UI에는 팁 유무만 표시, 재료 가격·판매가는 표시 안 함)
-  5. 하루 끝 업그레이드 (기획서 예시: 테이블, 서머 타임, 사탕 분류)
-  6. 다음 날
-- **승리**: 7일차(임시) 도달 시 자본 ≥ 0
-- **패배**: 하루 끝 자본 < 0
-- **캐릭터**: 플레이어 "캔디 추"(고1, 장사 중 선글라스), 손님 3명 — 명랑한 괴짜 단골 소녀(쉬움), 말을 잘 못하는 담임 선생님, 사기를 의심하는 반장(어려움)
 
-**미정 (TBD, 팀 논의 필요)**
+1. Open the folder in Assets > Game Jam Template > Prefabs
 
-- 잼 주제와의 연결
-- 쉬는 시간 10분 시간 제한 적용 여부
-- 손님 1·3 이름(손님 2는 담임 선생님), 손님별 힌트 텍스트
-- 힌트(행운의 숫자) ↔ 재료 대응, 레시피 변형 내용
-- 재료 가격 구조($1/$3의 의미), 카테고리별 최대 사용 개수
-- 업그레이드 목록 확정
-- 수업 중 화면 포함 여부
-- 아트 방향
 
-## 👥 팀
+1. Drag the two prefabs in that folder called UI and EventManager into the scene you want your main menu to appear in.
+2. Configure the options below as needed.
 
-| 역할 | 인원 | 비고 |
-|---|---|---|
-| 개발 | 2명 (hermit 외 1명) | 기획 겸임 X |
-| 기획 | 모집 중 (1명) | |
-| 2D 아트 | 모집 중 (2명) | |
 
-## 🔀 협업 방식
+Start Options:
 
-- 이 repo가 메인 프로젝트입니다.
-- 팀원은 작업물을 **Unity 패키지(`.unitypackage`)** 형태로 hermit에게 전달합니다.
-- hermit이 큰 틀과 핵심 시스템을 만들고, 팀원 작업물을 메인 프로젝트로 옮겨 통합합니다.
-- 세부 규칙(폴더, 네이밍, 패키지 익스포트 방법 등)은 팀 논의 후 👉 [프로젝트 컨벤션](Docs/CONVENTIONS.md)에 정리합니다.
 
-## 📄 문서
+The UI game object has a component called Start Options attached to it, choose from the following options:
 
-| 문서 | 설명 |
-|---|---|
-| [Docs/CONVENTIONS.md](Docs/CONVENTIONS.md) | 프로젝트 컨벤션 (확정 사항 + 논의 필요 항목) |
-| [CLAUDE.md](CLAUDE.md) | AI 명세서 — Cursor/Claude가 참고하는 프로젝트 정보 |
-| [Docs/AI_USAGE.md](Docs/AI_USAGE.md) | 생성형 AI 사용처 기록 (잼 규칙상 기재 필요) |
-| [Docs/CREDITS.md](Docs/CREDITS.md) | 외부 에셋 크레딧·라이선스 기록 |
 
-## ⚖️ 잼 규칙 (요약)
+* Change Scenes: if your game happens in a single scene, the scene in which this menu has been added, leave this at it’s default value of false. 
+* If you want to change scenes when the Start button is pressed add the scene you want to load to the Build Settings (via File > Build Settings)
+* To the right of each scene in the Build Settings is a number, this is the scene index. Add the number of the scene you want to load to the Scene To Start variable of Start Options.  If you only have two scenes, the default index value of Scene To Start (1) should work.
+* Set Change Scenes to true.
 
-- 팀 1~5명, 팀당 1개 제출, **itch.io에만** 업로드
-- 빌드 용량 **1GB 이하**
-- 마감 후 수정·외부 배포 시 실격
-- Linux 빌드를 낼 경우 Windows/Mac 빌드도 함께
-- 구매 에셋 사용 가능 (라이선스 준수·크레딧 표기)
-- 생성형 AI 사용 가능 — **사용처 미기재 시 수상 제외**
 
-## 🗓️ 일정
+Audio Configuration:
 
-| 날짜 | 내용 |
-|---|---|
-| 2026-11-14(토) 21:00 KST | 제출 마감 |
-| 2026-11-14 ~ 11-28 | 커뮤니티 평가 |
-| 2026-12-10 | 결과 발표 |
 
-세부 개발 일정: TBD
+The UI game object has a component called PlayMusic attached to it.
+* Assign the first clip you want to play to the AudioClip slot of the AudioSource attached to the 'UI' GameObject.
+* Assign the music clips you want to play to slots in the music clips array
+* If you want to play a different music clip after Start is pressed put the number of that clip in the 'Music To Change To' field in Start Options.
+* Set Change Music On Start to true. If left false, the clip in the AudioSource will loop.
+* Assign the ‘Output’ property of each Audio Source playing sound effects to the ‘SoundFx’ group of ‘MasterMixer’ by clicking the circle select button to the right of Output.
 
----
 
-_정보가 확정될 때마다 갱신합니다. 최종 수정: 2026-11-07_
+To change the Game Title, edit the Text field of the Text component attached to TitleText found under in the hierarchy under UI > MenuPanel > Title > TitleText.
+
+
+
+
+
+
+
+
+
+
+Functionality:
+
+
+Main Menu
+-Placeholder title image and title text
+-Start Button
+- Options Button
+- Quit Button
+- Fade to black (or any color assigned to FadeImage) when transitioning out of main menu to main scene
+
+
+Options Panel
+-Music Volume
+-Sound Effects Volume
+-Back Button
+
+
+Pause Panel
+-Music Volume
+-Sound Effects Volume
+- Resume Button
+- Quit Button
+
+
+Music 
+- Change or loop music clips when starting game
+-Music pre-routed to Audio Mixer, connected to UI
+
+
+Other functionality:
+
+
+-Can be used either with single scene or multi-scene games.
