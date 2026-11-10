@@ -34,11 +34,6 @@ MonoBehaviour:
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
-    dialogueText: Dad disappeared? I'm sorry!
-    button_B_Text: Next
-    isRequest: 0
-    isEnd: 0
-  - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
     dialogueText: So, to turn your misfortune into good fortune, since today is the
       4th...
     button_B_Text: Next
