@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ObjectDragManager : MonoBehaviour
@@ -99,6 +99,19 @@ public class ObjectDragManager : MonoBehaviour
 
                     mainObjectPlaced = true;
                     currentPlacementArea = innerCollider;
+                }
+
+                // 재료를 내려놓으면 재료비 차감 (기획: 모든 재료 $1) - 자본 시스템 연결
+                CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
+                if (capital != null)
+                {
+                    float before = capital.Current;
+                    capital.Add(-1f);
+                    Debug.Log($"[재료비 차감] {before:0.00} → {capital.Current:0.00} (-1.00)");
+                }
+                else
+                {
+                    Debug.LogWarning("[재료비 차감] 씬에 CapitalSystem이 없습니다. GameSystems 프리팹을 배치해 주세요.");
                 }
             }
             draggingObject = null;
