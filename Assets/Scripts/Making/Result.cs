@@ -20,6 +20,8 @@ public class Result : MonoBehaviour
     void Start()
     {
         check = FindAnyObjectByType<Check_Board>();
+
+        receipt_data = Customer_Data.receipt;
     }
 
     // Update is called once per frame

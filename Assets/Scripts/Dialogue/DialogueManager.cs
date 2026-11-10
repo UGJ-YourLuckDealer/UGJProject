@@ -37,6 +37,8 @@ public class DialogueManager : MonoBehaviour
     {
         //mainData = new Main_Data();
         StartDialogue();
+
+        Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
     }
 
     private void Update()

@@ -9,12 +9,15 @@ public class DialogueLine
     [TextArea(2, 5)]
     public string dialogueText;
     
-    public bool isRequest;
     public bool isEnd;
+
+    
 }
 
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
     public DialogueLine[] dialogueLines;
+
+    public Receipt_Data receiptData;
 }
