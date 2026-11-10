@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using SaintsField.Editor.Drawers.PropRangeDrawer;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Pool;
@@ -7,6 +9,9 @@ using UnityEngine.SceneManagement;
 
 public class AudioService : MonoBehaviour
 {
+    public const string VOLUME_SAVE_KEY = "MasterVolume";
+    const string MASTER_VOLUME_PARAM = "masterVol";
+
     public static AudioService Instance
     {
         get
@@ -18,6 +23,7 @@ public class AudioService : MonoBehaviour
                 {
                     var go = new GameObject("AudioService");
                     _instance = go.AddComponent<AudioService>();
+                    _instance.Initialize();
                 }
             }
 
@@ -25,9 +31,12 @@ public class AudioService : MonoBehaviour
         }
     }
 
+    public float MasterVolume => _masterVolume;
+
     static AudioService _instance;
 
     [SerializeField] ResourceDB _resourceDB;
+    [SerializeField] AudioMixer _audioMixer;
     [SerializeField] AudioMixerGroup _sfxMixerGroup;
     [SerializeField] AudioMixerGroup _bgmMixerGroup;
 
@@ -35,6 +44,8 @@ public class AudioService : MonoBehaviour
     ObjectPool<AudioSource> _sfxPool;
     List<AudioSource> _activeSfxSources;
     bool _initialized;
+
+    float _masterVolume;
 
     void Awake()
     {
@@ -44,6 +55,11 @@ public class AudioService : MonoBehaviour
     void Initialize()
     {
         if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        if (_initialized)
         {
             return;
         }
@@ -60,6 +76,7 @@ public class AudioService : MonoBehaviour
             _activeSfxSources = new List<AudioSource>();
             _instance = this;
 
+            LoadVolumeSettings().Forget();
             CreateBgmSource();
             CreateSfxPool();
             DontDestroyOnLoad(gameObject);
@@ -71,6 +88,15 @@ public class AudioService : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    async UniTask LoadVolumeSettings()
+    {
+        _masterVolume = PlayerPrefs.GetFloat(VOLUME_SAVE_KEY, 1f);
+
+        await UniTask.WaitForEndOfFrame();
+
+        SetMasterVolume(_masterVolume);
     }
 
     void CreateBgmSource()
@@ -109,6 +135,13 @@ public class AudioService : MonoBehaviour
     void ReleaseSfxSource(AudioSource source)
     {
         source.enabled = false;
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        _masterVolume = volume;
+        _audioMixer.SetFloat(MASTER_VOLUME_PARAM, Mathf.Log10(_masterVolume) * 20);
+        PlayerPrefs.SetFloat(VOLUME_SAVE_KEY, _masterVolume);
     }
 
     /// <summary>

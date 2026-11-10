@@ -45,5 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioService
   _resourceDB: {fileID: 11400000, guid: 5c5518b4a10c59c4ab1042eabb8f74a0, type: 2}
+  _audioMixer: {fileID: 24100000, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   _sfxMixerGroup: {fileID: 24301952, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   _bgmMixerGroup: {fileID: 24324684, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
