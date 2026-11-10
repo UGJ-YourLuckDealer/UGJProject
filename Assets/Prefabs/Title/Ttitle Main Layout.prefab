@@ -254,7 +254,6 @@ GameObject:
   - component: {fileID: 8534521259502287302}
   - component: {fileID: 8261002774922792976}
   - component: {fileID: 5975627861903875912}
-  - component: {fileID: 7610135861545509302}
   - component: {fileID: 57126234876294116}
   m_Layer: 0
   m_Name: QuitBtn
@@ -366,18 +365,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7610135861545509302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2621846036791963163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744719a4f9f45cf4eab45dafc205daae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::QuitButton
 --- !u!114 &57126234876294116
 MonoBehaviour:
   m_ObjectHideFlags: 0

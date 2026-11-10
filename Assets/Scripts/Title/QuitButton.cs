@@ -9,6 +9,13 @@ using R3;
 [RequireComponent(typeof(Button))]
 public class QuitButton : MonoBehaviour
 {
+    public static bool IsQuitSupported =>
+#if WEBGL
+        false;
+#else
+        true;
+#endif
+
     private void Awake()
     {
 #if UNITY_WEBGL

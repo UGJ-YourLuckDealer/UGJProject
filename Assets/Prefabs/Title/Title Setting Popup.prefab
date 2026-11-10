@@ -1108,10 +1108,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2231736447213885689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 99.41, y: -39.17}
+  m_SizeDelta: {x: 134.82, y: 46.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2680081893990720203
 CanvasRenderer:
@@ -1253,10 +1253,10 @@ RectTransform:
   - {fileID: 948377266546280451}
   m_Father: {fileID: 5075630033519868571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 99.41, y: -39.17}
+  m_SizeDelta: {x: 198.82, y: 78.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8082632680864719997
 CanvasRenderer:
@@ -1309,8 +1309,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
+    m_Mode: 2
+    m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1451,7 +1451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2231736447213885689
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1467,10 +1467,10 @@ RectTransform:
   - {fileID: 4586270229980185966}
   m_Father: {fileID: 5075630033519868571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 99.41, y: -117.509995}
+  m_SizeDelta: {x: 198.82, y: 78.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5680784854547573046
 CanvasRenderer:
@@ -1523,8 +1523,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
+    m_Mode: 2
+    m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1838,7 +1838,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5075630033519868571
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1857,8 +1857,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 192, y: -252.68002}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 192, y: -213.51}
+  m_SizeDelta: {x: 198.82, y: 78.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2756541603601954540
 MonoBehaviour:
@@ -4760,7 +4760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -5124,10 +5124,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6264461098137931379}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 99.41, y: -39.17}
+  m_SizeDelta: {x: 134.82, y: 46.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7523316530095298180
 CanvasRenderer:

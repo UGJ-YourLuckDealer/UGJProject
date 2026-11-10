@@ -35,6 +35,14 @@ public class TitleScreen : MonoBehaviour
         WaitAndPlayBgm().Forget();
     }
 
+    void Update()
+    {
+        if (EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(_startButton.gameObject);
+        }
+    }
+
     void SubscribeEvents()
     {
         _startButton
@@ -84,10 +92,11 @@ public class TitleScreen : MonoBehaviour
     /// </summary>
     void SubscribeButtonAnim(Button button, GameObject buttonEffect)
     {
+        Vector2 effectOrigin = buttonEffect.GetComponent<RectTransform>().anchoredPosition;
         buttonEffect.SetActive(false);
         button
             .OnSelectAsObservable()
-            .Subscribe(e => ScaleButton(e.selectedObject, buttonEffect))
+            .Subscribe(e => ScaleButton(e.selectedObject, buttonEffect, effectOrigin))
             .AddTo(this);
 
         button
@@ -96,28 +105,38 @@ public class TitleScreen : MonoBehaviour
             .AddTo(this);
     }
 
-    void ScaleButton(GameObject button, GameObject buttonEffect)
+    void ScaleButton(GameObject button, GameObject buttonEffect, Vector2 effectOrigin)
     {
         DOTween.Sequence()
-            .SetTarget(this)
             .Append(button.transform
                 .DOScale(Vector2.one * 1.1f, 0.2f)
                 .SetEase(Ease.OutQuad)
-                .SetTarget(this)
             )
             .Append(button.transform
                 .DOScale(Vector2.one, 0.2f)
                 .SetEase(Ease.InQuad)
-                .SetTarget(this)
             )
+            .SetTarget(this)
+            .SetLink(this.gameObject, LinkBehaviour.KillOnDisable)
+            .OnComplete(() => button.transform.localScale = Vector2.one)
             .Play();
 
         buttonEffect.gameObject.SetActive(true);
-        buttonEffect.transform.DOLocalMove(Vector2.one * 12f, 0.2f)
+        buttonEffect.GetComponent<RectTransform>()
+            .DOAnchorPos(Vector2.one * 12f, 0.2f)
             .SetEase(Ease.InOutBounce)
             .SetLoops(-1, LoopType.Yoyo)
-            .SetRelative(true)
             .SetTarget(this)
+            .SetLink(buttonEffect, LinkBehaviour.KillOnDisable)
+            .OnKill(() =>
+            {
+                // buttonEffect gameObject destroy 체크
+                if (buttonEffect != null)
+                {
+                    buttonEffect.GetComponent<RectTransform>().anchoredPosition = effectOrigin;
+                }
+            })
+            .SetRelative(true)
             .Play();
 
     }
