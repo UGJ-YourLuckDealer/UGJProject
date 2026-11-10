@@ -1,3 +1,4 @@
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -75,6 +76,9 @@ public class ObjectDeleteManager : MonoBehaviour
         if(holdTimer >= deleteDuration)
         {
             Debug.Log("Delete Object");
+            Customer_Data data = new Customer_Data();
+
+            data.InCrease_Account(selectedObject);
             deleteSlider.gameObject.SetActive(false);
             Destroy(selectedObject);
             selectedObject = null;

@@ -73,4 +73,30 @@ public class Customer_Data
         Debug.Log("°¨¼ÒµÊ");
     }
 
+    public void InCrease_Account(GameObject target)
+    {
+        if (target.CompareTag("Normal"))
+            normal++;
+
+        if (target.CompareTag("Heart"))
+            heart++;
+
+        if (target.CompareTag("Clover"))
+            clover++;
+
+        if (target.CompareTag("Number"))
+            number++;
+
+        if (target.CompareTag("Rainbow"))
+            rainbow++;
+
+        if (target.CompareTag("Note"))
+            note++;
+
+        if (target.CompareTag("A"))
+            A++;
+
+        Debug.Log("°¨¼ÒµÊ");
+    }
+
 }
