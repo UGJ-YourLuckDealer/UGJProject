@@ -54,6 +54,16 @@ public static class SceneFlow
         ScreenFader.LoadScene(MakingScene);
     }
 
+    /// <summary>
+    /// Counter를 떠날 때(SceneFlowLink.OnDestroy) 호출. SceneFlow를 거치지 않은 전환(팀원 코드의 직접 로드)도
+    /// 다음 손님 번호가 이어지도록 기록한다.
+    /// </summary>
+    public static void NoteCounterLeft(int currentCustomer, int count)
+    {
+        NextCustomerIndex = currentCustomer + 1;
+        if (count > 0) customerCount = count;
+    }
+
     /// <summary>Making에서 제출 → 손님 처리 완료. 손님이 남았으면 Counter, 아니면 Result.</summary>
     public static void ReturnFromMaking()
     {

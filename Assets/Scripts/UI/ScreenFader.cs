@@ -37,7 +37,11 @@ public class ScreenFader : MonoBehaviour
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay() => instance = null;
+    private static void ResetOnPlay()
+    {
+        instance = null;
+        SceneManager.sceneLoaded -= OnAnySceneLoaded;
+    }
 
     // 게임 실행 시 첫 화면을 검은 화면에서 Fade In
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -47,6 +51,17 @@ public class ScreenFader : MonoBehaviour
         if (f == null) return;
         f.SetAlpha(1f);
         f.StartCoroutine(f.Fade(0f, f.fadeInSeconds));
+        SceneManager.sceneLoaded -= OnAnySceneLoaded;
+        SceneManager.sceneLoaded += OnAnySceneLoaded;
+    }
+
+    // SceneFlow를 거치지 않고 바뀐 씬(팀원 코드의 직접 로드)도 Fade In으로 부드럽게 보여 준다
+    private static void OnAnySceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode != LoadSceneMode.Single || instance == null || instance.busy) return;
+        instance.StopAllCoroutines();
+        instance.SetAlpha(1f);
+        instance.StartCoroutine(instance.Fade(0f, instance.fadeInSeconds));
     }
 
     /// <summary>Fade Out → 씬 로드 → Fade In. 페이더가 없으면 바로 로드한다.</summary>

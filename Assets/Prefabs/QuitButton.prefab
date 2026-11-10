@@ -150,8 +150,8 @@ GameObject:
   - component: {fileID: 60412379488807342}
   - component: {fileID: 2350856041069569782}
   - component: {fileID: 2012819598060869640}
-  - component: {fileID: 5531562175062539973}
   - component: {fileID: 5607591617796716535}
+  - component: {fileID: 4986790680235330735}
   m_Layer: 0
   m_Name: QuitButton
   m_TagString: Untagged
@@ -273,20 +273,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744719a4f9f45cf4eab45dafc205daae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuitButton
---- !u!114 &5531562175062539973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6201722666470954917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d9723dae7e4ffa46919182dfd1b36b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverEffect
-  hoverScale: 1.15
-  scaleSpeed: 10
 --- !u!114 &5607591617796716535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,3 +286,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonClickDelay
   delay: 0.15
+--- !u!114 &4986790680235330735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6201722666470954917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac4d0cd7d35bd044a3f05833c4d981e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIHoverScale
+  hoverScale: 1.15
+  scaleSpeed: 10
