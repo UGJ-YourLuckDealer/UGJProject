@@ -11,4 +11,5 @@ public class ResourceDB : ScriptableObject
 {
     public SaintsDictionary<string, IAudioGenerator> sfxDict;
     public SaintsDictionary<string, AudioClip> bgmDict;
+    public SaintsDictionary<string, GameObject> popupDict;
 }

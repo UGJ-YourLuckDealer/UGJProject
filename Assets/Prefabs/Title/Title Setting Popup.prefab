@@ -1994,6 +1994,7 @@ GameObject:
   - component: {fileID: 9180550905284945735}
   - component: {fileID: 3994042671415808832}
   - component: {fileID: 3902588263702479492}
+  - component: {fileID: 8124837842071083654}
   m_Layer: 0
   m_Name: Title Setting Popup
   m_TagString: Untagged
@@ -2060,6 +2061,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8124837842071083654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2152359576366304557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88d49d55d4a2d648926e19f5ab5727d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsPopupUI
+  _backgroundPanel: {fileID: 4676736242973755001}
+  _volumeSlider: {fileID: 6265644511753162694}
+  _volumeText: {fileID: 6287434944114045013}
 --- !u!1 &2283439672809636637
 GameObject:
   m_ObjectHideFlags: 0
