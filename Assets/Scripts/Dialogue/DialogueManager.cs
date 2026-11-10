@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Unity.VisualScripting;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
@@ -10,6 +11,7 @@ public class DialogueManager : MonoBehaviour
     public DialogueData[] dialogueData;
     public int customer = 1;
 
+    public TextMeshProUGUI characterName;
     public TextMeshProUGUI dialogueText;
     public TextMeshProUGUI B_ButtonText;
     public UnityEngine.UI.Image characterImage;
@@ -25,7 +27,7 @@ public class DialogueManager : MonoBehaviour
     private Coroutine typingCoroutine;
     private bool isTyping = false;
 
-    DialogueLine line;
+    public DialogueLine line;
 
     private bool isWaiting = false;
 
@@ -36,6 +38,8 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
+        
+
         if(Mouse.current.leftButton.wasPressedThisFrame && !isWaiting)
         {
             if(isTyping == true)
@@ -45,8 +49,9 @@ public class DialogueManager : MonoBehaviour
 
                 dialogueText.text = line.dialogueText;
 
-
+                if(!line.isEnd)
                     nextButton.SetActive(true);
+                
                 if (line.isRequest)
                     requestButton.SetActive(true);
             }
@@ -66,22 +71,22 @@ public class DialogueManager : MonoBehaviour
             color.a = 255f;
             color.b = color.g = color.r = 255f;
             characterImage.color = color;
-
             return;
         }
-
-        SceneManager.LoadScene("Making");
+        
     }
     void DisplayDialogue()
     {
         typingCoroutine = StartCoroutine(TypeDialogue(line.dialogueText));
         characterImage.sprite = line.characterImage;
-        B_ButtonText.text = line.button_B_Text;
     }
 
     public void StartDialogue()
     {
+        
         line = dialogueData[customer].dialogueLines[currentIndex++];
+
+        characterName.text = line.character_Name;
         color.a = 255f;
         color.b = color.g = color.r = 255f;
         characterImage.color = color;
@@ -90,6 +95,11 @@ public class DialogueManager : MonoBehaviour
 
     public void NextDialogue()
     {
+
+
+        if (line.isEnd)
+            return;
+
         if (currentIndex < dialogueData[customer].dialogueLines.Length)
         {
             line = dialogueData[customer].dialogueLines[currentIndex++];
@@ -107,7 +117,7 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        if (!line.isEnd && !line.isRequest)
+        if (!line.isEnd)
             return;
 
         currentIndex = 0;
@@ -141,6 +151,7 @@ public class DialogueManager : MonoBehaviour
         if (line.isRequest)
             requestButton.SetActive(true);
 
+        if(!line.isEnd)
             nextButton.SetActive(true);
         isTyping = false;
         typingCoroutine = null;
