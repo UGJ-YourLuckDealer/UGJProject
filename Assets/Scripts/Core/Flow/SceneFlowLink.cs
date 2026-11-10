@@ -5,6 +5,7 @@ using UnityEngine.UI;
 /// 씬과 SceneFlow를 잇는 hermit 연결 컴포넌트. 팀원 스크립트·오브젝트는 수정하지 않는다.
 /// - Counter: 시작 손님 번호를 DialogueManager에 넣고, 씬을 떠날 때(팀원 코드가 직접 Making을 불러도) 다음 손님 번호를 기억한다.
 /// - Making: 팀원 Submit 버튼(Result.Result_Kiring)에 실행 중에만 ReturnFromMaking을 붙인다.
+///   지금 손님 번호에 맞는 레시피(customerReceipts)를 팀원 판정(Result.receipt_data)에 넣는다.
 /// - 버튼 OnClick에서 SceneFlow 함수를 부르는 용도로도 쓴다.
 /// </summary>
 public class SceneFlowLink : MonoBehaviour
@@ -13,6 +14,9 @@ public class SceneFlowLink : MonoBehaviour
 
     [Tooltip("Making: 팀원 Submit 버튼(Result_Kiring을 부르는 버튼)을 찾아 실행 중에 ReturnFromMaking을 연결")]
     [SerializeField] private bool hookResultSubmit;
+
+    [Tooltip("Making: 손님 번호(DialogueManager.customer) 순서대로 판정할 레시피. 비어 있으면 Result에 넣어 둔 기본 레시피를 쓴다")]
+    [SerializeField] private Receipt_Data[] customerReceipts;
 
     private int cachedCustomer = -1;
     private int cachedCustomerCount;
@@ -26,6 +30,17 @@ public class SceneFlowLink : MonoBehaviour
             dialogue.customer = SceneFlow.NextCustomerIndex;
 
         if (hookResultSubmit) HookSubmitButtons();
+        ApplyCustomerReceipt();
+    }
+
+    private void ApplyCustomerReceipt()
+    {
+        // Counter에서 GoToMaking/NoteCounterLeft가 다음 손님 번호를 기록하므로 지금 손님 = NextCustomerIndex - 1
+        int current = SceneFlow.NextCustomerIndex - 1;
+        if (customerReceipts == null || current < 0 || current >= customerReceipts.Length) return;
+        if (customerReceipts[current] == null) return;
+        var result = FindAnyObjectByType<Result>();
+        if (result != null) result.receipt_data = customerReceipts[current];
     }
 
     private void LateUpdate()

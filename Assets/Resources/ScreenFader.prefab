@@ -129,8 +129,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreenFader
   group: {fileID: 8545582653461059786}
-  fadeOutSeconds: 0.35
-  fadeInSeconds: 0.35
+  fadeOutSeconds: 0.5
+  fadeInSeconds: 0.6
+  holdBlackSeconds: 0.1
 --- !u!1 &9091987845588099777
 GameObject:
   m_ObjectHideFlags: 0

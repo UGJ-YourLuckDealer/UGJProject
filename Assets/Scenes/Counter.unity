@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
   dialogueData:
-  - {fileID: 11400000, guid: f9ac822f057bef94f95908b1d152abcc, type: 2}
+  - {fileID: 11400000, guid: 9a8c311ffbadff944b3cb4c7e49294e0, type: 2}
   - {fileID: 11400000, guid: 6eb1621cb83eed346910a34dbff8537d, type: 2}
   - {fileID: 11400000, guid: 57eca9bca9f8b964b830ff126a4c6923, type: 2}
   customer: 0

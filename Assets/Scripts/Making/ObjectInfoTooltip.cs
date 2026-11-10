@@ -72,12 +72,12 @@ public class ObjectInfoTooltip : MonoBehaviour
 
         if(mousePosition.y > Screen.height/2f)
         {
-            tooltipPanel.pivot = new Vector2(0f, 1f);
+            tooltipPanel.pivot = new Vector2(tooltipPanel.pivot.x, 1f);
             localPosition.y -= offset;
         }
         else
         {
-            tooltipPanel.pivot = new Vector2(0f, 0f);
+            tooltipPanel.pivot = new Vector2(tooltipPanel.pivot.x, 0f);
             localPosition.y += offset;
         }
 
