@@ -1,11 +1,12 @@
 # UGJProject
 
 > **Official Unity Game Jam 2026** 출품 프로젝트 (2D)
-> 게임 타이틀: **High School: Your luck dealer** · 잼 주제: **TBD**
+> 게임 타이틀: **High School: Your luck dealer** · 잼 주제: **행운의 숫자**
 
 학교 친구들의 행운의 숫자(Lucky Number)에 맞게 키링을 파는 2D 경영 게임입니다. (기획서 기준)
 
 > ℹ️ 이 문서는 **현재 확정된 사실만** 적습니다. 팀 논의가 필요한 항목은 `TBD`로 두고, 정해지는 대로 갱신합니다.
+> main 브랜치의 README에는 최신 내용이 반영되지 않은 부분이 많을 수 있습니다. 최신 내용을 확인하고 싶으시다면 develop 브랜치의 README를 참고해 주세요.
 
 ---
 
