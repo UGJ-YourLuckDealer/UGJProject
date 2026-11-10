@@ -6,7 +6,8 @@ public class ObjectDragManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Collider2D initialplacementArea;
-    [SerializeField] private Collider2D currentPlacementArea;
+    [SerializeField] private Collider2D bodyPlacementArea;
+    [SerializeField] private Collider2D headPlacementArea;
 
     private GameObject draggingObject;
     private bool isDragging;
@@ -21,7 +22,8 @@ public class ObjectDragManager : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        currentPlacementArea = initialplacementArea;
+        bodyPlacementArea = initialplacementArea;
+        headPlacementArea = initialplacementArea;
     }
 
     private void Update()
@@ -64,13 +66,14 @@ public class ObjectDragManager : MonoBehaviour
 
         if (!mainObjectPlaced)
             canPlace = initialplacementArea != null && initialplacementArea.OverlapPoint(mousePosition);
+        else if(draggingObject.layer == LayerMask.NameToLayer("Sub_Acrill"))
+            canPlace = bodyPlacementArea != null && bodyPlacementArea.OverlapPoint(mousePosition);
         else
-            canPlace = currentPlacementArea != null && currentPlacementArea.OverlapPoint(mousePosition);
-
+            canPlace = headPlacementArea != null && headPlacementArea.OverlapPoint(mousePosition);
 
         if (canPlace)
         {
-            if(!mainObjectPlaced && draggingObject.layer != LayerMask.NameToLayer("Main_Kiring"))
+            if (!mainObjectPlaced && draggingObject.layer != LayerMask.NameToLayer("Main_Kiring"))
             {
                 Debug.LogError("Main_Kiring is not exist.");
                 Destroy(draggingObject);
@@ -90,9 +93,21 @@ public class ObjectDragManager : MonoBehaviour
             {
                 if (!mainObjectPlaced && draggingObject.layer == LayerMask.NameToLayer("Main_Kiring"))
                 {
-                    Transform innerArea = draggingObject.transform.Find("InnerArea");
+                    Transform bodyArea = draggingObject.transform.Find("BodyArea");
 
-                    if (innerArea == null || !innerArea.TryGetComponent<Collider2D>(out Collider2D innerCollider))
+                    if (bodyArea == null || !bodyArea.TryGetComponent<Collider2D>(out Collider2D bodyCollider))
+                    {
+                        Debug.LogError("MainObject doesn't have InnerArea Collider.");
+                        Destroy(draggingObject);
+                        isDragging = false;
+                        draggingObject = null;
+                        return;
+                    }
+                    
+
+                    Transform headArea = draggingObject.transform.Find("HeadArea");
+
+                    if (headArea == null || !headArea.TryGetComponent<Collider2D>(out Collider2D headCollider))
                     {
                         Debug.LogError("MainObject doesn't have InnerArea Collider.");
                         Destroy(draggingObject);
@@ -102,7 +117,8 @@ public class ObjectDragManager : MonoBehaviour
                     }
 
                     mainObjectPlaced = true;
-                    currentPlacementArea = innerCollider;
+                    bodyPlacementArea = bodyCollider;
+                    headPlacementArea = headCollider;
                 }
 
                 if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1)

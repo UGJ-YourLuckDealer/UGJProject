@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Receipt 2
   m_EditorClassIdentifier: Assembly-CSharp::Receipt_Data
   main_kiring: 0
-  clover: 2
+  clover: 0
   note: 0
-  number: 0
-  rainbow: 0
+  number: 1
+  rainbow: 1
   special: 0
