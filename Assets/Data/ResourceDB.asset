@@ -30,24 +30,22 @@ MonoBehaviour:
       wrapType: 4
     _wrapTypeKey: 4
     _saintsValues:
-    - value: {fileID: 0}
-      valueField:
+    - valueField:
         propertyType: 0
         longValue: 0
         uLongValue: 0
         stringValue: 
         intValues: 
-        V: {fileID: 0}
+        V: {fileID: 8300000, guid: 13cff3b8d11533c4082babb76728e53d, type: 3}
         VRef:
           rid: -2
         IsVRef: 0
       valueArray: []
       valueList: []
-      wrapType: 4
-    _wrapTypeValue: 4
+      wrapType: 1
+    _wrapTypeValue: 1
     saintsSerializedVersion: 2
     _keys: []
-    _values: []
   bgmDict:
     _saintsKeys:
     - value: bgm_title
@@ -66,7 +64,7 @@ MonoBehaviour:
       wrapType: 4
     _wrapTypeKey: 4
     _saintsValues:
-    - value: {fileID: 0}
+    - value: {fileID: 8300000, guid: 7db0c87ec4fdb0e48af04349c4f14df9, type: 3}
       valueField:
         propertyType: 0
         longValue: 0
