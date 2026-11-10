@@ -14,6 +14,7 @@ public class Customer_Data
     public static int rainbow = 10;
     public static int note = 10;
     public static int A = 10;
+    public static int B = 10;
 
     public static void Set_CustomerReceipt(DialogueData dialogue)
     {
@@ -44,6 +45,9 @@ public class Customer_Data
         if (target.CompareTag("A"))
             category = A;
 
+        if (target.CompareTag("B"))
+            category = B;
+
         return category;
     }
 
@@ -70,6 +74,9 @@ public class Customer_Data
         if (target.CompareTag("A"))
             A--;
 
+        if (target.CompareTag("B"))
+            B--;
+
         Debug.Log("°¨¼ÒµÊ");
     }
 
@@ -95,6 +102,9 @@ public class Customer_Data
 
         if (target.CompareTag("A"))
             A++;
+
+        if (target.CompareTag("B"))
+            B++;
 
         Debug.Log("°¨¼ÒµÊ");
     }

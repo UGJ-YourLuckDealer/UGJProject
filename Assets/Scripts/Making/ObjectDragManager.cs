@@ -123,7 +123,7 @@ public class ObjectDragManager : MonoBehaviour
                     headPlacementArea = headCollider;
                 }
 
-                if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1)
+                if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1 || check.GetCount(LayerMask.NameToLayer("Clasp"), "B") > 1)
                 {
                     Debug.LogError("Clasp is not Exist over 1");
                     Destroy(draggingObject);

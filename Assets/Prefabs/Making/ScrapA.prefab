@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8627465109074525361}
   - component: {fileID: 6968471924598429676}
   m_Layer: 7
-  m_Name: Circle (1) 2
+  m_Name: ScrapA
   m_TagString: A
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -49,9 +49,11 @@ public class MakingBook : MonoBehaviour
             case Receipt_Data.Clasp.A:
                 receipt.Add("Clasp: A");
                 break;
-            //case Receipt_Data.Main_Kiring.Heart:
-            //    receipt.Add("Main Kiring: Heart");
-            //    break;
+            case Receipt_Data.Clasp.B:
+                receipt.Add("Clasp: B");
+                break;
+            case Receipt_Data.Clasp.Null:
+                break;
         }
 
     }

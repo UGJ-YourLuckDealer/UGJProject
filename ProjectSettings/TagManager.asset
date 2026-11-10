@@ -11,6 +11,7 @@ TagManager:
   - Normal
   - Heart
   - A
+  - B
   layers:
   - Default
   - TransparentFX

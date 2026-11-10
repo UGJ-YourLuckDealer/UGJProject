@@ -15,6 +15,7 @@ public class Result : MonoBehaviour
     int normal;
 
     int a;
+    int b;
 
     int main = 0;
 
@@ -45,6 +46,7 @@ public class Result : MonoBehaviour
         number = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Number");
 
         a = check.GetCount(LayerMask.NameToLayer("Clasp"), "A");
+        b = check.GetCount(LayerMask.NameToLayer("Clasp"), "B");
 
         if (clover == receipt_data.clover)
             correct = clover;
@@ -90,12 +92,18 @@ public class Result : MonoBehaviour
                 else
                     incorrect += 1;
                 break;
-            //case Receipt_Data.Scrap.A:
-            //    if (heart == 1)
-            //        correct += 1;
-            //    else
-            //        incorrect += 1;
-            //    break;
+            case Receipt_Data.Clasp.B:
+                if (b == 1)
+                    correct += 1;
+                else
+                    incorrect += 1;
+                break;
+            case Receipt_Data.Clasp.Null:
+                if (a == 0 && b==0)
+                    correct += 1;
+                else
+                    incorrect += 1;
+                break;
         }
 
 

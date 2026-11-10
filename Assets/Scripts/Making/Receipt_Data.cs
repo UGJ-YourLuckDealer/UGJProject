@@ -30,7 +30,9 @@ public class Receipt_Data : ScriptableObject
 
     public enum Clasp
     {
-        A
+        Null,
+        A,
+        B
     }
 
     public Clasp clasp;
