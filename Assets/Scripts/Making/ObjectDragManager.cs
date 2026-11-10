@@ -5,23 +5,23 @@ public class ObjectDragManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Collider2D placementArea;
-    [SerializeField] private Collider2D mainArea;
+    [SerializeField] private Collider2D initialplacementArea;
+    [SerializeField] private Collider2D currentPlacementArea;
 
     private GameObject draggingObject;
     private bool isDragging;
 
+    private bool mainObjectPlaced;
+    private bool draggingMainObject;
+
+    bool isMainObject;
+
     Vector2 mousePosition;
-    public bool canPlace;
     private void Awake()
     {
         mainCamera = Camera.main;
-    }
 
-    private void Start()
-    {
-        mousePosition = GetMouseWorldPosition();
-        canPlace = placementArea != null && placementArea.OverlapPoint(mousePosition);
+        currentPlacementArea = initialplacementArea;
     }
 
     private void Update()
@@ -60,14 +60,13 @@ public class ObjectDragManager : MonoBehaviour
         Check_Board check = FindAnyObjectByType<Check_Board>();
         mousePosition = GetMouseWorldPosition();
 
-        //if (check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Heart") +
-        //   check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Normal") >= 1)
-        //{
-        //    mainArea = LayerMask.NameToLayer("Main_Kiring").;
-        //    canPlace = mainArea != null && placementArea.OverlapPoint(mousePosition);
-        //}
+        bool canPlace;
 
-        canPlace = placementArea != null && placementArea.OverlapPoint(mousePosition);
+        if (!mainObjectPlaced)
+            canPlace = initialplacementArea != null && initialplacementArea.OverlapPoint(mousePosition);
+        else
+            canPlace = currentPlacementArea != null && currentPlacementArea.OverlapPoint(mousePosition);
+
 
         if (canPlace)
         {
@@ -80,9 +79,30 @@ public class ObjectDragManager : MonoBehaviour
             }
             else
             {
-                draggingObject = null;
+                if (!mainObjectPlaced && draggingObject.layer == LayerMask.NameToLayer("Main_Kiring"))
+                {
+                    Transform innerArea = draggingObject.transform.Find("InnerArea");
 
-                // 내려놓은 재료 1개만큼 재료비 차감 (기획: 모든 재료 $1)
+                    if (innerArea == null || !innerArea.TryGetComponent<Collider2D>(out Collider2D innerCollider))
+                    {
+                        Debug.LogError("MainObject doesn't have InnerArea Collider.");
+                        Destroy(draggingObject);
+                        return;
+                    }
+
+                    mainObjectPlaced = true;
+                    currentPlacementArea = innerCollider;
+                }
+
+                if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1)
+                {
+                    Debug.LogError("Clasp is not Exist over 1");
+                    Destroy(draggingObject);
+                    
+                }
+
+
+                // 재료를 내려놓으면 재료비 차감 (기획: 모든 재료 $1) - 자본 시스템 연결
                 CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
                 if (capital != null)
                 {
@@ -95,6 +115,7 @@ public class ObjectDragManager : MonoBehaviour
                     Debug.LogWarning("[재료비 차감] 씬에 CapitalSystem이 없습니다. GameSystems 프리팹을 배치해 주세요.");
                 }
             }
+            draggingObject = null;
         }
         else
         {

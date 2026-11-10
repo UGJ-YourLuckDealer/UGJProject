@@ -23,6 +23,8 @@ public class SettingsMenu : MonoBehaviour
 
     [Tooltip("Title 씬에서는 끈다 (이미 타이틀)")]
     [SerializeField] private bool showTitleButton = true;
+    [Tooltip("Title 씬에서는 끈다 (Title 화면에 별도 Quit 버튼이 있음)")]
+    [SerializeField] private bool showQuitButton = true;
     [Tooltip("열려 있는 동안 게임 일시정지")]
     [SerializeField] private bool pauseWhileOpen = true;
 
@@ -55,9 +57,8 @@ public class SettingsMenu : MonoBehaviour
         }
         if (quitButton != null)
         {
-#if UNITY_WEBGL
-            quitButton.gameObject.SetActive(false); // itch.io(WebGL)에서는 종료 버튼 숨김
-#endif
+            // Title 화면에 별도 Quit이 있거나, 웹(WebGL)이면 팝업의 종료 버튼 숨김
+            quitButton.gameObject.SetActive(showQuitButton && QuitButton.IsQuitSupported);
             quitButton.onClick.AddListener(Quit);
         }
 

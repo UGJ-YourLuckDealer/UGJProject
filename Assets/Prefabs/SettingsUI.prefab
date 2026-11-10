@@ -1115,7 +1115,7 @@ GameObject:
   - component: {fileID: 7235602191842528134}
   - component: {fileID: 6735647968015184308}
   - component: {fileID: 7336630450723587649}
-  - component: {fileID: -6921189117997563026}
+  - component: {fileID: 3580952758620130421}
   m_Layer: 0
   m_Name: SettingsUI
   m_TagString: Untagged
@@ -1227,8 +1227,9 @@ MonoBehaviour:
   titleButton: {fileID: 5443207804109464381}
   quitButton: {fileID: 7895312839574268757}
   showTitleButton: 1
+  showQuitButton: 1
   pauseWhileOpen: 1
---- !u!114 &-6921189117997563026
+--- !u!114 &3580952758620130421
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1237,9 +1238,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6666060406054870916}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d9723dae7e4ffa46919182dfd1b36b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ac4d0cd7d35bd044a3f05833c4d981e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverEffect
+  m_EditorClassIdentifier: Assembly-CSharp::UIHoverScale
   hoverScale: 1.15
   scaleSpeed: 10
 --- !u!1 &7166339964618336118

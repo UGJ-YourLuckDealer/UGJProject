@@ -13,6 +13,8 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] private GameObject heldPrefab;
     [SerializeField] private ObjectDragManager dragManager;
 
+    [SerializeField] private ObjectInfoTooltip infoTooltip;
+
     private GameObject outlineObject;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -42,19 +44,23 @@ public class ObjectInteraction : MonoBehaviour
 
         bool isOver = hit != null && hit.gameObject == gameObject;
 
-        if (isOver && !isHovering) //Enter
+        if(isOver && !isHovering) //Enter
         {
             isHovering = true;
             outlineObject.SetActive(true);
+
+            infoTooltip.Show(gameObject);
         }
 
-        if (!isOver && isHovering) //Exit
+        if(!isOver && isHovering) //Exit
         {
             isHovering = false;
             outlineObject.SetActive(false);
+
+            infoTooltip.Hide();
         }
 
-        if (isOver && Mouse.current.leftButton.wasPressedThisFrame) // OnMouseDown
+        if(isOver && Mouse.current.leftButton.wasPressedThisFrame) // OnMouseDown
         {
             if (dragManager == null || heldPrefab == null) return;
 
