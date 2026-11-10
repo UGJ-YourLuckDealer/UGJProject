@@ -27,4 +27,13 @@ public class Receipt_Data : ScriptableObject
     }
 
     public Special special;
+
+    public enum Clasp
+    {
+        Null,
+        A,
+        B
+    }
+
+    public Clasp clasp;
 }

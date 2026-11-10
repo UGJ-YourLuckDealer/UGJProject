@@ -6,7 +6,8 @@ public class ObjectDragManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Collider2D initialplacementArea;
-    [SerializeField] private Collider2D currentPlacementArea;
+    [SerializeField] private Collider2D bodyPlacementArea;
+    [SerializeField] private Collider2D headPlacementArea;
 
     private GameObject draggingObject;
     private bool isDragging;
@@ -21,7 +22,8 @@ public class ObjectDragManager : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        currentPlacementArea = initialplacementArea;
+        bodyPlacementArea = initialplacementArea;
+        headPlacementArea = initialplacementArea;
     }
 
     private void Update()
@@ -57,6 +59,8 @@ public class ObjectDragManager : MonoBehaviour
 
     void EndDrag()
     {
+        Customer_Data data = new Customer_Data();
+
         Check_Board check = FindAnyObjectByType<Check_Board>();
         mousePosition = GetMouseWorldPosition();
 
@@ -64,15 +68,22 @@ public class ObjectDragManager : MonoBehaviour
 
         if (!mainObjectPlaced)
             canPlace = initialplacementArea != null && initialplacementArea.OverlapPoint(mousePosition);
+        else if(draggingObject.layer == LayerMask.NameToLayer("Sub_Acrill"))
+            canPlace = bodyPlacementArea != null && bodyPlacementArea.OverlapPoint(mousePosition);
         else
-            canPlace = currentPlacementArea != null && currentPlacementArea.OverlapPoint(mousePosition);
-
-        if (!mainObjectPlaced && draggingObject.layer != LayerMask.NameToLayer("Main_Kiring"))
-            canPlace = false; // 메인 키링을 먼저 놓아야 함
-
+            canPlace = headPlacementArea != null && headPlacementArea.OverlapPoint(mousePosition);
 
         if (canPlace)
         {
+            if (!mainObjectPlaced && draggingObject.layer != LayerMask.NameToLayer("Main_Kiring"))
+            {
+                Debug.LogError("Main_Kiring is not exist.");
+                Destroy(draggingObject);
+                isDragging = false;
+                draggingObject = null;
+                return;
+            }
+
             if (check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Heart") > 1 ||
                 check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Normal") > 1)
             {
@@ -84,30 +95,46 @@ public class ObjectDragManager : MonoBehaviour
             {
                 if (!mainObjectPlaced && draggingObject.layer == LayerMask.NameToLayer("Main_Kiring"))
                 {
-                    Transform innerArea = draggingObject.transform.Find("InnerArea");
+                    Transform bodyArea = draggingObject.transform.Find("BodyArea");
 
-                    if (innerArea == null || !innerArea.TryGetComponent<Collider2D>(out Collider2D innerCollider))
+                    if (bodyArea == null || !bodyArea.TryGetComponent<Collider2D>(out Collider2D bodyCollider))
                     {
                         Debug.LogError("MainObject doesn't have InnerArea Collider.");
                         Destroy(draggingObject);
-                        draggingObject = null;
                         isDragging = false;
+                        draggingObject = null;
+                        return;
+                    }
+                    
+
+                    Transform headArea = draggingObject.transform.Find("HeadArea");
+
+                    if (headArea == null || !headArea.TryGetComponent<Collider2D>(out Collider2D headCollider))
+                    {
+                        Debug.LogError("MainObject doesn't have InnerArea Collider.");
+                        Destroy(draggingObject);
+                        isDragging = false;
+                        draggingObject = null;
                         return;
                     }
 
                     mainObjectPlaced = true;
-                    currentPlacementArea = innerCollider;
+                    bodyPlacementArea = bodyCollider;
+                    headPlacementArea = headCollider;
                 }
 
-                if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1)
+                if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1 || check.GetCount(LayerMask.NameToLayer("Clasp"), "B") > 1)
                 {
                     Debug.LogError("Clasp is not Exist over 1");
                     Destroy(draggingObject);
                     draggingObject = null;
                     isDragging = false;
-                    return; // 파괴된 잠금장치는 재료비를 빼지 않음
+                    return;
+
                 }
 
+                
+                
 
                 // 재료를 내려놓으면 재료비 차감 (기획: 모든 재료 $1) - 자본 시스템 연결
                 CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
@@ -122,7 +149,9 @@ public class ObjectDragManager : MonoBehaviour
                     Debug.LogWarning("[재료비 차감] 씬에 CapitalSystem이 없습니다. GameSystems 프리팹을 배치해 주세요.");
                 }
             }
+            data.Decrease_Account(draggingObject);
             draggingObject = null;
+            
         }
         else
         {

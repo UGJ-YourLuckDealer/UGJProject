@@ -8,14 +8,20 @@ public class ObjectInfoTooltip : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text typeText;
     [SerializeField] private TMP_Text priceText;
+    [SerializeField] private TMP_Text accountText;
+
+
 
     [Header("Settings")]
     [SerializeField] private float offset = 20f;
 
     private Canvas canvas;
 
+    Customer_Data data;
+
     private void Awake()
     {
+        data = new Customer_Data();
         canvas = GetComponent<Canvas>();
 
         tooltipPanel.gameObject.SetActive(false);
@@ -34,9 +40,14 @@ public class ObjectInfoTooltip : MonoBehaviour
 
     public void Show(GameObject target)
     {
+        int account = data.Get_Account(target);
+        
+
+
         nameText.text = "Name: " + target.tag;
         typeText.text = "Category: " + LayerMask.LayerToName(target.layer);
         priceText.text = "Sell Price: 1$";
+        accountText.text = "Account: "+ account;
 
         tooltipPanel.gameObject.SetActive(true);
 

@@ -14,12 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   dialogueLines:
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: 
     dialogueText: fffffffffffffffffffff
-    button_B_Text: Next
-    isRequest: 1
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: 
     dialogueText: gggggggggggggggggggg
-    button_B_Text: Reject
-    isRequest: 0
     isEnd: 1
+  receiptData: {fileID: 11400000, guid: 4c07b54cf1fbe5c4bb6a59db6e267974, type: 2}
