@@ -17,17 +17,6 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
         originalScale = rectTransform.localScale;
     }
 
-    // 버튼이 꺼질 때(창 닫기·씬 전환) 커진 크기가 남지 않도록 원래 크기로 되돌린다
-    private void OnDisable()
-    {
-        if (scaleCoroutine != null)
-        {
-            StopCoroutine(scaleCoroutine);
-            scaleCoroutine = null;
-        }
-        if (rectTransform != null) rectTransform.localScale = originalScale;
-    }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         ChangeScale(originalScale * hoverScale);
@@ -40,8 +29,6 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     private void ChangeScale(Vector3 targetScale)
     {
-        if (!isActiveAndEnabled) return;
-
         if(scaleCoroutine!=null)
         {
             StopCoroutine(scaleCoroutine);
@@ -54,8 +41,7 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         while(Vector3.Distance(rectTransform.localScale, targetScale) > 0.001f)
         {
-            // 설정 창 일시정지(timeScale = 0) 중에도 동작하도록 unscaledDeltaTime 사용
-            rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
+            rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, targetScale, Time.deltaTime * scaleSpeed);
 
             yield return null;
         }

@@ -40,13 +40,6 @@ public class ObjectDragManager : MonoBehaviour
         if (isDragging || prefab == null)
             return;
 
-
-        //if(!mainObjectPlaced && !isMainObject)
-        //{
-        //    Debug.LogError("Main is not exist.");
-        //    return;
-        //}
-
         Vector3 mousePosition = GetMouseWorldPosition();
 
         draggingObject = Instantiate(prefab, mousePosition, Quaternion.identity);
@@ -86,7 +79,7 @@ public class ObjectDragManager : MonoBehaviour
             }
             else
             {
-                if (!mainObjectPlaced)
+                if (!mainObjectPlaced && draggingObject.layer == LayerMask.NameToLayer("Main_Kiring"))
                 {
                     Transform innerArea = draggingObject.transform.Find("InnerArea");
 
@@ -100,6 +93,14 @@ public class ObjectDragManager : MonoBehaviour
                     mainObjectPlaced = true;
                     currentPlacementArea = innerCollider;
                 }
+
+                if (check.GetCount(LayerMask.NameToLayer("Clasp"), "A") > 1)
+                {
+                    Debug.LogError("Clasp is not Exist over 1");
+                    Destroy(draggingObject);
+                    
+                }
+
 
                 // 재료를 내려놓으면 재료비 차감 (기획: 모든 재료 $1) - 자본 시스템 연결
                 CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();

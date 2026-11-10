@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
-/// v0.0.1 씬 전환: Title → Counter(손님 대화) → Making(키링 제작) → Counter(다음 손님) … → Result.
+/// 씬 전환(Fade Out → 로드 → Fade In, ScreenFader): Title → Counter(손님 대화) → Making(키링 제작) → Counter(다음 손님) … → Result.
 /// 씬 버튼은 SceneFlowLink를 통해 이 클래스를 호출한다.
 /// </summary>
 public static class SceneFlow
@@ -35,40 +34,54 @@ public static class SceneFlow
     /// <summary>Title의 Start: 자본·흐름을 초기화하고 첫 손님부터 시작.</summary>
     public static void StartNewGame()
     {
+        if (ScreenFader.IsBusy) return; // 전환 중 중복 입력 무시
         PersistentSystems.ResetSession();
         NextCustomerIndex = 0;
         LastResult = null;
         customerCount = int.MaxValue;
-        SceneManager.LoadScene(CounterScene);
+        ScreenFader.LoadScene(CounterScene);
     }
 
     /// <summary>Counter에서 주문 수락 → Making. 현재 손님 다음 번호를 기억한다.</summary>
     public static void GoToMaking(DialogueManager dialogue)
     {
+        if (ScreenFader.IsBusy) return;
         if (dialogue != null)
         {
             NextCustomerIndex = dialogue.customer + 1;
             if (dialogue.dialogueData != null) customerCount = dialogue.dialogueData.Length;
         }
-        SceneManager.LoadScene(MakingScene);
+        ScreenFader.LoadScene(MakingScene);
+    }
+
+    /// <summary>
+    /// Counter를 떠날 때(SceneFlowLink.OnDestroy) 호출. SceneFlow를 거치지 않은 전환(팀원 코드의 직접 로드)도
+    /// 다음 손님 번호가 이어지도록 기록한다.
+    /// </summary>
+    public static void NoteCounterLeft(int currentCustomer, int count)
+    {
+        NextCustomerIndex = currentCustomer + 1;
+        if (count > 0) customerCount = count;
     }
 
     /// <summary>Making에서 제출 → 손님 처리 완료. 손님이 남았으면 Counter, 아니면 Result.</summary>
     public static void ReturnFromMaking()
     {
+        if (ScreenFader.IsBusy) return; // 손님 처리 완료가 두 번 세지지 않게
         GameEvents.RaiseCustomerFinished(null); // GameFlowManager가 처리 수를 세고, 마지막이면 GameEnded를 보낸다
 
         if (LastResult == null && NextCustomerIndex >= customerCount)
             LastResult = BuildResultNow(); // 대사 데이터가 손님 수보다 적어 먼저 끝난 경우
 
-        SceneManager.LoadScene(LastResult != null ? ResultScene : CounterScene);
+        ScreenFader.LoadScene(LastResult != null ? ResultScene : CounterScene); // Fade Out → 로드 → Fade In
     }
 
     /// <summary>Result의 타이틀 버튼.</summary>
     public static void GoToTitle()
     {
+        if (ScreenFader.IsBusy) return;
         PersistentSystems.ResetSession();
-        SceneManager.LoadScene(TitleScene);
+        ScreenFader.LoadScene(TitleScene);
     }
 
     private static GameResult BuildResultNow()
