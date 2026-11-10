@@ -837,8 +837,9 @@ GameObject:
   - component: {fileID: 393364036}
   - component: {fileID: 393364038}
   - component: {fileID: 393364037}
+  - component: {fileID: 393364039}
   m_Layer: 5
-  m_Name: Image
+  m_Name: MakingBook_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -902,6 +903,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 393364035}
   m_CullTransparentMesh: 1
+--- !u!114 &393364039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393364035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d58c36c6a73a9e489e85cd4bcae57bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MakingBookHover
+  moveAmount: 550
+  moveSpeed: 5
 --- !u!224 &428010082 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 838674670411020127, guid: 150b0fb1a7093b447ae3e4a3caa22b93, type: 3}
@@ -1935,7 +1950,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Recipe
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

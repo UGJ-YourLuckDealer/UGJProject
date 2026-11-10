@@ -14,6 +14,8 @@ public class Result : MonoBehaviour
     int heart;
     int normal;
 
+    int a;
+
     int main = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,6 +43,8 @@ public class Result : MonoBehaviour
         note = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Note");
         rainbow = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Rainbow");
         number = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Number");
+
+        a = check.GetCount(LayerMask.NameToLayer("Clasp"), "A");
 
         if (clover == receipt_data.clover)
             correct = clover;
@@ -78,13 +82,29 @@ public class Result : MonoBehaviour
                 break;
             }
 
-        
+        switch (receipt_data.clasp)
+        {
+            case Receipt_Data.Clasp.A:
+                if (a == 1)
+                    correct += 1;
+                else
+                    incorrect += 1;
+                break;
+            //case Receipt_Data.Scrap.A:
+            //    if (heart == 1)
+            //        correct += 1;
+            //    else
+            //        incorrect += 1;
+            //    break;
+        }
+
+
 
         float sum = (float)(correct - incorrect) /
-            (float)(receipt_data.clover + receipt_data.note + receipt_data.rainbow + receipt_data.number + 1);
+            (float)(receipt_data.clover + receipt_data.note + receipt_data.rainbow + receipt_data.number + 1 + 1);
 
         // 레시피 요소 총 개수 (= 분모와 같은 값)
-        int total = receipt_data.clover + receipt_data.note + receipt_data.rainbow + receipt_data.number + 1;
+        int total = receipt_data.clover + receipt_data.note + receipt_data.rainbow + receipt_data.number + 1 + 1;
 
         // 판매가 = 요소마다 $3 (기획: 모든 요소 판매가격 $3)
         float salePrice = total * 3f;

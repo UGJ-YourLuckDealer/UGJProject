@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 public class MakingBook : MonoBehaviour
@@ -25,29 +24,34 @@ public class MakingBook : MonoBehaviour
                 break;
         }
 
-        if (Customer_Data.clover != 0)
+        if (receipt_data.clover != 0)
         {
-            receipt.Add("Clover: " + Customer_Data.clover);
+            receipt.Add("Clover: " + receipt_data.clover);
         }
 
-        if (Customer_Data.note != 0)
+        if (receipt_data.note != 0)
         {
-            receipt.Add("Note: " + Customer_Data.note);
+            receipt.Add("Note: " + receipt_data.note);
         }
 
-        if (Customer_Data.number != 0)
+        if (receipt_data.number != 0)
         {
-            receipt.Add("Number: " + Customer_Data.number);
+            receipt.Add("Number: " + receipt_data.number);
         }
 
-        if (Customer_Data.rainbow != 0)
+        if (receipt_data.rainbow != 0)
         {
-            receipt.Add("Rainbow: " + Customer_Data.rainbow);
+            receipt.Add("Rainbow: " + receipt_data.rainbow);
         }
 
-        if (Customer_Data.A != 0)
+        switch (receipt_data.clasp)
         {
-            receipt.Add("Scrap: " + Customer_Data.A);
+            case Receipt_Data.Clasp.A:
+                receipt.Add("Clasp: A");
+                break;
+            //case Receipt_Data.Main_Kiring.Heart:
+            //    receipt.Add("Main Kiring: Heart");
+            //    break;
         }
 
     }
