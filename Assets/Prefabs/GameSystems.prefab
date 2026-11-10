@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 8764344088290829089}
   - component: {fileID: 5857559756935090218}
   - component: {fileID: 3743709862935503939}
+  - component: {fileID: 6120458812345678901}
+  - component: {fileID: 6120458812345678902}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -87,3 +89,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735e5f63cf920af47b8e110f5d0255ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PersistentSystems
+--- !u!114 &6120458812345678901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026818077915998541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb12694c53b98b44a4cc6242bff3f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TipFeedback
+  feedbackText: {fileID: 0}
+  tipMessage: Tip!
+  noTipMessage: No Tip
+  showSeconds: 2
+  fontSize: 96
+  textPosition: {x: 0, y: 200}
+--- !u!114 &6120458812345678902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026818077915998541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f80035f2c89480cb6a7b79bec662fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DayDisplay
+  dayFormat: Day {0}
+  labelFontSize: 56
+  labelPosition: {x: 40, y: -30}
+  bannerFontSize: 160
+  bannerDelay: 0.6
+  bannerSeconds: 1.5

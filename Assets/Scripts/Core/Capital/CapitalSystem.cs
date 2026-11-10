@@ -13,7 +13,7 @@ public class CapitalSystem : MonoBehaviour
 
     private void Awake()
     {
-        Current = startingCapital;
+        Current = DayCycle.TakeStartingCapital(startingCapital); // 다음 날이면 전날 자본을 이어받음
     }
 
     private void OnEnable()

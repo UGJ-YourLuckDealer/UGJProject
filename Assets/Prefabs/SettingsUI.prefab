@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2956515888739078615}
   - component: {fileID: 4383597971812564528}
   - component: {fileID: 3660953045157824153}
+  - component: {fileID: 3580952758620130421}
   m_Layer: 0
   m_Name: OpenButton
   m_TagString: Untagged
@@ -1115,7 +1116,6 @@ GameObject:
   - component: {fileID: 7235602191842528134}
   - component: {fileID: 6735647968015184308}
   - component: {fileID: 7336630450723587649}
-  - component: {fileID: 3580952758620130421}
   m_Layer: 0
   m_Name: SettingsUI
   m_TagString: Untagged
@@ -1235,7 +1235,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6666060406054870916}
+  m_GameObject: {fileID: 322729034541001906}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ac4d0cd7d35bd044a3f05833c4d981e, type: 3}
@@ -1703,6 +1703,7 @@ GameObject:
   - component: {fileID: 5785242252495727110}
   - component: {fileID: 7895312839574268757}
   - component: {fileID: 7031827746111977674}
+  - component: {fileID: 4711000000000000003}
   m_Layer: 0
   m_Name: QuitButton
   m_TagString: Untagged
@@ -1838,6 +1839,7 @@ GameObject:
   - component: {fileID: 9037402171346534873}
   - component: {fileID: 5443207804109464381}
   - component: {fileID: 6745464046141179499}
+  - component: {fileID: 4711000000000000002}
   m_Layer: 0
   m_Name: TitleButton
   m_TagString: Untagged
@@ -1973,6 +1975,7 @@ GameObject:
   - component: {fileID: 7113897530764785460}
   - component: {fileID: 370370559613228326}
   - component: {fileID: 3047276217517050976}
+  - component: {fileID: 4711000000000000001}
   m_Layer: 0
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -2185,3 +2188,45 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4711000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056000797279827896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac4d0cd7d35bd044a3f05833c4d981e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIHoverScale
+  hoverScale: 1.15
+  scaleSpeed: 10
+--- !u!114 &4711000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8743533415980176460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac4d0cd7d35bd044a3f05833c4d981e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIHoverScale
+  hoverScale: 1.15
+  scaleSpeed: 10
+--- !u!114 &4711000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8630169394577412321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac4d0cd7d35bd044a3f05833c4d981e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIHoverScale
+  hoverScale: 1.15
+  scaleSpeed: 10

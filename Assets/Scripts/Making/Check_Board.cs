@@ -32,6 +32,8 @@ public class Check_Board : MonoBehaviour
 
     private void AddCount(GameObject obj)
     {
+        if (obj.GetComponent<ObjectInteraction>() != null) return; // 집어 오는 원본 재료는 세지 않음
+
         int layer = obj.layer;
         string tag = obj.tag;
 
