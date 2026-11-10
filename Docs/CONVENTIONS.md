@@ -46,7 +46,7 @@
 
 - [ ] 코드 스타일 (필드·메서드 이름 규칙 등)
 - [ ] 입력 방식, UI/텍스트 방식
-- [ ] 데이터 관리 방식
+- [ ] 데이터 관리 방식 (v0.0.1 공통 데이터·연결 규칙은 [DATA_AND_EVENTS.md](DATA_AND_EVENTS.md)에 정리됨: ScriptableObject + `GameEvents`)
 
 ### 아트·기타
 

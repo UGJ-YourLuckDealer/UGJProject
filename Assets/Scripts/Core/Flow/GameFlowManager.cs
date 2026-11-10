@@ -1,0 +1,90 @@
+using TMPro;
+using UnityEngine;
+
+/// <summary>
+/// 게임 흐름·승패 (v0.0.1). GameEvents 신호를 받아 단계를 진행하고,
+/// 단계가 바뀌면 GameEvents.PhaseChanged(화면 전환 요청), 종료 시 GameEvents.GameEnded를 보낸다.
+/// 실제 화면/씬 전환은 PhaseChanged를 받는 쪽(팀원 작업)이 처리한다.
+/// </summary>
+public class GameFlowManager : MonoBehaviour
+{
+    [SerializeField, Min(1)] private int customersPerGame = 3;
+    [SerializeField] private CapitalSystem capital;
+
+    [Tooltip("임시 결과 표시 (선택). 비워 두면 Console에만 출력")]
+    [SerializeField] private TMP_Text resultText;
+
+    private GameFlow flow;
+
+    public GamePhase Phase => flow != null ? flow.Phase : GamePhase.Classroom;
+    public int CustomersFinished => flow != null ? flow.CustomersFinished : 0;
+
+    private void Awake()
+    {
+        if (capital == null) capital = FindAnyObjectByType<CapitalSystem>();
+        flow = new GameFlow(customersPerGame);
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OrderAccepted += OnOrderAccepted;
+        GameEvents.KeyringServed += OnKeyringServed;
+        GameEvents.CustomerFinished += OnCustomerFinished;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OrderAccepted -= OnOrderAccepted;
+        GameEvents.KeyringServed -= OnKeyringServed;
+        GameEvents.CustomerFinished -= OnCustomerFinished;
+    }
+
+    private void Start()
+    {
+        if (resultText != null) resultText.gameObject.SetActive(false);
+        flow.Begin();
+        GameEvents.RaisePhaseChanged(flow.Phase);
+    }
+
+    private void OnOrderAccepted(CustomerData customer)
+    {
+        if (flow.OrderAccepted()) GameEvents.RaisePhaseChanged(flow.Phase);
+    }
+
+    private void OnKeyringServed(CustomerData customer, KeyringData keyring)
+    {
+        if (flow.KeyringServed()) GameEvents.RaisePhaseChanged(flow.Phase);
+    }
+
+    private void OnCustomerFinished(CustomerData customer)
+    {
+        if (flow.IsOver) return;
+        GamePhase before = flow.Phase;
+        bool ended = flow.CustomerFinished();
+        if (flow.Phase != before) GameEvents.RaisePhaseChanged(flow.Phase);
+        if (ended) EndGame();
+    }
+
+    private void EndGame()
+    {
+        float money = capital != null ? capital.Current : 0f;
+        if (capital == null) Debug.LogWarning("[GameFlow] CapitalSystem이 없어 자본 0으로 판정합니다.");
+
+        var result = new GameResult
+        {
+            isWin = GameFlow.IsWin(money),
+            capital = money,
+            customersFinished = flow.CustomersFinished,
+        };
+
+        string message = $"{(result.isWin ? "WIN" : "LOSE")}  {money.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}";
+        Debug.Log($"[GameFlow] Game over: {message} ({result.customersFinished} customers)");
+        if (resultText != null)
+        {
+            resultText.text = message;
+            resultText.gameObject.SetActive(true);
+        }
+
+        GameEvents.RaiseGameEnded(result);
+    }
+}
