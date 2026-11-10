@@ -10,6 +10,8 @@ public class TitleScreen : MonoBehaviour
 
     private void Start()
     {
+        AudioService.Instance.PlayBgm("bgm_title");
+
         if (versionText != null)
             versionText.text = Application.version;
     }
@@ -17,5 +19,6 @@ public class TitleScreen : MonoBehaviour
     public void OnStartButtonClicked()
     {
         SceneFlow.StartNewGame();
+        AudioService.Instance.PlaySfx("sfx_ui_btn_click");
     }
 }
