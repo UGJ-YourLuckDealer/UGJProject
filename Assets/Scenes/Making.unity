@@ -1491,9 +1491,9 @@ GameObject:
   - component: {fileID: 1458924839}
   - component: {fileID: 1458924838}
   - component: {fileID: 1458924837}
-  m_Layer: 0
-  m_Name: Circle (1)
-  m_TagString: Untagged
+  m_Layer: 7
+  m_Name: Clasp
+  m_TagString: A
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1726,7 +1726,6 @@ GameObject:
   - component: {fileID: 1539927632}
   - component: {fileID: 1539927631}
   - component: {fileID: 1539927634}
-  - component: {fileID: 1539927633}
   m_Layer: 0
   m_Name: SceneFlowLink
   m_TagString: Untagged
@@ -1763,32 +1762,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1539927633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1539927630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edf2bb5cfe649a9448bb193af993ea42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IngredientCostWatcher
-  costPerIngredient: 1
-  kinds:
-  - layer: Main_Kiring
-    tag: Normal
-  - layer: Main_Kiring
-    tag: Heart
-  - layer: Sub_Acrill
-    tag: Clover
-  - layer: Sub_Acrill
-    tag: Note
-  - layer: Sub_Acrill
-    tag: Number
-  - layer: Sub_Acrill
-    tag: Rainbow
 --- !u!114 &1539927634
 MonoBehaviour:
   m_ObjectHideFlags: 0
