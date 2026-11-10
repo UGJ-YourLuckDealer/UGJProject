@@ -284,8 +284,8 @@ MonoBehaviour:
   dialogueText: {fileID: 1455241145}
   B_ButtonText: {fileID: 0}
   characterImage: {fileID: 1357105099}
-  requestButton: {fileID: 0}
   nextButton: {fileID: 493864756}
+  textPanel: {fileID: 401953803}
   currentIndex: 0
   line:
     characterImage: {fileID: 0}
@@ -308,6 +308,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &401953803 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3794435368336154680, guid: 69ec1d20856309847b3a0d8e79dee59d, type: 3}
+  m_PrefabInstance: {fileID: 1164886103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &493864756 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8938704582795871291, guid: 69ec1d20856309847b3a0d8e79dee59d, type: 3}

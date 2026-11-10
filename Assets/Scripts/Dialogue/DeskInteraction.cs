@@ -71,7 +71,7 @@ public class DeskInteraction : MonoBehaviour
         // 클릭 감지
         if (isOver && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            SceneManager.LoadScene("Making");
+            SceneFlow.GoToMaking(manager);
         }
     }
 
