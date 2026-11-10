@@ -12,6 +12,8 @@ public struct GameResult
     public bool isWin;
     public float capital;
     public int customersFinished;
+    public int day;        // 끝난 일차
+    public bool isDayEnd;  // true: 하루만 끝남 (다음 날 계속), false: 게임 종료 (승리 또는 패배)
 }
 
 /// <summary>
