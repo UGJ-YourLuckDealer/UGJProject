@@ -58,7 +58,7 @@ public class SettingsMenu : MonoBehaviour
         if (quitButton != null)
         {
             // Title 화면에 별도 Quit이 있거나, 웹(WebGL)이면 팝업의 종료 버튼 숨김
-            quitButton.gameObject.SetActive(showQuitButton && QuitButton.IsQuitSupported);
+            // quitButton.gameObject.SetActive(showQuitButton && QuitButton.IsQuitSupported);
             quitButton.onClick.AddListener(Quit);
         }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using R3;
 
 /// <summary>
 /// Title 씬 Quit(게임 종료) 버튼. PC 빌드에서만 보이고, 웹(WebGL) 빌드에서는 스스로 숨긴다.
@@ -8,17 +9,18 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class QuitButton : MonoBehaviour
 {
-    /// <summary>게임 종료를 지원하는 플랫폼인지 (웹은 브라우저 탭이라 종료 불가).</summary>
-    public static bool IsQuitSupported => Application.platform != RuntimePlatform.WebGLPlayer;
-
     private void Awake()
     {
-        if (!IsQuitSupported)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-        GetComponent<Button>().onClick.AddListener(Quit);
+#if UNITY_WEBGL
+        this.gameObject.SetActive(false);
+        return;
+#endif
+
+        this.GetComponent<Button>()
+            .OnClickAsObservable()
+            .Take(1)
+            .Subscribe(_ => this.Quit())
+            .AddTo(this);
     }
 
     public void Quit()
