@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class GameFlowManager : MonoBehaviour
 {
+    [Tooltip("하루에 받는 손님 수. 다 받으면 하루 끝 (DayCycle.TotalDays일째면 게임 종료)")]
     [SerializeField, Min(1)] private int customersPerGame = 3;
     [SerializeField] private CapitalSystem capital;
 
@@ -18,6 +19,7 @@ public class GameFlowManager : MonoBehaviour
 
     public GamePhase Phase => flow != null ? flow.Phase : GamePhase.Classroom;
     public int CustomersFinished => flow != null ? flow.CustomersFinished : 0;
+    public int CustomersPerGame => customersPerGame;
 
     private void Awake()
     {
@@ -61,6 +63,8 @@ public class GameFlowManager : MonoBehaviour
         if (flow.IsOver) return;
         GamePhase before = flow.Phase;
         bool ended = flow.CustomerFinished();
+        // 기본 게임 오버 처리 (v0.0.2): 키링 제출 후 자본이 마이너스면 남은 손님과 상관없이 게임 오버
+        if (!ended && capital != null && !GameFlow.IsWin(capital.Current)) ended = flow.ForceGameOver();
         if (flow.Phase != before) GameEvents.RaisePhaseChanged(flow.Phase);
         if (ended) EndGame();
     }
@@ -75,10 +79,14 @@ public class GameFlowManager : MonoBehaviour
             isWin = GameFlow.IsWin(money),
             capital = money,
             customersFinished = flow.CustomersFinished,
+            day = DayCycle.CurrentDay,
         };
+        // 자본 ≥ 0으로 하루를 마쳤고 마지막 날이 아니면 다음 날로 이어진다
+        result.isDayEnd = result.isWin && !DayCycle.IsLastDay;
 
-        string message = $"{(result.isWin ? "WIN" : "LOSE")}  {money.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}";
-        Debug.Log($"[GameFlow] Game over: {message} ({result.customersFinished} customers)");
+        string title = result.isDayEnd ? $"Day {result.day} Clear" : (result.isWin ? "WIN" : "LOSE");
+        string message = $"{title}  {money.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}";
+        Debug.Log($"[GameFlow] {(result.isDayEnd ? "Day end" : "Game over")}: {message} ({result.customersFinished} customers)");
         if (resultText != null)
         {
             resultText.text = message;

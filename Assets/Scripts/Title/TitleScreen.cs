@@ -16,6 +16,8 @@ public class TitleScreen : MonoBehaviour
 
     public void OnStartButtonClicked()
     {
+        if (ScreenFader.IsBusy) return;
+        DayCycle.BeginNewGame();
         SceneFlow.StartNewGame();
     }
 }

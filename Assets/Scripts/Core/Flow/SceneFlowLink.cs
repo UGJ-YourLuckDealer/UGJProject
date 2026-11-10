@@ -59,11 +59,14 @@ public class SceneFlowLink : MonoBehaviour
 
     private void HookSubmitButtons()
     {
+        // 결산 팝업이 있으면 Submit → 결산 → (팝업 버튼) → ReturnFromMaking, 없으면 바로 ReturnFromMaking
+        var settlement = FindAnyObjectByType<SettlementPopup>();
         foreach (var b in FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             for (int i = 0; i < b.onClick.GetPersistentEventCount(); i++)
                 if (b.onClick.GetPersistentMethodName(i) == "Result_Kiring")
                 {
-                    b.onClick.AddListener(ReturnFromMaking); // 팀원 판정(Result_Kiring) 다음에 실행됨
+                    if (settlement != null) b.onClick.AddListener(settlement.Show); // 팀원 판정(Result_Kiring) 다음에 실행됨
+                    else b.onClick.AddListener(ReturnFromMaking);
                     break;
                 }
     }

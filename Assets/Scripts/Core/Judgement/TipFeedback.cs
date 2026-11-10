@@ -63,6 +63,7 @@ public class TipFeedback : MonoBehaviour
     private void OnJudged(CustomerData customer, JudgementResult result)
     {
         if (feedbackText == null) return;
+        if (FindAnyObjectByType<SettlementPopup>() != null) return; // 결산 팝업이 있는 씬에서는 팝업 안에 Tip!을 찍는다
         feedbackText.text = result.HasTip ? tipMessage : noTipMessage;
         feedbackText.gameObject.SetActive(true);
         if (hideRoutine != null) StopCoroutine(hideRoutine);
