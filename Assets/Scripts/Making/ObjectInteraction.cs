@@ -46,6 +46,7 @@ public class ObjectInteraction : MonoBehaviour
 
         if(isOver && !isHovering) //Enter
         {
+
             isHovering = true;
             outlineObject.SetActive(true);
 

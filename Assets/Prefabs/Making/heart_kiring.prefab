@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 145792064177855960}
   - component: {fileID: 5329413838498818620}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: HeadArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6175609310861363540}
   - component: {fileID: 5383372958237553131}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: BodyArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -59,6 +59,8 @@ public class ObjectDragManager : MonoBehaviour
 
     void EndDrag()
     {
+        Customer_Data data = new Customer_Data();
+
         Check_Board check = FindAnyObjectByType<Check_Board>();
         mousePosition = GetMouseWorldPosition();
 
@@ -131,6 +133,8 @@ public class ObjectDragManager : MonoBehaviour
 
                 }
 
+                
+                
 
                 // 재료를 내려놓으면 재료비 차감 (기획: 모든 재료 $1) - 자본 시스템 연결
                 CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
@@ -145,7 +149,9 @@ public class ObjectDragManager : MonoBehaviour
                     Debug.LogWarning("[재료비 차감] 씬에 CapitalSystem이 없습니다. GameSystems 프리팹을 배치해 주세요.");
                 }
             }
+            data.Decrease_Account(draggingObject);
             draggingObject = null;
+            
         }
         else
         {
