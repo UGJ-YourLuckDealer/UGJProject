@@ -4,14 +4,11 @@ using UnityEngine;
 public class DialogueLine
 {
     public Sprite characterImage;
+    public string character_Name;
 
     [TextArea(2, 5)]
     public string dialogueText;
-
-    [TextArea(1, 5)]
-    public string button_B_Text;
-
-
+    
     public bool isRequest;
     public bool isEnd;
 }
