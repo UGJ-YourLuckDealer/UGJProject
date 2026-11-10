@@ -1726,6 +1726,7 @@ GameObject:
   - component: {fileID: 1539927632}
   - component: {fileID: 1539927631}
   - component: {fileID: 1539927634}
+  - component: {fileID: 1539927635}
   m_Layer: 0
   m_Name: SceneFlowLink
   m_TagString: Untagged
@@ -1762,6 +1763,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1539927635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539927630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ae5e71993746c3b6746c93335b9f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettlementPopup
+  boxSprite: {fileID: 21300000, guid: 72407682ac20985409612600558eed60, type: 3}
+  buttonSprite: {fileID: 21300000, guid: 20999fae50ba9824f976862054bd7ed4, type: 3}
+  buttonHighlightSprite: {fileID: 21300000, guid: e04f92c3c8d91cd4ba413fc5218960dd, type: 3}
+  font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
 --- !u!114 &1539927634
 MonoBehaviour:
   m_ObjectHideFlags: 0

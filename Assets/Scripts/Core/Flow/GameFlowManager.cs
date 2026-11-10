@@ -19,6 +19,7 @@ public class GameFlowManager : MonoBehaviour
 
     public GamePhase Phase => flow != null ? flow.Phase : GamePhase.Classroom;
     public int CustomersFinished => flow != null ? flow.CustomersFinished : 0;
+    public int CustomersPerGame => customersPerGame;
 
     private void Awake()
     {
