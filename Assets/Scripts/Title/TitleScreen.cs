@@ -11,7 +11,7 @@ public class TitleScreen : MonoBehaviour
     private void Start()
     {
         if (versionText != null)
-            versionText.text = Application.version;
+            versionText.text = "v" + Application.version;
     }
 
     public void OnStartButtonClicked()
