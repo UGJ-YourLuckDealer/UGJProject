@@ -61,6 +61,8 @@ public class GameFlowManager : MonoBehaviour
         if (flow.IsOver) return;
         GamePhase before = flow.Phase;
         bool ended = flow.CustomerFinished();
+        // 기본 게임 오버 처리 (v0.0.2): 키링 제출 후 자본이 마이너스면 남은 손님과 상관없이 게임 오버
+        if (!ended && capital != null && !GameFlow.IsWin(capital.Current)) ended = flow.ForceGameOver();
         if (flow.Phase != before) GameEvents.RaisePhaseChanged(flow.Phase);
         if (ended) EndGame();
     }

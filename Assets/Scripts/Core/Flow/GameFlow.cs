@@ -55,6 +55,14 @@ public class GameFlow
         return true;
     }
 
+    /// <summary>손님이 남아 있어도 바로 게임 오버 (예: 키링 제출 후 자본이 마이너스). 이미 끝났으면 false.</summary>
+    public bool ForceGameOver()
+    {
+        if (IsOver) return false;
+        Phase = GamePhase.GameOver;
+        return true;
+    }
+
     /// <summary>손님 1명 처리 완료. 마지막 손님이면 GameOver로 바꾸고 true.</summary>
     public bool CustomerFinished()
     {
