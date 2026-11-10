@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class DialogueManager : MonoBehaviour
 {
     public DialogueData[] dialogueData;
+    //Main_Data mainData;
     public int customer = 1;
 
     public TextMeshProUGUI characterName;
@@ -17,8 +18,9 @@ public class DialogueManager : MonoBehaviour
     public UnityEngine.UI.Image characterImage;
     Color color;
 
-    public GameObject requestButton;
     public GameObject nextButton;
+
+    public GameObject textPanel;
 
     [SerializeField] private int currentIndex = 0;
 
@@ -33,6 +35,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
+        //mainData = new Main_Data();
         StartDialogue();
     }
 
@@ -52,8 +55,6 @@ public class DialogueManager : MonoBehaviour
                 if(!line.isEnd)
                     nextButton.SetActive(true);
                 
-                if (line.isRequest)
-                    requestButton.SetActive(true);
             }
         }
     }
@@ -83,7 +84,8 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue()
     {
-        
+        textPanel.SetActive(true);
+
         line = dialogueData[customer].dialogueLines[currentIndex++];
 
         characterName.text = line.character_Name;
@@ -127,7 +129,8 @@ public class DialogueManager : MonoBehaviour
         characterImage.sprite = null;
         characterImage.color = color;
 
-        requestButton.SetActive(false);
+        textPanel.SetActive(false);
+
         nextButton.SetActive(false);
 
         isWaiting = true;
@@ -147,9 +150,6 @@ public class DialogueManager : MonoBehaviour
 
             yield return new WaitForSeconds(typingSpeed);
         }
-
-        if (line.isRequest)
-            requestButton.SetActive(true);
 
         if(!line.isEnd)
             nextButton.SetActive(true);
