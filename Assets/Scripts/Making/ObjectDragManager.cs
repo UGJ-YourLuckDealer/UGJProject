@@ -67,6 +67,9 @@ public class ObjectDragManager : MonoBehaviour
         else
             canPlace = currentPlacementArea != null && currentPlacementArea.OverlapPoint(mousePosition);
 
+        if (!mainObjectPlaced && draggingObject.layer != LayerMask.NameToLayer("Main_Kiring"))
+            canPlace = false; // 메인 키링을 먼저 놓아야 함
+
 
         if (canPlace)
         {
@@ -87,6 +90,8 @@ public class ObjectDragManager : MonoBehaviour
                     {
                         Debug.LogError("MainObject doesn't have InnerArea Collider.");
                         Destroy(draggingObject);
+                        draggingObject = null;
+                        isDragging = false;
                         return;
                     }
 
@@ -98,7 +103,9 @@ public class ObjectDragManager : MonoBehaviour
                 {
                     Debug.LogError("Clasp is not Exist over 1");
                     Destroy(draggingObject);
-                    
+                    draggingObject = null;
+                    isDragging = false;
+                    return; // 파괴된 잠금장치는 재료비를 빼지 않음
                 }
 
 

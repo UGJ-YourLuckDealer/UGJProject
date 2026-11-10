@@ -14,6 +14,8 @@ public class ScreenFader : MonoBehaviour
     [SerializeField] private CanvasGroup group;
     [SerializeField, Min(0f)] private float fadeOutSeconds = 0.35f;
     [SerializeField, Min(0f)] private float fadeInSeconds = 0.35f;
+    [Tooltip("완전히 어두워진 상태로 잠깐 머무는 시간 (전환이 끊겨 보이지 않게)")]
+    [SerializeField, Min(0f)] private float holdBlackSeconds = 0.1f;
 
     private static ScreenFader instance;
     private bool busy;
@@ -80,6 +82,7 @@ public class ScreenFader : MonoBehaviour
         Time.timeScale = 1f; // 일시정지 상태로 전환되지 않게
         var op = SceneManager.LoadSceneAsync(sceneName);
         while (op != null && !op.isDone) yield return null;
+        if (holdBlackSeconds > 0f) yield return new WaitForSecondsRealtime(holdBlackSeconds);
         yield return Fade(0f, fadeInSeconds);
         busy = false;
     }
@@ -90,7 +93,8 @@ public class ScreenFader : MonoBehaviour
         float start = group.alpha;
         for (float t = 0f; t < seconds; t += Time.unscaledDeltaTime)
         {
-            SetAlpha(Mathf.Lerp(start, target, t / seconds));
+            // SmoothStep: 천천히 시작해 천천히 끝나 자연스럽게 어두워지고 밝아진다
+            SetAlpha(Mathf.Lerp(start, target, Mathf.SmoothStep(0f, 1f, t / seconds)));
             yield return null;
         }
         SetAlpha(target);

@@ -14,42 +14,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   dialogueLines:
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: 'Ooooooh! Heeeey! '
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: I miss you!
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: Where have you been?
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: Dad disappeared? I'm sorry!
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: So, to turn your misfortune into good fortune, since today is the
       4th...
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: Make a keyring with number 4 as the Lucky Number!
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: Why would I pay money to buy my own luck?
     button_B_Text: Next
     isRequest: 0
     isEnd: 0
   - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    character_Name: Candy Oh
     dialogueText: But the keyring is so pretty!
     button_B_Text: Next
     isRequest: 0

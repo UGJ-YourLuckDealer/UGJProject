@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Result : MonoBehaviour
 {
-    [SerializeField] Receipt_Data receipt_data;
+    public Receipt_Data receipt_data;
     Check_Board check;
 
     int clover;
@@ -40,25 +40,17 @@ public class Result : MonoBehaviour
         rainbow = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Rainbow");
         number = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Number");
 
-        if (clover == receipt_data.clover)
-            correct = clover;
-        else
-            incorrect = Mathf.Abs(clover - receipt_data.clover);
+        correct += Mathf.Min(clover, receipt_data.clover);
+        incorrect += Mathf.Max(0, clover - receipt_data.clover);
 
-        if (note == receipt_data.note)
-            correct += note;
-        else
-            incorrect += Mathf.Abs(note - receipt_data.note);
+        correct += Mathf.Min(note, receipt_data.note);
+        incorrect += Mathf.Max(0, note - receipt_data.note);
 
-        if (rainbow == receipt_data.rainbow)
-            correct += rainbow;
-        else
-            incorrect += Mathf.Abs(rainbow - receipt_data.rainbow);
+        correct += Mathf.Min(rainbow, receipt_data.rainbow);
+        incorrect += Mathf.Max(0, rainbow - receipt_data.rainbow);
 
-        if (number == receipt_data.number)
-            correct += number;
-        else
-            incorrect += Mathf.Abs(number - receipt_data.number);
+        correct += Mathf.Min(number, receipt_data.number);
+        incorrect += Mathf.Max(0, number - receipt_data.number);
 
         switch (receipt_data.main_kiring)
             {
@@ -89,20 +81,24 @@ public class Result : MonoBehaviour
 
         float earned;
         string grade;
+        JudgementResult judgement = new JudgementResult();
         if (sum >= 1f)                    // 100%: 판매가 + 판매가의 10% 팁
         {
             earned = salePrice * 1.1f;
             grade = "Perfect (Tip)";
+            judgement.grade = JudgementGrade.Perfect;
         }
         else if (sum >= 0.8f - 0.0001f)   // 80% 이상: 판매가만
         {
             earned = salePrice;
             grade = "Pass";
+            judgement.grade = JudgementGrade.Pass;
         }
         else                              // 80% 미만: 환불 (수익 없음)
         {
             earned = 0f;
             grade = "Refund";
+            judgement.grade = JudgementGrade.Refund;
         }
 
         CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
@@ -116,6 +112,13 @@ public class Result : MonoBehaviour
         {
             Debug.LogWarning("[판정 수익] 씬에 CapitalSystem이 없습니다. GameSystems 프리팹을 배치해 주세요.");
         }
+
+        // 팁 유무 표시용 판정 결과 알림 (수익은 위에서 이미 더했으므로 금액은 넣지 않음)
+        judgement.matched = correct;
+        judgement.mismatched = incorrect;
+        judgement.total = total;
+        judgement.ratio = sum;
+        GameEvents.RaiseKeyringJudged(null, judgement);
 
         Debug.Log("Result: " + sum);
         Debug.Log(check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Clover"));

@@ -277,7 +277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7336630450723587649, guid: 150b0fb1a7093b447ae3e4a3caa22b93, type: 3}
       propertyPath: showQuitButton
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7336630450723587649, guid: 150b0fb1a7093b447ae3e4a3caa22b93, type: 3}
       propertyPath: showTitleButton
@@ -1176,8 +1176,8 @@ RectTransform:
   - {fileID: 690501270}
   - {fileID: 1050301077}
   - {fileID: 531614053}
-  - {fileID: 695811913}
   - {fileID: 341335058}
+  - {fileID: 695811913}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
