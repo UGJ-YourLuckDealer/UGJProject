@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "com.cysharp.r3": "https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity",
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.doneref.unity-zed-ide": "https://github.com/Doneref-Studios/Unity-Zed-IDE.git",
+    "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
     "com.unity.2d.animation": "13.0.6",
     "com.unity.2d.aseprite": "3.0.2",
     "com.unity.2d.psdimporter": "12.0.2",
@@ -17,6 +21,7 @@
     "com.unity.timeline": "1.8.13",
     "com.unity.ugui": "2.0.0",
     "com.unity.visualscripting": "1.9.12",
+    "today.comes.saintsfield": "https://github.com/TylerTemp/SaintsField.git",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.adaptiveperformance": "1.0.0",
     "com.unity.modules.ai": "1.0.0",

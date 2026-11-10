@@ -50,7 +50,7 @@ public class ObjectInteraction : MonoBehaviour
             isHovering = true;
             outlineObject.SetActive(true);
 
-            infoTooltip.Show(gameObject);
+            if (infoTooltip != null) infoTooltip.Show(gameObject);
         }
 
         if(!isOver && isHovering) //Exit
@@ -58,7 +58,7 @@ public class ObjectInteraction : MonoBehaviour
             isHovering = false;
             outlineObject.SetActive(false);
 
-            infoTooltip.Hide();
+            if (infoTooltip != null) infoTooltip.Hide();
         }
 
         if(isOver && Mouse.current.leftButton.wasPressedThisFrame) // OnMouseDown

@@ -12,6 +12,8 @@ public struct GameResult
     public bool isWin;
     public float capital;
     public int customersFinished;
+    public int day;        // 끝난 일차
+    public bool isDayEnd;  // true: 하루만 끝남 (다음 날 계속), false: 게임 종료 (승리 또는 패배)
 }
 
 /// <summary>
@@ -52,6 +54,14 @@ public class GameFlow
     {
         if (Phase != GamePhase.Crafting) return false;
         Phase = GamePhase.Classroom;
+        return true;
+    }
+
+    /// <summary>손님이 남아 있어도 바로 게임 오버 (예: 키링 제출 후 자본이 마이너스). 이미 끝났으면 false.</summary>
+    public bool ForceGameOver()
+    {
+        if (IsOver) return false;
+        Phase = GamePhase.GameOver;
         return true;
     }
 

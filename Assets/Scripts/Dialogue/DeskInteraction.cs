@@ -38,7 +38,7 @@ public class DeskInteraction : MonoBehaviour
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
 
-        // UI ÀÌ¹ÌÁö ¿µ¿ª °¨Áö
+        // UI ì´ë¯¸ì§€ ì˜ì—­ ê°ì§€
         Camera uiCamera = null;
 
         if (image.canvas.renderMode != RenderMode.ScreenSpaceOverlay)
@@ -52,7 +52,7 @@ public class DeskInteraction : MonoBehaviour
 
         isHovering = isOver;
 
-        // ÀÌ¹ÌÁö È®´ë
+        // ì´ë¯¸ì§€ í™•ëŒ€
         Vector3 targetScale = isHovering
             ? originalScale * hoverScale
             : originalScale;
@@ -63,12 +63,12 @@ public class DeskInteraction : MonoBehaviour
             Time.deltaTime * 10f
         );
 
-        // Outline Ç¥½Ã
+        // Outline í‘œì‹œ
         //outlineObject.SetActive(isHovering);
 
         //outlineRect.localScale = targetScale * 1.1f;
 
-        // Å¬¸¯ °¨Áö
+        // í´ë¦­ ê°ì§€
         if (isOver && Mouse.current.leftButton.wasPressedThisFrame)
         {
             SceneFlow.GoToMaking(manager);
@@ -93,7 +93,7 @@ public class DeskInteraction : MonoBehaviour
         outlineRect.localRotation = imageRect.localRotation;
         outlineRect.localScale = originalScale * 1.1f;
 
-        // Image µÚ¿¡ ¹èÄ¡
+        // Image ë’¤ì— ë°°ì¹˜
         outlineRect.SetSiblingIndex(imageRect.GetSiblingIndex());
 
         Image outlineImage = outlineObject.AddComponent<Image>();
