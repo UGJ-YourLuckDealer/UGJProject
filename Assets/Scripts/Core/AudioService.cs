@@ -33,6 +33,7 @@ public class AudioService : MonoBehaviour
 
     AudioSource _bgmSource;
     ObjectPool<AudioSource> _sfxPool;
+    List<AudioSource> _activeSfxSources;
     bool _initialized;
 
     void Awake()
@@ -56,9 +57,11 @@ public class AudioService : MonoBehaviour
             }
 
             _initialized = true;
+            _activeSfxSources = new List<AudioSource>();
             _instance = this;
 
-
+            CreateBgmSource();
+            CreateSfxPool();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -70,7 +73,7 @@ public class AudioService : MonoBehaviour
         }
     }
 
-    void CreateBGMSource()
+    void CreateBgmSource()
     {
         var bgmSource = new GameObject("BGM Source");
         bgmSource.transform.SetParent(transform);
@@ -127,7 +130,21 @@ public class AudioService : MonoBehaviour
     IEnumerator ReleaseSfxSourceAfterPlay(float duration, AudioSource source)
     {
         yield return new WaitForSeconds(duration);
-        _sfxPool.Release(source);
+
+        if (_activeSfxSources.Contains(source))
+        {
+            _sfxPool.Release(source);
+            _activeSfxSources.Remove(source);
+        }
+    }
+
+    public void ClearSfx()
+    {
+        foreach (var source in _activeSfxSources)
+        {
+            _sfxPool.Release(source);
+        }
+        _activeSfxSources.Clear();
     }
 
     /// <summary>
