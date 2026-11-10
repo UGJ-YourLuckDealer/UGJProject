@@ -70,6 +70,15 @@ public class ObjectDragManager : MonoBehaviour
 
         if (canPlace)
         {
+            if(!mainObjectPlaced && draggingObject.layer != LayerMask.NameToLayer("Main_Kiring"))
+            {
+                Debug.LogError("Main_Kiring is not exist.");
+                Destroy(draggingObject);
+                isDragging = false;
+                draggingObject = null;
+                return;
+            }
+
             if (check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Heart") > 1 ||
                 check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Normal") > 1)
             {
@@ -87,6 +96,8 @@ public class ObjectDragManager : MonoBehaviour
                     {
                         Debug.LogError("MainObject doesn't have InnerArea Collider.");
                         Destroy(draggingObject);
+                        isDragging = false;
+                        draggingObject = null;
                         return;
                     }
 
@@ -98,7 +109,10 @@ public class ObjectDragManager : MonoBehaviour
                 {
                     Debug.LogError("Clasp is not Exist over 1");
                     Destroy(draggingObject);
-                    
+                    draggingObject = null;
+                    isDragging = false;
+                    return;
+
                 }
 
 
