@@ -42,7 +42,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Start");
         isWaiting = false;
 
-
+        
 
         Debug.Log(Customer_Data.isfinish);
 
@@ -201,12 +201,14 @@ public class DialogueManager : MonoBehaviour
 
     public void NextDialogue()
     {
-
+        Vector3 a = new Vector3(0f, 220f);
 
         if (line.isEnd)
         {
             Customer_Data.isfinish = false;
             isWaiting = true;
+            GuideTooltip.Instance.Show(GameObject.Find("ToolTip").transform, "");
+
             return;
         }
 
