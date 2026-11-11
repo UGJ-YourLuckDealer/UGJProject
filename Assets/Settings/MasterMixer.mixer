@@ -1,25 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!244 &-3001559894844792894
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: be998873b1288204f9881962e71320c4
-  m_EffectName: Normalize
-  m_MixLevel: 168a206408376004c9659a98a5693452
-  m_Parameters:
-  - m_ParameterName: Fade in time
-    m_GUID: 7c365d8f0d785d1488758f8457d58d2c
-  - m_ParameterName: Lowest volume
-    m_GUID: 433d23359ea0c864db5cc8292945d932
-  - m_ParameterName: Maximum amp
-    m_GUID: aafa0f1cc3ca6d248af17837275c762e
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -68,7 +48,6 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 24400002}
-  - {fileID: -3001559894844792894}
   m_UserColorIndex: 5
   m_Mute: 0
   m_Solo: 0
