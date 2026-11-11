@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,6 +17,14 @@ public class ResultScreen : MonoBehaviour
     [SerializeField] private Button titleButton;
     [SerializeField] private string dayClearFormat = "Day {0} Clear";
     [SerializeField] private string nextDayLabel = "Next Day";
+
+    [Header("하루 정산표 (기획: 잔액·수입·팁·환불·지출·합계·게임오버 여부)")]
+    [SerializeField] private Color goodColor = new Color32(0x2E, 0x9E, 0x3A, 0xFF);  // 유리한 값
+    [SerializeField] private Color badColor = new Color32(0xD9, 0x3B, 0x2E, 0xFF);   // 불리한 값
+    [SerializeField] private string surviveMessage = "You survived today!";
+    [SerializeField] private string gameOverMessage = "Game Over";
+    [Tooltip("값이 시작되는 위치 (줄 너비 기준 %)")]
+    [SerializeField] private float valueColumn = 55f;
 
     // ButtonClickDelay(실행 순서 1000)가 버튼 동작을 감싸기 전에 바꿔야 하므로 Awake에서 처리한다
     private void Awake()
@@ -52,7 +61,38 @@ public class ResultScreen : MonoBehaviour
         var r = result.Value;
         if (titleText != null)
             titleText.text = r.isDayEnd ? string.Format(dayClearFormat, r.day) : (r.isWin ? "WIN" : "LOSE");
-        if (detailText != null)
-            detailText.text = $"Money  {r.capital.ToString("0.00", CultureInfo.InvariantCulture)}\nDay  {Mathf.Max(1, r.day)} / {DayCycle.TotalDays}";
+        if (detailText != null) detailText.text = BuildSettlement(r);
     }
+
+    // 하루 정산표: 소수점 2자리, 유리한 값 초록·불리한 값 빨강
+    private string BuildSettlement(GameResult r)
+    {
+        var sb = new StringBuilder();
+        float balance = GameSession.DayStartCapital ?? (r.capital - GameSession.DayTotal); // 오늘 시작 자본
+        Row(sb, "Balance", Money(balance), balance >= 0f ? (Color?)null : badColor);
+        Row(sb, "Income", "+" + Money(GameSession.DaySales), goodColor);
+        Row(sb, "Tips", "+" + Money(GameSession.DayTips), goodColor);
+        Row(sb, "Refund", "-" + Money(GameSession.DayRefund), badColor);
+        Row(sb, "Expense", "-" + Money(GameSession.DayMaterialCost), badColor);
+        // Total = Balance + Income + Tips - Refund - Expense = 하루가 끝난 지금 자본 (기획 정산표 레퍼런스와 같은 방식)
+        Row(sb, "<b>Total</b>", "<b>" + (r.capital < 0f ? "-" : "") + Money(Mathf.Abs(r.capital)) + "</b>", r.capital >= 0f ? goodColor : badColor);
+
+        bool gameOver = !r.isWin;
+        sb.Append("\n<align=center>")
+          .Append(Colored(gameOver ? gameOverMessage : surviveMessage, gameOver ? badColor : goodColor))
+          .Append($"  (Day {Mathf.Max(1, r.day)} / {DayCycle.TotalDays})</align>");
+        return sb.ToString();
+    }
+
+    private void Row(StringBuilder sb, string label, string value, Color? color)
+    {
+        sb.Append(label)
+          .Append("<pos=").Append(valueColumn.ToString(CultureInfo.InvariantCulture)).Append("%>")
+          .Append(color.HasValue ? Colored(value, color.Value) : value)
+          .Append('\n');
+    }
+
+    private static string Colored(string text, Color color) => $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{text}</color>";
+
+    private static string Money(float v) => v.ToString("0.00", CultureInfo.InvariantCulture);
 }

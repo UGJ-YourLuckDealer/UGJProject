@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 6120458812345678902}
   - component: {fileID: 6120458812345678903}
   - component: {fileID: 6120458812345678904}
+  - component: {fileID: 6120458812345678905}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -152,3 +153,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3cca37f81e94dfd932f15decdd7a042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettlementRecorder
+--- !u!114 &6120458812345678905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026818077915998541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2ac5ed539245de88d3753d274061df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DayClock
+  faceSprite: {fileID: -8801819111103863087, guid: 5a3fbb5b21875094e9632a7d7c26d95e, type: 3}
+  fillSprite: {fileID: -8235584854142760882, guid: fd6849a6ffc4bca459a9229b01160479, type: 3}

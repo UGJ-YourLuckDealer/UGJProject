@@ -3,40 +3,46 @@ using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// 정산 팝업 (Settlement Popup 프리팹, ResourceDB 키 "popup_making_settlement").
-/// PopupService.ShowPopup으로 열리면 GameSession의 정산 값(수입·재료비·팁)을 읽어,
-/// 결산 상자가 오른쪽에서 가운데로 들어온 뒤 Income / Expense / Total을 하나씩 효과음과 함께 보여 주고
-/// 다음 손님(Counter, 하루·게임이 끝나면 Result)으로 가는 버튼을 띄운다.
-/// 모양·위치는 프리팹에서 바꾸면 되고, 아래 참조만 연결돼 있으면 된다.
+/// 하루 정산 팝업 (Settlement Popup 프리팹, ResourceDB 키 "popup_making_settlement", 기획: 정산 팝업.pdf).
+/// 하루 마지막 손님의 키링을 제출하면 자동으로 뜬다. 정산표(가계부 클립보드)가 오른쪽에서 가운데로 들어오고
+/// 잔액·수입·팁·환불·지출·합계를 하나씩 효과음과 함께 보여 준 뒤 게임오버 여부를 표시한다.
+/// 숫자는 소수점 2자리, 유리한 값은 초록·불리한 값은 빨강.
+/// 다 나온 뒤 빈 곳을 클릭하거나 마우스 우클릭하면 닫히고 바로 다음 날 손님 대기(Counter)로 간다.
+/// (게임 오버·마지막 날이면 Result 화면으로)
+/// 값: Balance = 오늘 시작 자본, Total = Balance + Income + Tips - Refund - Expense (= 지금 자본)
 /// </summary>
 public class SettlementPopupView : MonoBehaviour
 {
     [Header("References (프리팹 안)")]
     [SerializeField] private Image dim;
     [SerializeField] private RectTransform box;
-    [Tooltip("Income, Expense, Total 순서")]
-    [SerializeField] private RectTransform[] rows = new RectTransform[3];
-    [Tooltip("Income, Expense, Total 값 텍스트 (rows와 같은 순서)")]
-    [SerializeField] private TMP_Text[] values = new TMP_Text[3];
-    [SerializeField] private GameObject tipStamp;
-    [SerializeField] private Button nextButton;
-    [SerializeField] private TMP_Text nextLabel;
+    [Tooltip("Balance, Income, Tips, Refund, Expense, Total 순서")]
+    [SerializeField] private RectTransform[] rows = new RectTransform[6];
+    [Tooltip("rows와 같은 순서의 값 텍스트")]
+    [SerializeField] private TMP_Text[] values = new TMP_Text[6];
+    [SerializeField] private TMP_Text titleText;
+    [SerializeField] private TMP_Text markText;
+    [SerializeField] private TMP_Text hintText;
     [SerializeField] private AudioSource audioSource;
 
     [Header("Text·Color")]
-    [SerializeField] private string nextCustomerLabel = "Next Customer";
-    [SerializeField] private string resultLabel = "Result";
-    [SerializeField] private Color gainColor = new Color32(0x2E, 0x9E, 0x3A, 0xFF);
-    [SerializeField] private Color lossColor = new Color32(0xD9, 0x3B, 0x2E, 0xFF);
+    [SerializeField] private string titleFormat = "Day {0} Summary";
+    [SerializeField] private string surviveMessage = "You made it through today!";
+    [SerializeField] private string clearMessage = "You survived all 7 days!";
+    [SerializeField] private string gameOverMessage = "Game Over";
+    [SerializeField] private Color normalColor = new Color(0.30f, 0.20f, 0.15f, 1f);
+    [SerializeField] private Color goodColor = new Color32(0x2E, 0x9E, 0x3A, 0xFF);  // 유리한 값
+    [SerializeField] private Color badColor = new Color32(0xD9, 0x3B, 0x2E, 0xFF);   // 불리한 값
 
     [Header("Timing")]
     [SerializeField, Min(0.05f)] private float slideSeconds = 0.5f;
     [SerializeField] private float slideFromX = 1400f;
-    [Tooltip("결산 값이 하나씩 나오는 간격")]
-    [SerializeField, Min(0f)] private float lineInterval = 0.45f;
+    [Tooltip("정산 값이 하나씩 나오는 간격")]
+    [SerializeField, Min(0f)] private float lineInterval = 0.35f;
     [SerializeField, Range(0f, 1f)] private float sfxVolume = 0.6f;
 
     [Tooltip("팝업이 떠 있는 동안 꺼 둘 컴포넌트 (마우스를 직접 읽어 팝업 뒤로 클릭이 새는 팀원 스크립트)")]
@@ -49,13 +55,15 @@ public class SettlementPopupView : MonoBehaviour
     private readonly Dictionary<float, AudioClip> dings = new Dictionary<float, AudioClip>();
     private Color dimColor;
     private Vector2 boxPosition;
+    private bool canClose;
     private bool leaving;
+    private bool gameOver;
+    private bool lastDay;
 
     private void Awake()
     {
         if (dim != null) dimColor = dim.color;
         if (box != null) boxPosition = box.anchoredPosition;
-        if (nextButton != null) nextButton.onClick.AddListener(OnNextClicked);
     }
 
     private void OnEnable()
@@ -70,26 +78,30 @@ public class SettlementPopupView : MonoBehaviour
 
     private void Start()
     {
-        float income = GameSession.CustomerIncome;
-        float expense = GameSession.CustomerExpense;
-        float total = income - expense;
-        SetValue(0, "+" + Money(income), gainColor);
-        SetValue(1, "-" + Money(expense), lossColor);
-        SetValue(2, (total >= 0f ? "+" : "-") + Money(Mathf.Abs(total)), total >= 0f ? gainColor : lossColor);
-        if (nextLabel != null) nextLabel.text = WillEndAfterThis() ? resultLabel : nextCustomerLabel;
-
-        StartCoroutine(Play(GameSession.CustomerTip));
-    }
-
-    private bool WillEndAfterThis()
-    {
         var capital = FindAnyObjectByType<CapitalSystem>();
-        if (capital != null && !GameFlow.IsWin(capital.Current)) return true; // 자본 < 0 → 게임 오버
-        var flow = FindAnyObjectByType<GameFlowManager>();
-        return flow != null && flow.CustomersFinished + 1 >= flow.CustomersPerGame; // 오늘 마지막 손님
+        float now = capital != null ? capital.Current : 0f;
+        float total = GameSession.DayTotal;
+        float balance = GameSession.DayStartCapital ?? (now - total);
+        gameOver = !GameFlow.IsWin(now);
+        lastDay = DayCycle.IsLastDay;
+
+        if (titleText != null) titleText.text = string.Format(titleFormat, DayCycle.CurrentDay);
+        SetValue(0, Money(balance), balance >= 0f ? normalColor : badColor);
+        SetValue(1, "+" + Money(GameSession.DaySales), goodColor);
+        SetValue(2, "+" + Money(GameSession.DayTips), goodColor);
+        SetValue(3, "-" + Money(GameSession.DayRefund), badColor);
+        SetValue(4, "-" + Money(GameSession.DayMaterialCost), badColor);
+        SetValue(5, Money(now), now >= 0f ? goodColor : badColor);
+        if (markText != null)
+        {
+            markText.text = gameOver ? gameOverMessage : (lastDay ? clearMessage : surviveMessage);
+            markText.color = gameOver ? badColor : goodColor;
+        }
+
+        StartCoroutine(Play());
     }
 
-    private static string Money(float v) => v.ToString("0.00", CultureInfo.InvariantCulture);
+    private static string Money(float v) => (v < 0f ? "-" : "") + Mathf.Abs(v).ToString("0.00", CultureInfo.InvariantCulture);
 
     private void SetValue(int i, string text, Color color)
     {
@@ -98,13 +110,13 @@ public class SettlementPopupView : MonoBehaviour
         values[i].color = color;
     }
 
-    private IEnumerator Play(bool hasTip)
+    private IEnumerator Play()
     {
         foreach (var r in rows) if (r != null) r.gameObject.SetActive(false);
-        if (tipStamp != null) tipStamp.SetActive(false);
-        if (nextButton != null) nextButton.gameObject.SetActive(false);
+        if (markText != null) markText.gameObject.SetActive(false);
+        if (hintText != null) hintText.gameObject.SetActive(false);
 
-        // 어두운 패널 + 오른쪽에서 가운데로 들어오는 상자
+        // 어두운 패널 + 오른쪽에서 가운데로 들어오는 정산표
         Vector2 from = boxPosition + new Vector2(slideFromX, 0f);
         for (float t = 0f; t < slideSeconds; t += Time.unscaledDeltaTime)
         {
@@ -116,7 +128,7 @@ public class SettlementPopupView : MonoBehaviour
         if (dim != null) dim.color = dimColor;
         if (box != null) box.anchoredPosition = boxPosition;
 
-        // 결산 값을 하나씩 (띠링)
+        // 정산 값을 하나씩 (띠링)
         for (int i = 0; i < rows.Length; i++)
         {
             if (rows[i] == null) continue;
@@ -126,20 +138,16 @@ public class SettlementPopupView : MonoBehaviour
             yield return Punch(rows[i]);
         }
 
-        if (hasTip && tipStamp != null)
+        if (markText != null)
         {
             yield return new WaitForSecondsRealtime(lineInterval);
-            tipStamp.SetActive(true);
+            markText.gameObject.SetActive(true);
             PlayDing(rows.Length);
-            yield return Punch((RectTransform)tipStamp.transform);
+            yield return Punch(markText.rectTransform);
         }
 
-        if (nextButton != null)
-        {
-            yield return new WaitForSecondsRealtime(lineInterval);
-            nextButton.gameObject.SetActive(true);
-            yield return Punch((RectTransform)nextButton.transform);
-        }
+        if (hintText != null) hintText.gameObject.SetActive(true);
+        canClose = true;
     }
 
     private IEnumerator Punch(RectTransform target)
@@ -154,12 +162,26 @@ public class SettlementPopupView : MonoBehaviour
         target.localScale = baseScale;
     }
 
-    private void OnNextClicked()
+    // 다 나온 뒤 빈 곳 클릭(좌클릭) 또는 우클릭으로 닫기
+    private void Update()
     {
-        if (leaving) return;
+        if (!canClose || leaving) return;
+        var mouse = Mouse.current;
+        if (mouse == null) return;
+        if (mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame) Close();
+    }
+
+    private void Close()
+    {
+        if (ScreenFader.IsBusy) return;
         leaving = true;
-        nextButton.interactable = false;
-        SceneFlow.ReturnFromMaking(); // 손님 처리 완료 → Counter (하루·게임이 끝났으면 Result)
+
+        if (gameOver || lastDay)
+            SceneFlow.ReturnFromMaking(); // 게임 종료 → Result (WIN / LOSE)
+        else
+            DayCycle.GoToNextDay();       // 바로 다음 날 손님 대기(Counter)
+
+        Destroy(gameObject); // 화면 전환(Fade)보다 위에 남지 않게
     }
 
     // ---- 임시 효과음 "띠링" (값마다 조금씩 높아짐) ----
