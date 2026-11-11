@@ -118,6 +118,9 @@ public static class GameSession
     /// <summary>화면 Fade 오브젝트 (Resources/ScreenFader 프리팹에서 생성).</summary>
     public static ScreenFader Fader { get; internal set; }
 
+    /// <summary>유도 툴팁 서비스 (Resources/GuideTooltip 프리팹 또는 씬에 놓인 것).</summary>
+    public static GuideTooltip GuideTooltip { get; internal set; }
+
     // ---- 초기화 ----
 
     /// <summary>새 게임·다음 날 시작: 손님 진행만 처음부터 (일차·자본 이어받기는 유지).</summary>
@@ -156,6 +159,7 @@ public static class GameSession
         IsUIBlockingInput = false;
         Systems = null;
         Fader = null;
+        GuideTooltip = null;
     }
 
     // ResetAll(이벤트 비우기) 다음, 첫 씬 로드 전에 static 구독을 건다.
