@@ -58,6 +58,10 @@ public class DialogueManager : MonoBehaviour
                     nextButton.SetActive(true);
                 
             }
+            else
+            {
+                NextDialogue();
+            }
         }
     }
 
