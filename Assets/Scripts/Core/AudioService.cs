@@ -140,7 +140,11 @@ public class AudioService : MonoBehaviour
     public void SetMasterVolume(float volume)
     {
         _masterVolume = volume;
-        _audioMixer.SetFloat(MASTER_VOLUME_PARAM, Mathf.Log10(_masterVolume) * 20);
+
+        // 0.01f ~ 1f 범위로 제한
+        // !0이 들어가면 Log10(0)이 되어 NaN이 되므로 0.01f로 클램프
+        float audioMixerValue = Mathf.Clamp(_masterVolume, 0.01f, 1f);
+        _audioMixer.SetFloat(MASTER_VOLUME_PARAM, Mathf.Log10(audioMixerValue) * 20);
         PlayerPrefs.SetFloat(VOLUME_SAVE_KEY, _masterVolume);
     }
 

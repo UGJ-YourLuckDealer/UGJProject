@@ -30,8 +30,12 @@ public class TitleScreen : MonoBehaviour
         if (versionText != null)
             versionText.text = "v" + Application.version;
 
-        SubscribeEvents();
+        if (EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(_startButton.gameObject);
+        }
 
+        SubscribeEvents();
         WaitAndPlayBgm().Forget();
     }
 
@@ -96,7 +100,11 @@ public class TitleScreen : MonoBehaviour
         buttonEffect.SetActive(false);
         button
             .OnSelectAsObservable()
-            .Subscribe(e => ScaleButton(e.selectedObject, buttonEffect, effectOrigin))
+            .Subscribe(e =>
+            {
+                AudioService.Instance.PlaySfx("sfx_ui_select");
+                ScaleButton(e.selectedObject, buttonEffect, effectOrigin);
+            })
             .AddTo(this);
 
         button

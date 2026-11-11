@@ -28,6 +28,20 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
+    - value: sfx_ui_select
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
     _wrapTypeKey: 4
     _saintsValues:
     - valueField:
@@ -36,7 +50,20 @@ MonoBehaviour:
         uLongValue: 0
         stringValue: 
         intValues: 
-        V: {fileID: 8300000, guid: 13cff3b8d11533c4082babb76728e53d, type: 3}
+        V: {fileID: 6418180475301049370, guid: 793611d2f6bd5604d88a53cfbb2f23c7, type: 2}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 1
+    - valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 6418180475301049370, guid: 4fdd3ad931f676e459208daf0e7938be, type: 2}
         VRef:
           rid: -2
         IsVRef: 0
@@ -64,7 +91,7 @@ MonoBehaviour:
       wrapType: 4
     _wrapTypeKey: 4
     _saintsValues:
-    - value: {fileID: 8300000, guid: 7db0c87ec4fdb0e48af04349c4f14df9, type: 3}
+    - value: {fileID: 8300000, guid: 72bf482aab40a824ea15f9d7d3cfda87, type: 3}
       valueField:
         propertyType: 0
         longValue: 0
