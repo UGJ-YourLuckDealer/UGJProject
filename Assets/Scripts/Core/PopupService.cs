@@ -29,6 +29,7 @@ public class PopupService : MonoBehaviour
     }
 
     public bool IsAnyPopupOpen => TopPopup != null;
+    public bool IsPopupOpen(string key) => _activePopups.ContainsKey(key);
 
     public void ShowPopup(string key)
     {
