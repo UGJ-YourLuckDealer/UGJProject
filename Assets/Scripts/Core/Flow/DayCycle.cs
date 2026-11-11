@@ -10,32 +10,20 @@ public static class DayCycle
     /// <summary>승리까지 버텨야 하는 일수 (임시).</summary>
     public const int TotalDays = 7;
 
-    public static int CurrentDay { get; private set; } = 1;
+    // 값(현재 일차, 이어받을 자본)은 GameSession에 저장한다.
+    public static int CurrentDay => GameSession.CurrentDay;
     public static bool IsLastDay => CurrentDay >= TotalDays;
 
-    private static float? carriedCapital;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay()
-    {
-        CurrentDay = 1;
-        carriedCapital = null;
-    }
-
     /// <summary>Title에서 새 게임 시작: 1일차, 시작 자본부터.</summary>
-    public static void BeginNewGame()
-    {
-        CurrentDay = 1;
-        carriedCapital = null;
-    }
+    public static void BeginNewGame() => GameSession.ResetDays();
 
     /// <summary>Result의 Next Day 버튼: 지금 자본을 들고 다음 날 첫 손님부터 시작.</summary>
     public static void GoToNextDay()
     {
         if (ScreenFader.IsBusy) return; // 전환 중 중복 입력 무시
         var capital = Object.FindAnyObjectByType<CapitalSystem>();
-        carriedCapital = capital != null ? capital.Current : (float?)null;
-        CurrentDay++;
+        GameSession.CarriedCapital = capital != null ? capital.Current : (float?)null;
+        GameSession.CurrentDay++;
         Debug.Log($"[DayCycle] Day {CurrentDay} start");
         SceneFlow.StartNewGame(); // 손님 순서·결과 초기화 후 Counter (자본은 CapitalSystem이 이어받음)
     }
@@ -43,8 +31,8 @@ public static class DayCycle
     /// <summary>CapitalSystem 생성 시 시작 자본. 전날 자본이 있으면 그것을 한 번만 돌려준다.</summary>
     public static float TakeStartingCapital(float defaultCapital)
     {
-        float value = carriedCapital ?? defaultCapital;
-        carriedCapital = null;
+        float value = GameSession.CarriedCapital ?? defaultCapital;
+        GameSession.CarriedCapital = null;
         return value;
     }
 }

@@ -8,7 +8,12 @@ using UnityEngine;
 [DefaultExecutionOrder(-10000)]
 public class PersistentSystems : MonoBehaviour
 {
-    public static PersistentSystems Instance { get; private set; }
+    /// <summary>유지 중인 GameSystems. 값은 GameSession.Systems에 저장한다.</summary>
+    public static PersistentSystems Instance
+    {
+        get => GameSession.Systems;
+        private set => GameSession.Systems = value;
+    }
 
     private void Awake()
     {
@@ -35,7 +40,4 @@ public class PersistentSystems : MonoBehaviour
             Instance = null;
         }
     }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay() => Instance = null;
 }

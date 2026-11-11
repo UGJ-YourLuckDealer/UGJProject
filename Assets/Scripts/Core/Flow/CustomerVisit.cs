@@ -10,14 +10,13 @@ using UnityEngine;
 /// </summary>
 public static class CustomerVisit
 {
+    // 값은 GameSession에 저장한다.
+
     /// <summary>이번 Counter 화면에서 방문 시퀀스를 시작해도 되는지.</summary>
-    public static bool IsReady { get; private set; }
+    public static bool IsReady => GameSession.VisitReady;
 
     /// <summary>준비된 손님 번호 (DialogueManager.customer). 준비 전에는 -1.</summary>
-    public static int ReadyCustomer { get; private set; } = -1;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay() => Reset();
+    public static int ReadyCustomer => GameSession.ReadyCustomer;
 
     /// <summary>준비되면(또는 이미 준비됐으면 바로) callback(손님 번호)을 한 번 호출한다.</summary>
     public static void WhenReady(Action<int> callback)
@@ -35,17 +34,13 @@ public static class CustomerVisit
     }
 
     /// <summary>Counter 화면에 들어올 때 DayDisplay가 호출 (준비 상태 초기화).</summary>
-    internal static void Reset()
-    {
-        IsReady = false;
-        ReadyCustomer = -1;
-    }
+    internal static void Reset() => GameSession.ResetVisit();
 
     /// <summary>날짜 표시·Fade In이 끝났을 때 DayDisplay가 호출.</summary>
     internal static void MarkReady(int customer)
     {
-        IsReady = true;
-        ReadyCustomer = customer;
+        GameSession.VisitReady = true;
+        GameSession.ReadyCustomer = customer;
         GameEvents.RaiseCustomerVisitReady(customer);
     }
 }

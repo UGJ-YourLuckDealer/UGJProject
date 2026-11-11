@@ -27,7 +27,7 @@ public class CapitalFeedback : MonoBehaviour
     private float lastValue;
     private bool hasValue;
     private Coroutine punchRoutine;
-    private static AudioClip generatedGain, generatedLoss;
+    private AudioClip generatedGain, generatedLoss; // 임시 효과음 (오브젝트마다 처음 필요할 때 생성)
 
     private void OnEnable() => GameEvents.CapitalChanged += OnCapitalChanged;
     private void OnDisable() => GameEvents.CapitalChanged -= OnCapitalChanged;
@@ -102,8 +102,8 @@ public class CapitalFeedback : MonoBehaviour
     }
 
     // ---- 임시 효과음 (효과음 파일이 들어오기 전까지) ----
-    private static AudioClip GeneratedGain => generatedGain ??= Tones("sfx_money_gain_temp", new[] { 988f, 1319f });
-    private static AudioClip GeneratedLoss => generatedLoss ??= Tones("sfx_money_loss_temp", new[] { 523f, 392f });
+    private AudioClip GeneratedGain => generatedGain ??= Tones("sfx_money_gain_temp", new[] { 988f, 1319f });
+    private AudioClip GeneratedLoss => generatedLoss ??= Tones("sfx_money_loss_temp", new[] { 523f, 392f });
 
     private static AudioClip Tones(string name, float[] freqs)
     {
@@ -122,7 +122,4 @@ public class CapitalFeedback : MonoBehaviour
         clip.SetData(data, 0);
         return clip;
     }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay() { generatedGain = null; generatedLoss = null; }
 }

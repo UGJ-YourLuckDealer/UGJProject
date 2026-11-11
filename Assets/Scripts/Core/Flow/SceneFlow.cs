@@ -11,34 +11,20 @@ public static class SceneFlow
     public const string MakingScene = "Making";
     public const string ResultScene = "Result";
 
+    // 값은 GameSession에 저장한다 (static 값·초기화는 GameSession 한 곳에서 관리). GameEnded → LastResult 저장도 GameSession이 한다.
+
     /// <summary>Counter를 다시 불러올 때 시작할 손님 번호 (DialogueManager.customer).</summary>
-    public static int NextCustomerIndex { get; private set; }
+    public static int NextCustomerIndex => GameSession.NextCustomerIndex;
 
     /// <summary>마지막 게임 결과 (Result 씬 표시용).</summary>
-    public static GameResult? LastResult { get; private set; }
-
-    private static int customerCount = int.MaxValue;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay()
-    {
-        NextCustomerIndex = 0;
-        LastResult = null;
-        customerCount = int.MaxValue;
-    }
-
-    // GameEvents는 SubsystemRegistration에서 구독이 비워지므로 그 뒤에 구독한다.
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void Subscribe() => GameEvents.GameEnded += r => LastResult = r;
+    public static GameResult? LastResult => GameSession.LastResult;
 
     /// <summary>Title의 Start: 자본·흐름을 초기화하고 첫 손님부터 시작.</summary>
     public static void StartNewGame()
     {
         if (ScreenFader.IsBusy) return; // 전환 중 중복 입력 무시
         PersistentSystems.ResetSession();
-        NextCustomerIndex = 0;
-        LastResult = null;
-        customerCount = int.MaxValue;
+        GameSession.ResetCustomerProgress();
         ScreenFader.LoadScene(CounterScene);
     }
 
@@ -48,8 +34,8 @@ public static class SceneFlow
         if (ScreenFader.IsBusy) return;
         if (dialogue != null)
         {
-            NextCustomerIndex = dialogue.customer + 1;
-            if (dialogue.dialogueData != null) customerCount = dialogue.dialogueData.Length;
+            GameSession.NextCustomerIndex = dialogue.customer + 1;
+            if (dialogue.dialogueData != null) GameSession.CustomerCount = dialogue.dialogueData.Length;
         }
         ScreenFader.LoadScene(MakingScene);
     }
@@ -60,8 +46,8 @@ public static class SceneFlow
     /// </summary>
     public static void NoteCounterLeft(int currentCustomer, int count)
     {
-        NextCustomerIndex = currentCustomer + 1;
-        if (count > 0) customerCount = count;
+        GameSession.NextCustomerIndex = currentCustomer + 1;
+        if (count > 0) GameSession.CustomerCount = count;
     }
 
     /// <summary>Making에서 제출 → 손님 처리 완료. 손님이 남았으면 Counter, 아니면 Result.</summary>
@@ -70,8 +56,8 @@ public static class SceneFlow
         if (ScreenFader.IsBusy) return; // 손님 처리 완료가 두 번 세지지 않게
         GameEvents.RaiseCustomerFinished(null); // GameFlowManager가 처리 수를 세고, 마지막이면 GameEnded를 보낸다
 
-        if (LastResult == null && NextCustomerIndex >= customerCount)
-            LastResult = BuildResultNow(); // 대사 데이터가 손님 수보다 적어 먼저 끝난 경우
+        if (LastResult == null && NextCustomerIndex >= GameSession.CustomerCount)
+            GameSession.LastResult = BuildResultNow(); // 대사 데이터가 손님 수보다 적어 먼저 끝난 경우
 
         ScreenFader.LoadScene(LastResult != null ? ResultScene : CounterScene); // Fade Out → 로드 → Fade In
     }

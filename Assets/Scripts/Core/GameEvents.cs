@@ -62,9 +62,8 @@ public static class GameEvents
     public static void RaiseCustomerFinished(CustomerData customer) => CustomerFinished?.Invoke(customer);
     public static void RaiseKeyringJudged(CustomerData customer, JudgementResult result) => KeyringJudged?.Invoke(customer, result);
 
-    // 프로젝트가 Enter Play Mode에서 Domain Reload를 끄고 있어 static 이벤트가 Play 간에 남는다. Play 시작마다 초기화.
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay()
+    /// <summary>모든 구독을 비운다. Play 시작마다 GameSession.ResetAll이 호출 (Domain Reload가 꺼져 있어 구독이 Play 간에 남음).</summary>
+    internal static void ClearAll()
     {
         OrderAccepted = null;
         IngredientUsed = null;

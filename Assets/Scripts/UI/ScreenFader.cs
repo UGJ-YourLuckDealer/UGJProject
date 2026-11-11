@@ -17,8 +17,14 @@ public class ScreenFader : MonoBehaviour
     [Tooltip("완전히 어두워진 상태로 잠깐 머무는 시간 (전환이 끊겨 보이지 않게)")]
     [SerializeField, Min(0f)] private float holdBlackSeconds = 0.1f;
 
-    private static ScreenFader instance;
     private bool busy;
+
+    // 유지 중인 페이더는 GameSession.Fader에 저장한다 (static 값·초기화는 GameSession에서 관리).
+    private static ScreenFader instance
+    {
+        get => GameSession.Fader;
+        set => GameSession.Fader = value;
+    }
 
     public static bool IsBusy => instance != null && instance.busy;
 
@@ -38,16 +44,11 @@ public class ScreenFader : MonoBehaviour
         }
     }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetOnPlay()
-    {
-        instance = null;
-        SceneManager.sceneLoaded -= OnAnySceneLoaded;
-    }
+    /// <summary>static 이벤트 연결 해제 (GameSession.ResetAll이 Play 시작마다 호출).</summary>
+    internal static void ClearStaticHooks() => SceneManager.sceneLoaded -= OnAnySceneLoaded;
 
-    // 게임 실행 시 첫 화면을 검은 화면에서 Fade In
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void FadeInOnLaunch()
+    /// <summary>게임 실행 시 첫 화면을 검은 화면에서 Fade In (GameSession이 첫 씬 로드 후 호출).</summary>
+    internal static void FadeInOnLaunch()
     {
         var f = Instance;
         if (f == null) return;
