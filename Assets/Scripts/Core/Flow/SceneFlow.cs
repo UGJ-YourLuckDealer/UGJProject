@@ -67,6 +67,7 @@ public static class SceneFlow
     {
         if (ScreenFader.IsBusy) return;
         PersistentSystems.ResetSession();
+        GameSession.ClearDialogueLog(); // 게임을 그만두면 대화 기록도 비움
         ScreenFader.LoadScene(TitleScene);
     }
 

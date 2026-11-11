@@ -1,4 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>대화 로그 한 줄 (대화 기록 팝업용).</summary>
+public struct DialogueLogEntry
+{
+    public string speaker;   // 말한 사람 이름
+    public string text;      // 대사 전체
+    public Sprite portrait;  // 초상화 (없으면 null)
+    public int day;          // 몇 일차 대화인지
+}
 
 /// <summary>
 /// hermit 파트의 static(씬을 넘어 유지되는 값)을 한곳에서 관리한다.
@@ -32,6 +42,22 @@ public static class GameSession
     public static bool VisitReady { get; internal set; }
     public static int ReadyCustomer { get; internal set; } = -1;
 
+    // ---- 대화 로그 ----
+
+    static readonly List<DialogueLogEntry> dialogueLog = new List<DialogueLogEntry>();
+
+    /// <summary>지금까지 진행한 대화 (오래된 것부터). 씬과 상관없이 유지되어 어느 씬의 팝업에서도 읽을 수 있다.</summary>
+    public static IReadOnlyList<DialogueLogEntry> DialogueLog => dialogueLog;
+
+    /// <summary>대화 로그에 한 줄 추가 (DialogueLogRecorder가 호출).</summary>
+    public static void AddDialogueLog(string speaker, string text, Sprite portrait)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return;
+        dialogueLog.Add(new DialogueLogEntry { speaker = speaker, text = text, portrait = portrait, day = CurrentDay });
+    }
+
+    public static void ClearDialogueLog() => dialogueLog.Clear();
+
     // ---- 입력 잠금 ----
 
     /// <summary>
@@ -64,6 +90,7 @@ public static class GameSession
     {
         CurrentDay = 1;
         CarriedCapital = null;
+        ClearDialogueLog();
     }
 
     /// <summary>손님 방문 준비 상태만 초기화 (Counter에 들어올 때마다).</summary>
