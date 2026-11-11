@@ -38,9 +38,23 @@ public static class GameEvents
     /// <summary>손님을 모두 처리해 게임 종료. 승패·남은 자본.</summary>
     public static event Action<GameResult> GameEnded;
 
+    // ---- Counter 손님 방문 시퀀스 (hermit → macro) ----
+
+    /// <summary>하루 시작: Counter 첫 손님 전에 "Day N" 날짜 표시를 시작함. 인자 = 일차.</summary>
+    public static event Action<int> DayStarted;
+
+    /// <summary>
+    /// 손님 방문 시퀀스(문 소리 → 초상화 Fade → 대화)를 시작해도 됨. 인자 = 손님 번호(DialogueManager.customer).
+    /// 하루 첫 손님은 날짜 표시가 끝난 뒤, 이후 손님은 Counter 화면 Fade In이 끝난 뒤 한 번 온다.
+    /// 구독이 늦었으면 CustomerVisit.IsReady / CustomerVisit.ReadyCustomer로 확인.
+    /// </summary>
+    public static event Action<int> CustomerVisitReady;
+
     public static void RaisePhaseChanged(GamePhase phase) => PhaseChanged?.Invoke(phase);
     public static void RaiseCapitalChanged(float capital) => CapitalChanged?.Invoke(capital);
     public static void RaiseGameEnded(GameResult result) => GameEnded?.Invoke(result);
+    public static void RaiseDayStarted(int day) => DayStarted?.Invoke(day);
+    public static void RaiseCustomerVisitReady(int customer) => CustomerVisitReady?.Invoke(customer);
 
     public static void RaiseOrderAccepted(CustomerData customer) => OrderAccepted?.Invoke(customer);
     public static void RaiseIngredientUsed(IngredientData ingredient) => IngredientUsed?.Invoke(ingredient);
@@ -60,5 +74,7 @@ public static class GameEvents
         PhaseChanged = null;
         CapitalChanged = null;
         GameEnded = null;
+        DayStarted = null;
+        CustomerVisitReady = null;
     }
 }

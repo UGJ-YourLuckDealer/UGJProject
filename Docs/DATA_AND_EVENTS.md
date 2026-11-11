@@ -54,6 +54,22 @@ GameEvents.RaiseKeyringServed(currentCustomer, keyring);
 흐름: `Classroom` →(OrderAccepted)→ `Crafting` →(KeyringServed)→ `Classroom` →(CustomerFinished)→ 다음 손님 … 3명째 `CustomerFinished` → `GameOver` + `GameEnded`
 주문을 거절해 제작 중에 `CustomerFinished`가 와도 `Classroom`으로 돌아갑니다.
 
+### Counter 손님 방문 시퀀스 (hermit → macro, v0.0.3)
+
+| 신호 | 내용 |
+|---|---|
+| `DayStarted(int day)` | 하루 첫 손님 전에 "Day N" 날짜 표시를 시작할 때 한 번 |
+| `CustomerVisitReady(int customer)` | **손님 방문 시퀀스(문 소리 → 초상화 Fade → 대화)를 시작해도 됨.** 하루 첫 손님은 날짜 표시가 끝난 뒤, 이후 손님은 Counter Fade In이 끝난 뒤 한 번 옵니다. 인자 = `DialogueManager.customer` |
+
+구독 타이밍을 신경 쓰지 않으려면 `CustomerVisit.WhenReady(...)`를 쓰면 됩니다. 이미 준비됐으면 바로, 아니면 준비되는 순간 한 번 호출됩니다.
+
+```csharp
+void Start()
+{
+    CustomerVisit.WhenReady(customer => StartCoroutine(VisitSequence(customer)));
+}
+```
+
 ## 2-1. 시스템 배치
 
 - `Assets/Prefabs/GameSystems.prefab` (`CapitalSystem` + `GameFlowManager` + `JudgementSystem`)를 게임 씬에 하나 둡니다.

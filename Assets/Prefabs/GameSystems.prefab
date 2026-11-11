@@ -120,8 +120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayDisplay
   dayFormat: Day {0}
+  showDayLabel: 0
   labelFontSize: 56
   labelPosition: {x: 40, y: -30}
   bannerFontSize: 160
-  bannerDelay: 0.6
+  bannerDelay: 0.1
   bannerSeconds: 1.5
