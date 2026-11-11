@@ -136,7 +136,7 @@ public class TitleScreen : MonoBehaviour
         SubscribeButtonAnim(_settingsButton, _settingsButtonEffect);
 
 #if UNITY_WEBGL
-        _quitButton.SetActive(false);
+        _quitButton.gameObject.SetActive(false);
         _quitButtonEffect.SetActive(false);
 #else
         _quitButton
