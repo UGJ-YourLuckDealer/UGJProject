@@ -25,4 +25,11 @@ MonoBehaviour:
     character_Name: 
     dialogueText: cccccccccccccccccccccccccc
     isEnd: 1
+  dialogueBifurcations:
+  - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    bifuractionText: Best
+  - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    bifuractionText: Good
+  - characterImage: {fileID: 2358774442571399510, guid: 80e30c7be3b292b43b1541bb89c83465, type: 3}
+    bifuractionText: Bad
   receiptData: {fileID: 11400000, guid: 3e3fb4acbb22c5549bf6a97ca63b79b0, type: 2}

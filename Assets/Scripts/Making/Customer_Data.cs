@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -14,6 +15,32 @@ public class Customer_Data
     public static int note = 10;
     public static int A = 10;
     public static int B = 10;
+
+    public static bool isfinish = true;
+
+    public enum State
+    {
+        Best,
+        Good,
+        Bad
+    }
+    public State state;
+
+    public bool IsFinished()
+    {
+        return isfinish;
+    }
+
+    public void Finished()
+    {
+        isfinish = true;
+    }
+
+    public void NotFinished()
+    {
+        isfinish= false;
+    }
+
 
     public static void Set_CustomerReceipt(DialogueData dialogue)
     {
@@ -75,8 +102,6 @@ public class Customer_Data
 
         if (target.CompareTag("B"))
             B--;
-
-        Debug.Log("°¨¼ÒµÊ");
     }
 
     public void InCrease_Account(GameObject target)
@@ -104,8 +129,5 @@ public class Customer_Data
 
         if (target.CompareTag("B"))
             B++;
-
-        Debug.Log("°¨¼ÒµÊ");
     }
-
 }

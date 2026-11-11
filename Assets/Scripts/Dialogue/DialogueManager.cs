@@ -5,10 +5,12 @@ using System.Collections;
 using Unity.VisualScripting;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine.SceneManagement;
+using Unity.Android.Gradle.Manifest;
 
 public class DialogueManager : MonoBehaviour
 {
     public DialogueData[] dialogueData;
+
     //Main_Data mainData;
     public int customer = 1;
 
@@ -30,47 +32,93 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping = false;
 
     public DialogueLine line;
+    public DialogueBifurcation bifurcation;
 
     private bool isWaiting = false;
 
-    
+    private bool isEndDialogue = false;
 
     private void Start()
     {
-        //mainData = new Main_Data();
-        StartDialogue();
+        Debug.Log("Start");
+        isWaiting = false;
 
-        Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
+        Debug.Log(Customer_Data.isfinish);
+
+        if (Customer_Data.isfinish == true)
+            StartDialogue();
+        else
+            LastDialogue();
+
+       Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
     }
 
     private void Update()
     {
-        
 
-        if(Mouse.current.leftButton.wasPressedThisFrame && !isWaiting)
+        if (Mouse.current.leftButton.wasPressedThisFrame && !isWaiting)
         {
             if(isTyping == true)
             {
                 isTyping = false;
                 StopCoroutine(typingCoroutine);
 
-                dialogueText.text = line.dialogueText;
 
-                if(!line.isEnd)
+                if (Customer_Data.isfinish == true)
+                    dialogueText.text = line.dialogueText;
+                else if (Customer_Data.isfinish != true)
+                    dialogueText.text = bifurcation.bifuractionText;
+
+
+                if (!line.isEnd && Customer_Data.isfinish == true)
                     nextButton.SetActive(true);
                 
             }
             else
             {
-                NextDialogue();
+                if (Customer_Data.isfinish == true)
+                {
+                    Debug.Log("NextDialogue");
+                    NextDialogue();
+                }
+                else if (Customer_Data.isfinish != true)
+                {
+                    if (isEndDialogue == true)
+                        return;
+
+                    EndDialogue();
+                    isEndDialogue = true;
+                }
+                    
             }
         }
+    }
+
+    public void LastDialogue()
+    {
+        
+
+        TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
+
+        panelScaleUp.StartScaleUp();
+        Debug.Log(currentIndex);
+        Debug.Log(customer);
+
+        bifurcation = dialogueData[customer-1].dialogueBifurcations[currentIndex];
+
+        characterName.text = line.character_Name;
+        color.a = 255f;
+        color.b = color.g = color.r = 255f;
+        characterImage.color = color;
+        textPanel.SetActive(true);
+        DisplayLastDialogue();
     }
 
     public void ReStartDialogue()
     {
         isWaiting = false;
-        customer++;
+        isEndDialogue = false;
+        //customer++;
 
         if(customer < dialogueData.Length)
         {
@@ -90,10 +138,16 @@ public class DialogueManager : MonoBehaviour
         characterImage.sprite = line.characterImage;
     }
 
+    void DisplayLastDialogue()
+    {
+        typingCoroutine = StartCoroutine(TypeDialogue(bifurcation.bifuractionText));
+        characterImage.sprite = bifurcation.characterImage;
+    }
+
     public void StartDialogue()
     {
         textPanel.SetActive(true);
-
+        Debug.Log("StartDialogue");
         TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
 
         panelScaleUp.StartScaleUp();
@@ -112,7 +166,12 @@ public class DialogueManager : MonoBehaviour
         
 
         if (line.isEnd)
+        {
+            Customer_Data.isfinish = false;
+            isWaiting = true;
             return;
+        }
+            
 
         TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
         panelScaleUp.StartScaleUp();
@@ -134,8 +193,10 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        if (!line.isEnd)
+        if (!line.isEnd && Customer_Data.isfinish == true)
             return;
+
+        Customer_Data.isfinish = true;
 
         currentIndex = 0;
 
@@ -149,7 +210,7 @@ public class DialogueManager : MonoBehaviour
         nextButton.SetActive(false);
 
         isWaiting = true;
-
+        
         Invoke(nameof(ReStartDialogue), 2f);
     }
 

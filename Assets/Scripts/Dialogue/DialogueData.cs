@@ -14,10 +14,26 @@ public class DialogueLine
     
 }
 
+[System.Serializable]
+public class DialogueBifurcation
+{
+    public Sprite characterImage;
+
+    [TextArea(2, 5)]
+    public string bifuractionText;
+
+    
+}
+
 [CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue/Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
     public DialogueLine[] dialogueLines;
 
+    public DialogueBifurcation[] dialogueBifurcations;
+
     public Receipt_Data receiptData;
+
+
+    
 }
