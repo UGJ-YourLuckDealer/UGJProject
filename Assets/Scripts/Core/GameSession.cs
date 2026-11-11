@@ -58,6 +58,28 @@ public static class GameSession
     public static float DayExpense { get; internal set; }
     public static int DayTipCount { get; internal set; }
 
+    /// <summary>오늘 받은 주문의 판매가 합 (환불 주문 포함, 정산표 "수입").</summary>
+    public static float DaySales { get; internal set; }
+    /// <summary>오늘 받은 팁 합.</summary>
+    public static float DayTips { get; internal set; }
+    /// <summary>오늘 환불된 주문의 판매가 합 (정산표 "환불").</summary>
+    public static float DayRefund { get; internal set; }
+    /// <summary>오늘 쓴 재료비 합 (정산표 "지출").</summary>
+    public static float DayMaterialCost { get; internal set; }
+    /// <summary>오늘 하루 자본 변화 = 수입 + 팁 - 환불 - 지출.</summary>
+    public static float DayTotal => DaySales + DayTips - DayRefund - DayMaterialCost;
+    /// <summary>오늘 하루 시작 자본 (정산표 "Balance"). 첫 키링 제작에 들어갈 때 기록, 기록 전에는 null.</summary>
+    public static float? DayStartCapital { get; internal set; }
+
+    /// <summary>키링 제출 1건을 하루 정산에 더한다 (SettlementRecorder).</summary>
+    public static void AddOrderSettlement(float sale, float tip, float refund, float materialCost)
+    {
+        DaySales += sale;
+        DayTips += tip;
+        DayRefund += refund;
+        DayMaterialCost += materialCost;
+    }
+
     /// <summary>Making에 들어올 때마다 (SettlementRecorder).</summary>
     public static void ResetCustomerSettlement()
     {
@@ -71,6 +93,11 @@ public static class GameSession
         DayIncome = 0f;
         DayExpense = 0f;
         DayTipCount = 0;
+        DaySales = 0f;
+        DayTips = 0f;
+        DayRefund = 0f;
+        DayMaterialCost = 0f;
+        DayStartCapital = null;
         ResetCustomerSettlement();
     }
 
