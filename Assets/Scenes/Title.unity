@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 278968762}
   - component: {fileID: 278968766}
   m_Layer: 5
-  m_Name: World Canvas
+  m_Name: Popup Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopupService
   _resourceDB: {fileID: 11400000, guid: 5c5518b4a10c59c4ab1042eabb8f74a0, type: 2}
-  _worldCanvas: {fileID: 278968764}
+  _popupRootCanvas: {fileID: 278968764}
 --- !u!1 &531614050
 GameObject:
   m_ObjectHideFlags: 0
