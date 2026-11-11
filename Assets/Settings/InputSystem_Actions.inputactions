@@ -1016,7 +1016,7 @@
             "id": "c9305854-1c8e-4746-aad3-de4aecad4776",
             "actions": [
                 {
-                    "name": "OpenDialogueHistory",
+                    "name": "OpenRecipes",
                     "type": "Button",
                     "id": "6beabec3-54b2-42a9-a64f-516504fd32a1",
                     "expectedControlType": "",
@@ -1034,6 +1034,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "OpenDialogueHistory",
+                    "type": "Button",
+                    "id": "8353ad86-1a04-4953-ab25-18cad4c778f5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -1044,7 +1054,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "OpenDialogueHistory",
+                    "action": "OpenRecipes",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1056,6 +1066,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "OpenSettingsPopup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fab2378c-7489-4405-b863-1efa2b793667",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "OpenDialogueHistory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
