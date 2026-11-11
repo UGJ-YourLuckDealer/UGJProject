@@ -139,6 +139,20 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
+    - value: popup_making_settings
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
     - value: popup_making_settlement
       valueField:
         propertyType: 0
@@ -170,6 +184,20 @@ MonoBehaviour:
       valueList: []
       wrapType: 4
     - value: {fileID: 8721504997365823939, guid: 0c4de706916b7d648a7855dd8caaede3, type: 3}
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
+    - value: {fileID: 2152359576366304557, guid: aa34c353d0f77fa46889642880ab2b3b, type: 3}
       valueField:
         propertyType: 0
         longValue: 0
