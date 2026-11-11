@@ -1658,7 +1658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopupService
   _resourceDB: {fileID: 11400000, guid: 5c5518b4a10c59c4ab1042eabb8f74a0, type: 2}
-  _popupRootCanvas: {fileID: 987698164}
+  _worldCanvas: {fileID: 987698164}
 --- !u!1 &1043070753
 GameObject:
   m_ObjectHideFlags: 0
