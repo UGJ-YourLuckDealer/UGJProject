@@ -7,17 +7,20 @@ public class MakingInputController : MonoBehaviour
 
     [SerializeField] InputActionReference exitAction;
     [SerializeField] InputActionReference shiftAction;
+    [SerializeField] InputActionReference spaceAction;
 
     void OnEnable()
     {
         exitAction.action.performed += OnExitAction;
         shiftAction.action.performed += OnShiftAction;
+        spaceAction.action.performed += OnSpaceAction;
     }
 
     void OnDisable()
     {
         exitAction.action.performed -= OnExitAction;
         shiftAction.action.performed -= OnShiftAction;
+        spaceAction.action.performed -= OnSpaceAction;
     }
 
     void OnExitAction(InputAction.CallbackContext ctx)
@@ -35,6 +38,20 @@ public class MakingInputController : MonoBehaviour
     }
 
     void OnShiftAction(InputAction.CallbackContext ctx)
+    {
+        const string popupKey = "";
+
+        if (popupService.IsPopupOpen(popupKey))
+        {
+            popupService.ClosePopup(popupKey);
+        }
+        else
+        {
+            popupService.ShowPopup(popupKey);
+        }
+    }
+
+    void OnSpaceAction(InputAction.CallbackContext ctx)
     {
         const string popupKey = "popup_making_dialogue_history";
 

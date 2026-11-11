@@ -42,6 +42,8 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Start");
         isWaiting = false;
 
+
+
         Debug.Log(Customer_Data.isfinish);
 
         if (Customer_Data.isfinish == true)
@@ -157,7 +159,7 @@ public class DialogueManager : MonoBehaviour
     {
         
         Debug.Log("StartDialogue");
-        
+        AudioService.Instance.PlaySfx("sfx_ui_btn_click");
 
         line = dialogueData[customer].dialogueLines[currentIndex++];
 
@@ -231,6 +233,8 @@ public class DialogueManager : MonoBehaviour
     {
         if (!line.isEnd && Customer_Data.isfinish == true)
             return;
+
+        AudioService.Instance.PlaySfx("sfx_ui_btn_click");
 
         Customer_Data.isfinish = true;
 
