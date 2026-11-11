@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 정산 기록 (hermit). Making 씬에서 생긴 자본 변화(+ 수입, - 재료비)와 팁 여부를 GameSession에 모은다.
-/// 키링 제출 판정(GameEvents.KeyringJudged)마다 하루 집계(수입·팁·환불·지출)에 더한다.
+/// 키링 제출 판정(GameEvents.KeyringJudged)마다 하루 집계(수입·팁·환불·지출)에 더하고,
+/// 손님 반응 대화용으로 마지막 판정(GameSession.LastJudgement / ReactionIndex)을 남긴다.
 /// 정산 팝업(Settlement Popup 프리팹)은 이 값을 읽어 보여 주므로 씬과 상관없이 열 수 있다.
 /// GameSystems 프리팹(씬 전환 후에도 유지)에 붙는다.
 /// </summary>
@@ -79,5 +80,8 @@ public class SettlementRecorder : MonoBehaviour
         float materialCost = Mathf.Max(0f, earned - change);
 
         GameSession.AddOrderSettlement(sale, tip, refund, materialCost);
+
+        // 손님 반응 대화(다음 Counter)가 읽을 수 있게 판정 결과를 씬과 상관없이 남긴다
+        GameSession.SetLastJudgement(result, GameSession.CurrentOrderCustomer, tip);
     }
 }

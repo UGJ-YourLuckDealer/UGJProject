@@ -54,6 +54,24 @@ GameEvents.RaiseKeyringServed(currentCustomer, keyring);
 흐름: `Classroom` →(OrderAccepted)→ `Crafting` →(KeyringServed)→ `Classroom` →(CustomerFinished)→ 다음 손님 … 3명째 `CustomerFinished` → `GameOver` + `GameEnded`
 주문을 거절해 제작 중에 `CustomerFinished`가 와도 `Classroom`으로 돌아갑니다.
 
+### 키링 제출 후 손님 반응 (hermit → macro, v0.0.3)
+
+키링을 제출하면 Making에서 판정하고, 손님 반응 대화는 다음 Counter에서 나옵니다. 씬이 바뀌어도 읽을 수 있게 마지막 판정을 `GameSession`에 남깁니다.
+
+| 값 | 내용 |
+|---|---|
+| `GameSession.ReactionIndex` | **반응 대사 번호.** `DialogueData.dialogueBifurcations` 순서(Best, Good, Bad)와 같음. Perfect(팁) = 0, Pass = 1, Refund = 2, 판정 전 = -1 |
+| `GameSession.LastJudgement` | 판정 결과 전체 (`grade`, `HasTip`, `ratio` 등). 판정 전이면 null |
+| `GameSession.LastJudgedCustomer` | 판정한 손님 번호 (`DialogueManager.customer`) |
+| `GameSession.LastTipAmount` | 받은 팁 금액 (없으면 0) |
+
+```csharp
+int index = GameSession.ReactionIndex;            // 0 Best, 1 Good, 2 Bad
+if (index >= 0) bifurcation = dialogueData[customer].dialogueBifurcations[index];
+```
+
+자본 반영(판매가·팁·환불)과 하루 집계(수입·팁·환불·지출)는 판정 직후 자동으로 처리됩니다 (`Result.cs` → `SettlementRecorder`).
+
 ### Counter 손님 방문 시퀀스 (hermit → macro, v0.0.3)
 
 | 신호 | 내용 |

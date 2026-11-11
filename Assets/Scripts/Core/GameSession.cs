@@ -115,6 +115,51 @@ public static class GameSession
         DayTipCount++;
     }
 
+    // ---- 마지막 판정 (손님 반응 대화용) ----
+
+    /// <summary>
+    /// 가장 최근 키링 제출 판정 결과. Making에서 판정하고 다음 Counter에서 손님 반응 대화를 보여 줄 때 읽는다.
+    /// 판정 전이면 null. 새 게임(1일차)에서만 비우고, 다음 날로 넘어가도 유지된다 (마지막 손님 반응이 다음 날 첫 화면에 나올 수 있으므로).
+    /// </summary>
+    public static JudgementResult? LastJudgement { get; internal set; }
+    /// <summary>LastJudgement가 몇 번째 손님(DialogueManager.customer)의 판정인지.</summary>
+    public static int LastJudgedCustomer { get; internal set; } = -1;
+    /// <summary>LastJudgement에서 받은 팁 금액 (팁이 없으면 0).</summary>
+    public static float LastTipAmount { get; internal set; }
+
+    /// <summary>
+    /// 손님 반응 대사 번호 (DialogueData.dialogueBifurcations 순서 = Best, Good, Bad / Customer_Data.State와 같은 순서).
+    /// Perfect(팁) = 0 Best, Pass = 1 Good, Refund = 2 Bad. 판정 전이면 -1.
+    /// </summary>
+    public static int ReactionIndex
+    {
+        get
+        {
+            if (LastJudgement == null) return -1;
+            switch (LastJudgement.Value.grade)
+            {
+                case JudgementGrade.Perfect: return 0;
+                case JudgementGrade.Pass: return 1;
+                default: return 2;
+            }
+        }
+    }
+
+    /// <summary>판정 결과 저장 (SettlementRecorder).</summary>
+    public static void SetLastJudgement(JudgementResult result, int customer, float tipAmount)
+    {
+        LastJudgement = result;
+        LastJudgedCustomer = customer;
+        LastTipAmount = tipAmount;
+    }
+
+    public static void ClearLastJudgement()
+    {
+        LastJudgement = null;
+        LastJudgedCustomer = -1;
+        LastTipAmount = 0f;
+    }
+
     // ---- 대화 로그 ----
 
     static readonly List<DialogueLogEntry> dialogueLog = new List<DialogueLogEntry>();
@@ -186,6 +231,7 @@ public static class GameSession
         CurrentDay = 1;
         CarriedCapital = null;
         ClearDialogueLog();
+        ClearLastJudgement();
     }
 
     /// <summary>손님 방문 준비 상태만 초기화 (Counter에 들어올 때마다).</summary>
