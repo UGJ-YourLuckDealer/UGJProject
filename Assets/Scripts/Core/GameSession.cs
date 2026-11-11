@@ -8,6 +8,8 @@ public struct DialogueLogEntry
     public string text;      // 대사 전체
     public Sprite portrait;  // 초상화 (없으면 null)
     public int day;          // 몇 일차 대화인지
+    public int customer;     // 몇 번째 손님(주문)의 대화인지 (DialogueManager.customer)
+    public bool isReaction;  // 키링 제출 후 반응 대사인지
 }
 
 /// <summary>
@@ -94,13 +96,31 @@ public static class GameSession
     public static IReadOnlyList<DialogueLogEntry> DialogueLog => dialogueLog;
 
     /// <summary>대화 로그에 한 줄 추가 (DialogueLogRecorder가 호출).</summary>
-    public static void AddDialogueLog(string speaker, string text, Sprite portrait)
+    public static void AddDialogueLog(string speaker, string text, Sprite portrait, int customer, bool isReaction = false)
     {
         if (string.IsNullOrWhiteSpace(text)) return;
-        dialogueLog.Add(new DialogueLogEntry { speaker = speaker, text = text, portrait = portrait, day = CurrentDay });
+        dialogueLog.Add(new DialogueLogEntry
+        {
+            speaker = speaker, text = text, portrait = portrait,
+            day = CurrentDay, customer = customer, isReaction = isReaction,
+        });
     }
 
     public static void ClearDialogueLog() => dialogueLog.Clear();
+
+    /// <summary>지금 주문(키링 제작 중인 손님)의 번호. Counter에서 Making으로 넘어갈 때 기록된 다음 손님 번호 - 1.</summary>
+    public static int CurrentOrderCustomer => NextCustomerIndex - 1;
+
+    /// <summary>지금 주문에서 나눈 대화만 (오늘, 지금 손님, 제출 후 반응 대사 제외).</summary>
+    public static List<DialogueLogEntry> CurrentOrderDialogue()
+    {
+        var result = new List<DialogueLogEntry>();
+        int customer = CurrentOrderCustomer;
+        foreach (var entry in dialogueLog)
+            if (entry.day == CurrentDay && entry.customer == customer && !entry.isReaction)
+                result.Add(entry);
+        return result;
+    }
 
     // ---- 입력 잠금 ----
 

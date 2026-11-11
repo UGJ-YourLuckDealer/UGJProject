@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 대화 기록 팝업 내용 채우기 (hermit). Hook의 Dialogue History Popup 프리팹 루트에 붙는다.
-/// 팝업이 열릴 때 GameSession.DialogueLog(씬과 상관없이 유지되는 대화 기록)를 읽어 한 줄씩 만든다.
+/// 팝업이 열릴 때 GameSession의 대화 기록 중 지금 주문(키링을 만들고 있는 손님)에서 나눈 대화만 읽어 한 줄씩 만든다.
 /// 줄 모양은 프리팹 Content 안의 첫 번째 예시 줄(이름·아이콘·대사)을 복제해서 쓴다.
 /// </summary>
 public class DialogueHistoryView : MonoBehaviour
@@ -51,7 +51,7 @@ public class DialogueHistoryView : MonoBehaviour
             Destroy(sample);
         }
 
-        var log = GameSession.DialogueLog;
+        var log = GameSession.CurrentOrderDialogue();
         if (log.Count == 0)
             AddLine("", emptyMessage, null);
         else

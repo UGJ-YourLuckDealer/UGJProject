@@ -41,13 +41,13 @@ public class DialogueLogRecorder : MonoBehaviour
         {
             lastLine = dialogue.line;
             string speaker = !string.IsNullOrEmpty(lastLine.character_Name) ? lastLine.character_Name : NameOnScreen();
-            GameSession.AddDialogueLog(speaker, lastLine.dialogueText, lastLine.characterImage);
+            GameSession.AddDialogueLog(speaker, lastLine.dialogueText, lastLine.characterImage, dialogue.customer);
         }
 
         if (dialogue.bifurcation != null && dialogue.bifurcation != lastBifurcation)
         {
             lastBifurcation = dialogue.bifurcation;
-            GameSession.AddDialogueLog(NameOnScreen(), lastBifurcation.bifuractionText, lastBifurcation.characterImage);
+            GameSession.AddDialogueLog(NameOnScreen(), lastBifurcation.bifuractionText, lastBifurcation.characterImage, dialogue.customer, isReaction: true);
         }
     }
 
