@@ -42,6 +42,50 @@ public static class GameSession
     public static bool VisitReady { get; internal set; }
     public static int ReadyCustomer { get; internal set; } = -1;
 
+    // ---- 정산 (손님 1명 / 하루) ----
+
+    /// <summary>지금 손님 키링 제작에서 번 돈 (판매가·팁).</summary>
+    public static float CustomerIncome { get; internal set; }
+    /// <summary>지금 손님 키링 제작에 쓴 돈 (재료비).</summary>
+    public static float CustomerExpense { get; internal set; }
+    /// <summary>지금 손님에게 팁을 받았는지.</summary>
+    public static bool CustomerTip { get; internal set; }
+
+    /// <summary>오늘 하루 합계 (하루 결과창용).</summary>
+    public static float DayIncome { get; internal set; }
+    public static float DayExpense { get; internal set; }
+    public static int DayTipCount { get; internal set; }
+
+    /// <summary>Making에 들어올 때마다 (SettlementRecorder).</summary>
+    public static void ResetCustomerSettlement()
+    {
+        CustomerIncome = 0f;
+        CustomerExpense = 0f;
+        CustomerTip = false;
+    }
+
+    public static void ResetDaySettlement()
+    {
+        DayIncome = 0f;
+        DayExpense = 0f;
+        DayTipCount = 0;
+        ResetCustomerSettlement();
+    }
+
+    /// <summary>자본 변화 기록 (SettlementRecorder): + 는 수입, - 는 지출.</summary>
+    public static void AddSettlement(float delta)
+    {
+        if (delta > 0f) { CustomerIncome += delta; DayIncome += delta; }
+        else if (delta < 0f) { CustomerExpense -= delta; DayExpense -= delta; }
+    }
+
+    public static void MarkTip()
+    {
+        if (CustomerTip) return;
+        CustomerTip = true;
+        DayTipCount++;
+    }
+
     // ---- 대화 로그 ----
 
     static readonly List<DialogueLogEntry> dialogueLog = new List<DialogueLogEntry>();
@@ -83,6 +127,7 @@ public static class GameSession
         CustomerCount = int.MaxValue;
         LastResult = null;
         ResetVisit();
+        ResetDaySettlement();
     }
 
     /// <summary>1일차부터 다시 (이어받을 자본도 비움).</summary>
