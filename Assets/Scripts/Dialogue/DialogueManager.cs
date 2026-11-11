@@ -5,7 +5,6 @@ using System.Collections;
 using Unity.VisualScripting;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine.SceneManagement;
-using Unity.Android.Gradle.Manifest;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -50,7 +49,7 @@ public class DialogueManager : MonoBehaviour
         else
             LastDialogue();
 
-       Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
+        Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
     }
 
     private void Update()
@@ -58,7 +57,7 @@ public class DialogueManager : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame && !isWaiting)
         {
-            if(isTyping == true)
+            if (isTyping == true)
             {
                 isTyping = false;
                 StopCoroutine(typingCoroutine);
@@ -72,7 +71,7 @@ public class DialogueManager : MonoBehaviour
 
                 if (!line.isEnd && Customer_Data.isfinish == true)
                     nextButton.SetActive(true);
-                
+
             }
             else
             {
@@ -89,14 +88,14 @@ public class DialogueManager : MonoBehaviour
                     EndDialogue();
                     isEndDialogue = true;
                 }
-                    
+
             }
         }
     }
 
     public void LastDialogue()
     {
-        
+
 
         TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
 
@@ -104,7 +103,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log(currentIndex);
         Debug.Log(customer);
 
-        bifurcation = dialogueData[customer-1].dialogueBifurcations[currentIndex];
+        bifurcation = dialogueData[customer - 1].dialogueBifurcations[currentIndex];
 
         characterName.text = line.character_Name;
         color.a = 255f;
@@ -120,7 +119,7 @@ public class DialogueManager : MonoBehaviour
         isEndDialogue = false;
         //customer++;
 
-        if(customer < dialogueData.Length)
+        if (customer < dialogueData.Length)
         {
             line = dialogueData[customer].dialogueLines[currentIndex];
             StartDialogue();
@@ -130,7 +129,7 @@ public class DialogueManager : MonoBehaviour
             characterImage.color = color;
             return;
         }
-        
+
     }
     void DisplayDialogue()
     {
@@ -163,7 +162,7 @@ public class DialogueManager : MonoBehaviour
 
     public void NextDialogue()
     {
-        
+
 
         if (line.isEnd)
         {
@@ -171,7 +170,7 @@ public class DialogueManager : MonoBehaviour
             isWaiting = true;
             return;
         }
-            
+
 
         TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
         panelScaleUp.StartScaleUp();
@@ -210,7 +209,7 @@ public class DialogueManager : MonoBehaviour
         nextButton.SetActive(false);
 
         isWaiting = true;
-        
+
         Invoke(nameof(ReStartDialogue), 2f);
     }
 
@@ -227,7 +226,7 @@ public class DialogueManager : MonoBehaviour
             yield return new WaitForSeconds(typingSpeed);
         }
 
-        if(!line.isEnd)
+        if (!line.isEnd)
             nextButton.SetActive(true);
         isTyping = false;
         typingCoroutine = null;
