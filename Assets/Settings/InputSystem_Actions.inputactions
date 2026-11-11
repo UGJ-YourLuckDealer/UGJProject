@@ -90,7 +90,7 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
-                    "expectedControlType": "",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false,
@@ -1006,35 +1006,6 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Making",
-            "id": "c9305854-1c8e-4746-aad3-de4aecad4776",
-            "actions": [
-                {
-                    "name": "OpenDialogueHistory",
-                    "type": "Button",
-                    "id": "6beabec3-54b2-42a9-a64f-516504fd32a1",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "6239e044-8f5b-4104-9b02-0072f5db1e96",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "OpenDialogueHistory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
