@@ -1,0 +1,11 @@
+# 프로젝트 루트 지정
+root = true
+
+# 모든 파일에 공통 적용
+[*]
+indent_style = space      # 들여쓰기 종류 (space 또는 tab)
+indent_size = 4           # 들여쓰기 칸 수
+end_of_line = lf          # 줄바꿈 방식 (lf, cr, crlf)
+charset = utf-8           # 문자 인코딩
+trim_trailing_whitespace = true  # 줄 끝의 불필요한 공백 제거
+insert_final_newline = true      # 파일 마지막에 빈 줄(New line) 삽입
