@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Check_Board : MonoBehaviour
 {
+    [SerializeField] private Collider2D boardArea;
+
+    public Collider2D BoardArea => boardArea != null ? boardArea : GetComponent<Collider2D>();
+
     private HashSet<GameObject> insideObjects = new HashSet<GameObject>();
 
     private Dictionary<int, HashSet<GameObject>> countedObjects = new Dictionary<int, HashSet<GameObject>>();
@@ -38,12 +42,12 @@ public class Check_Board : MonoBehaviour
         string tag = obj.tag;
 
 
-        if(!countedObjects.ContainsKey(layer))
+        if (!countedObjects.ContainsKey(layer))
             countedObjects[layer] = new HashSet<GameObject>();
 
         countedObjects[layer].Add(obj);
 
-        Debug.Log("Add: " +LayerMask.LayerToName(layer) + ":" + GetCount(layer, tag));
+        Debug.Log("Add: " + LayerMask.LayerToName(layer) + ":" + GetCount(layer, tag));
     }
 
     private void RemoveCount(GameObject obj)
@@ -55,7 +59,7 @@ public class Check_Board : MonoBehaviour
         {
             countedObjects[layer].Remove(obj);
 
-            Debug.Log("Remove: " +LayerMask.LayerToName(layer) + ":" + GetCount(layer, tag));
+            Debug.Log("Remove: " + LayerMask.LayerToName(layer) + ":" + GetCount(layer, tag));
         }
     }
 
@@ -69,7 +73,7 @@ public class Check_Board : MonoBehaviour
 
     public void EndDragging(GameObject obj)
     {
-        if(!draggingObjects.Remove(obj))
+        if (!draggingObjects.Remove(obj))
             return;
 
         if (insideObjects.Contains(obj))
@@ -78,12 +82,12 @@ public class Check_Board : MonoBehaviour
 
     public int GetCount(int layer, string tag)
     {
-        if(!countedObjects.ContainsKey((int)layer))
+        if (!countedObjects.ContainsKey((int)layer))
             return 0;
 
         int count = 0;
 
-        foreach(GameObject obj in countedObjects[layer])
+        foreach (GameObject obj in countedObjects[layer])
         {
             if (obj != null && obj.CompareTag(tag))
                 count++;
