@@ -125,37 +125,9 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
-    - value: popup_making_dialogue_history
-      valueField:
-        propertyType: 0
-        longValue: 0
-        uLongValue: 0
-        stringValue: 
-        intValues: 
-        V: {fileID: 0}
-        VRef:
-          rid: -2
-        IsVRef: 0
-      valueArray: []
-      valueList: []
-      wrapType: 4
     _wrapTypeKey: 4
     _saintsValues:
     - value: {fileID: 2152359576366304557, guid: d59118f62a306b54891e769d2024c4ac, type: 3}
-      valueField:
-        propertyType: 0
-        longValue: 0
-        uLongValue: 0
-        stringValue: 
-        intValues: 
-        V: {fileID: 0}
-        VRef:
-          rid: -2
-        IsVRef: 0
-      valueArray: []
-      valueList: []
-      wrapType: 4
-    - value: {fileID: 8721504997365823939, guid: 0c4de706916b7d648a7855dd8caaede3, type: 3}
       valueField:
         propertyType: 0
         longValue: 0
