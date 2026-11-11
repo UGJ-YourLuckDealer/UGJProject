@@ -953,6 +953,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670842598}
   m_CullTransparentMesh: 1
+--- !u!1 &726464267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 726464269}
+  - component: {fileID: 726464268}
+  m_Layer: 0
+  m_Name: MakingInputController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &726464268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726464267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30dd81fe56dfed24188588de55b31581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MakingInputController
+  popupService: {fileID: 987698166}
+  exitAction: {fileID: -181475399972993320, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  shiftAction: {fileID: 8744622969572302525, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  spaceAction: {fileID: -4901965557094638768, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+--- !u!4 &726464269
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726464267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &790942043
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,7 +1188,6 @@ GameObject:
   - component: {fileID: 806486216}
   - component: {fileID: 806486215}
   - component: {fileID: 806486214}
-  - component: {fileID: 806486217}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1209,21 +1256,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &806486217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 806486213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30dd81fe56dfed24188588de55b31581, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MakingInputController
-  popupService: {fileID: 987698166}
-  exitAction: {fileID: -181475399972993320, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  shiftAction: {fileID: 8744622969572302525, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!1 &903529325
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,26 +2960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ae5e71993746c3b6746c93335b9f3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettlementPopup
-  boxSprite: {fileID: 21300000, guid: 72407682ac20985409612600558eed60, type: 3}
-  buttonSprite: {fileID: 21300000, guid: 20999fae50ba9824f976862054bd7ed4, type: 3}
-  buttonHighlightSprite: {fileID: 21300000, guid: e04f92c3c8d91cd4ba413fc5218960dd, type: 3}
-  font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  dimColor: {r: 0, g: 0, b: 0, a: 0.6}
-  textColor: {r: 0.3, g: 0.2, b: 0.15, a: 1}
-  gainColor: {r: 0.18039216, g: 0.61960787, b: 0.22745098, a: 1}
-  lossColor: {r: 0.8509804, g: 0.23137255, b: 0.18039216, a: 1}
-  boxSize: {x: 620, y: 620}
-  titleLabel: Settlement
-  incomeLabel: Income
-  expenseLabel: Expense
-  totalLabel: Total
-  nextCustomerLabel: Next Customer
-  resultLabel: Result
-  tipStamp: Tip!
-  tipColor: {r: 1, g: 0.54901963, b: 0.101960786, a: 1}
-  slideSeconds: 0.5
-  lineInterval: 0.45
-  sfxVolume: 0.6
+  popupKey: popup_making_settlement
 --- !u!1 &1549613857
 GameObject:
   m_ObjectHideFlags: 0
@@ -5272,11 +5285,12 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1693618450}
+  - {fileID: 1625645993}
+  - {fileID: 726464269}
   - {fileID: 1723482163}
   - {fileID: 1550639589}
   - {fileID: 987698165}
   - {fileID: 2013453148}
-  - {fileID: 1625645993}
   - {fileID: 1178005810}
   - {fileID: 913579595}
   - {fileID: 1535715358}
