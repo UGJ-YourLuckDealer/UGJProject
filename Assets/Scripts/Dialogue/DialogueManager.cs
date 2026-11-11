@@ -103,7 +103,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log(currentIndex);
         Debug.Log(customer);
 
-        bifurcation = dialogueData[customer - 1].dialogueBifurcations[currentIndex];
+        bifurcation = dialogueData[customer].dialogueBifurcations[currentIndex];
 
         characterName.text = line.character_Name;
         color.a = 255f;
@@ -115,7 +115,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ReStartDialogue()
     {
-        isWaiting = false;
+        
         isEndDialogue = false;
         //customer++;
 
@@ -133,8 +133,18 @@ public class DialogueManager : MonoBehaviour
     }
     void DisplayDialogue()
     {
+        
+
+        isWaiting = false;
+        textPanel.SetActive(true);
+
+        TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
+
+        panelScaleUp.StartScaleUp();
+
+
         typingCoroutine = StartCoroutine(TypeDialogue(line.dialogueText));
-        characterImage.sprite = line.characterImage;
+        
     }
 
     void DisplayLastDialogue()
@@ -145,19 +155,46 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue()
     {
-        textPanel.SetActive(true);
+        
         Debug.Log("StartDialogue");
-        TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
-
-        panelScaleUp.StartScaleUp();
+        
 
         line = dialogueData[customer].dialogueLines[currentIndex++];
 
         characterName.text = line.character_Name;
         color.a = 255f;
-        color.b = color.g = color.r = 255f;
+
+
+        StartCoroutine(CharacterImageColor());
         characterImage.color = color;
+        
+    }
+
+    //CharacterImageColor Black -> White
+    IEnumerator CharacterImageColor()
+    {
+        characterImage.sprite = line.characterImage;
+
+        float elapsed = 0f;
+
+        while (elapsed < 3f)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float t = Mathf.Clamp01(elapsed / 3f);
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            color.b = color.g = color.r = t;
+            characterImage.color = color;
+
+            yield return null;
+        }
+
+        characterImage.color = Color.white;
+
         DisplayDialogue();
+        
+
     }
 
     public void NextDialogue()
