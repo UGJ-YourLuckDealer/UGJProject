@@ -23,6 +23,9 @@ public class TitleScreen : MonoBehaviour
 
     PopupService _popupService;
 
+    bool _isPopupOpen;
+    GameObject _selectedBeforePopup;
+
     private void Start()
     {
         _popupService = FindAnyObjectByType<PopupService>();
@@ -41,10 +44,69 @@ public class TitleScreen : MonoBehaviour
 
     void Update()
     {
+        bool popupOpen = _popupService != null && _popupService.IsAnyPopupOpen;
+        if (popupOpen != _isPopupOpen)
+        {
+            _isPopupOpen = popupOpen;
+            OnPopupStateChanged(popupOpen);
+        }
+
+        if (_isPopupOpen)
+        {
+            // 팝업이 열려 있는 동안은 팝업 안의 UI만 선택되도록 유지
+            KeepSelectionInPopup();
+            return;
+        }
+
         if (EventSystem.current.currentSelectedGameObject == null)
         {
             EventSystem.current.SetSelectedGameObject(_startButton.gameObject);
         }
+    }
+
+    /// <summary>
+    /// 팝업이 열리면 뒤의 Title 버튼을 잠가 WASD·방향키 이동, Submit, 강조 연출이 동작하지 않게 하고
+    /// 닫히면 팝업을 열기 전에 선택돼 있던 버튼으로 돌아간다.
+    /// </summary>
+    void OnPopupStateChanged(bool popupOpen)
+    {
+        if (popupOpen)
+        {
+            _selectedBeforePopup = EventSystem.current.currentSelectedGameObject;
+            EventSystem.current.SetSelectedGameObject(null); // 버튼 Deselect → 강조 이펙트 끄기
+        }
+
+        SetTitleButtonsInteractable(!popupOpen);
+
+        if (popupOpen)
+        {
+            KeepSelectionInPopup();
+        }
+        else
+        {
+            var restore = _selectedBeforePopup != null ? _selectedBeforePopup : _startButton.gameObject;
+            EventSystem.current.SetSelectedGameObject(restore);
+            _selectedBeforePopup = null;
+        }
+    }
+
+    void SetTitleButtonsInteractable(bool interactable)
+    {
+        _startButton.interactable = interactable;
+        _settingsButton.interactable = interactable;
+        if (_quitButton != null) _quitButton.interactable = interactable;
+    }
+
+    void KeepSelectionInPopup()
+    {
+        var popup = _popupService.TopPopup;
+        if (popup == null) return;
+
+        var selected = EventSystem.current.currentSelectedGameObject;
+        if (selected != null && selected.transform.IsChildOf(popup.transform)) return;
+
+        var first = popup.GetComponentInChildren<Selectable>();
+        if (first != null) EventSystem.current.SetSelectedGameObject(first.gameObject);
     }
 
     void SubscribeEvents()
@@ -110,6 +172,14 @@ public class TitleScreen : MonoBehaviour
         button
             .OnDeselectAsObservable()
             .Subscribe(_ => buttonEffect.SetActive(false))
+            .AddTo(this);
+
+        // 마우스를 올리면 그 버튼을 선택 상태로 바꿔 강조 이펙트가 키보드 선택과 같이 따라오게 한다
+        // (마우스 강조와 키보드 선택이 서로 다른 버튼에 동시에 표시되던 문제)
+        button
+            .OnPointerEnterAsObservable()
+            .Where(_ => button.interactable && EventSystem.current.currentSelectedGameObject != button.gameObject)
+            .Subscribe(_ => EventSystem.current.SetSelectedGameObject(button.gameObject))
             .AddTo(this);
     }
 

@@ -32,6 +32,14 @@ public static class GameSession
     public static bool VisitReady { get; internal set; }
     public static int ReadyCustomer { get; internal set; } = -1;
 
+    // ---- 입력 잠금 ----
+
+    /// <summary>
+    /// 설정 팝업 등 화면을 덮는 UI가 열려 있어 게임 입력(대화 넘기기, 재료 드래그 등)을 받으면 안 되는 상태.
+    /// 마우스를 직접 읽는 코드는 이 값이 true면 입력을 무시하면 된다.
+    /// </summary>
+    public static bool IsUIBlockingInput { get; internal set; }
+
     // ---- 씬을 넘어 유지되는 오브젝트 ----
 
     /// <summary>유지 중인 GameSystems (자본·흐름·판정).</summary>
@@ -73,6 +81,7 @@ public static class GameSession
         ScreenFader.ClearStaticHooks();
         ResetCustomerProgress();
         ResetDays();
+        IsUIBlockingInput = false;
         Systems = null;
         Fader = null;
     }

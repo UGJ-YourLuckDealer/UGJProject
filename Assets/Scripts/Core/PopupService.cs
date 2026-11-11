@@ -11,6 +11,25 @@ public class PopupService : MonoBehaviour
 
     Dictionary<string, GameObject> _activePopups = new();
 
+    /// <summary>
+    /// 열려 있는 팝업 중 가장 최근 것 (없으면 null).
+    /// 팝업이 스스로 Destroy된 경우(예: SettingsPopupUI.Hide)도 닫힌 것으로 본다.
+    /// </summary>
+    public GameObject TopPopup
+    {
+        get
+        {
+            GameObject top = null;
+            foreach (var popup in _activePopups.Values)
+            {
+                if (popup != null) top = popup;
+            }
+            return top;
+        }
+    }
+
+    public bool IsAnyPopupOpen => TopPopup != null;
+
     public void ShowPopup(string key)
     {
         ClosePopup(key);
