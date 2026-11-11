@@ -33,6 +33,8 @@ public class DialogueManager : MonoBehaviour
 
     private bool isWaiting = false;
 
+    
+
     private void Start()
     {
         //mainData = new Main_Data();
@@ -92,6 +94,10 @@ public class DialogueManager : MonoBehaviour
     {
         textPanel.SetActive(true);
 
+        TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
+
+        panelScaleUp.StartScaleUp();
+
         line = dialogueData[customer].dialogueLines[currentIndex++];
 
         characterName.text = line.character_Name;
@@ -103,10 +109,13 @@ public class DialogueManager : MonoBehaviour
 
     public void NextDialogue()
     {
-
+        
 
         if (line.isEnd)
             return;
+
+        TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
+        panelScaleUp.StartScaleUp();
 
         if (currentIndex < dialogueData[customer].dialogueLines.Length)
         {
