@@ -1,20 +1,33 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+
 public class MakingBook : MonoBehaviour
 {
+    /// <summary>
+    /// Making Scene에서 바로 테스트용 Default값 변수
+    /// </summary>
     public Receipt_Data receipt_data;
-
-    List<string> receipt = new List<string>();
-
     public TMP_Text receiptPrefab;
     public Transform receiptParent;
 
+    List<string> receipt = new List<string>();
+    Receipt_Data _loadedReceipt;
+
     private void Awake()
     {
-        receipt_data = Customer_Data.receipt;
+        if (Customer_Data.receipt != null)
+        {
+            Debug.Log("Counter Scene으로 부터 Static으로 Target 레시피 데이터 받아옴");
+            _loadedReceipt = Customer_Data.receipt;
+        }
+        else
+        {
+            Debug.LogWarning("Counter Scene으로 부터 Static으로 Target 레시피 데이터 받아오지 못함, Default 레시피 데이터 사용");
+            _loadedReceipt = receipt_data;
+        }
 
-        switch(receipt_data.main_kiring)
+        switch (_loadedReceipt.main_kiring)
         {
             case Receipt_Data.Main_Kiring.Normal:
                 receipt.Add("Main Kiring: Normal");
@@ -60,13 +73,13 @@ public class MakingBook : MonoBehaviour
 
     private void Start()
     {
-        for(int i=0;i< receipt.Count;i++)
+        for (int i = 0; i < receipt.Count; i++)
         {
             TMP_Text newText = Instantiate(receiptPrefab, receiptParent);
 
             newText.text = receipt[i].ToString();
-        }    
+        }
 
-        
+
     }
 }
