@@ -36,6 +36,15 @@ public class MakingInputController : MonoBehaviour
 
     void OnShiftAction(InputAction.CallbackContext ctx)
     {
+        const string popupKey = "popup_making_dialogue_history";
 
+        if (popupService.IsPopupOpen(popupKey))
+        {
+            popupService.ClosePopup(popupKey);
+        }
+        else
+        {
+            popupService.ShowPopup(popupKey);
+        }
     }
 }
