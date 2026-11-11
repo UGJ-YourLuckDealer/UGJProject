@@ -1,8 +1,7 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class Customer_Data 
+public class Customer_Data
 {
     public static Receipt_Data receipt;
 

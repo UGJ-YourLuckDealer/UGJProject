@@ -1,4 +1,3 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -40,7 +39,7 @@ public class ObjectDeleteManager : MonoBehaviour
         if (Mouse.current == null)
             return;
 
-        if(Mouse.current.rightButton.wasPressedThisFrame)
+        if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
 
@@ -48,7 +47,7 @@ public class ObjectDeleteManager : MonoBehaviour
 
             Collider2D hit = Physics2D.OverlapPoint(worldPosition, deleteLayer);
 
-            if(hit!= null)
+            if (hit != null)
             {
                 selectedObject = hit.gameObject;
                 holdTimer = 0f;
@@ -60,20 +59,20 @@ public class ObjectDeleteManager : MonoBehaviour
     {
         if (selectedObject == null) return;
 
-        if(Mouse.current.rightButton.wasReleasedThisFrame)
+        if (Mouse.current.rightButton.wasReleasedThisFrame)
         {
             CancelDelete();
             return;
         }
 
-        if(Mouse.current.rightButton.isPressed)
+        if (Mouse.current.rightButton.isPressed)
         {
             holdTimer += Time.deltaTime;
             UpdateDeleteUI();
             Debug.Log((holdTimer / deleteDuration * 100).ToString("F1") + "%");
         }
 
-        if(holdTimer >= deleteDuration)
+        if (holdTimer >= deleteDuration)
         {
             Debug.Log("Delete Object");
             Customer_Data data = new Customer_Data();
@@ -88,7 +87,7 @@ public class ObjectDeleteManager : MonoBehaviour
 
     void UpdateDeleteUI()
     {
-        if(selectedObject == null) return;
+        if (selectedObject == null) return;
 
         deleteSlider.gameObject.SetActive(true);
 
