@@ -1081,6 +1081,35 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Counter",
+            "id": "6c06e40c-3009-4f3f-b996-cc464bcf14f0",
+            "actions": [
+                {
+                    "name": "OpenSettingsPopup",
+                    "type": "Button",
+                    "id": "93cf2e41-45b7-479f-aa0d-e6790f7019f3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "32daa55e-fc37-4eda-8315-f7223bb6ddf9",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "OpenSettingsPopup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
