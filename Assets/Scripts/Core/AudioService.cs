@@ -1,4 +1,4 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -41,7 +41,14 @@ public class AudioService : MonoBehaviour
 
     AudioSource _bgmSource;
     ObjectPool<AudioSource> _sfxPool;
-    List<AudioSource> _activeSfxSources;
+    struct ActiveSfx
+    {
+        public AudioSource source;
+        public string concurrencyGroup;
+        public int startFrame;
+    }
+
+    List<ActiveSfx> _activeSfxSources;
     bool _initialized;
 
     float _masterVolume;
@@ -72,7 +79,7 @@ public class AudioService : MonoBehaviour
             }
 
             _initialized = true;
-            _activeSfxSources = new List<AudioSource>();
+            _activeSfxSources = new List<ActiveSfx>();
             _instance = this;
 
             LoadVolumeSettings().Forget();
@@ -133,6 +140,8 @@ public class AudioService : MonoBehaviour
 
     void ReleaseSfxSource(AudioSource source)
     {
+        source.Stop();
+        source.generator = null;
         source.enabled = false;
     }
 
@@ -147,40 +156,83 @@ public class AudioService : MonoBehaviour
         PlayerPrefs.SetFloat(VOLUME_SAVE_KEY, _masterVolume);
     }
 
-    /// <summary>
-    /// SFX를 재생 (5초 이하만 처리)
-    /// </summary>
+    /// <summary>동시 재생 수 제한 없이 SFX를 재생합니다.</summary>
     public void PlaySfx(string key)
     {
-        if (_resourceDB.sfxDict.TryGetValue(key, out IAudioGenerator clip))
-        {
-            var source = _sfxPool.Get();
-            source.generator = clip;
-            source.Play();
+        TryPlaySfx(key, int.MaxValue);
+    }
 
-            // 5초 이하 SFX만 처리
-            StartCoroutine(ReleaseSfxSourceAfterPlay(5, source));
+    /// <summary>
+    /// 같은 그룹의 활성 재생 수가 maxConcurrent 미만이면 재생을 요청합니다.
+    /// 그룹을 지정하지 않으면 key를 그룹으로 사용합니다.
+    /// </summary>
+    public bool TryPlaySfx(string key, int maxConcurrent, string concurrencyGroup = null)
+    {
+        if (!_initialized || !isActiveAndEnabled || string.IsNullOrEmpty(key) || maxConcurrent <= 0 ||
+            !_resourceDB.sfxDict.TryGetValue(key, out IAudioGenerator clip) || clip == null)
+        {
+            return false;
+        }
+
+        ReleaseFinishedSfx();
+        string group = string.IsNullOrEmpty(concurrencyGroup) ? key : concurrencyGroup;
+        int count = 0;
+        foreach (var active in _activeSfxSources)
+        {
+            if (active.concurrencyGroup == group && ++count >= maxConcurrent)
+            {
+                return false;
+            }
+        }
+
+        var source = _sfxPool.Get();
+        source.generator = clip;
+        source.Play();
+        _activeSfxSources.Add(new ActiveSfx { source = source, concurrencyGroup = group, startFrame = Time.frameCount });
+        return true;
+    }
+
+    void Update()
+    {
+        if (_initialized)
+        {
+            ReleaseFinishedSfx();
         }
     }
 
-    IEnumerator ReleaseSfxSourceAfterPlay(float duration, AudioSource source)
+    void ReleaseFinishedSfx()
     {
-        yield return new WaitForSeconds(duration);
-
-        if (_activeSfxSources.Contains(source))
+        for (int i = _activeSfxSources.Count - 1; i >= 0; i--)
         {
-            _sfxPool.Release(source);
-            _activeSfxSources.Remove(source);
+            var active = _activeSfxSources[i];
+            // 시작 프레임과 리스너 일시정지 중에는 재생 상태만으로 종료를 판단하지 않습니다.
+            if (active.startFrame == Time.frameCount ||
+                (AudioListener.pause && !active.source.ignoreListenerPause) || active.source.isPlaying)
+            {
+                continue;
+            }
+
+            _activeSfxSources.RemoveAt(i);
+            _sfxPool.Release(active.source);
         }
+    }
+
+    void OnDisable()
+    {
+        ClearSfx();
     }
 
     public void ClearSfx()
     {
-        foreach (var source in _activeSfxSources)
+        if (_activeSfxSources == null || _sfxPool == null) return;
+
+        while (_activeSfxSources.Count > 0)
         {
+            int index = _activeSfxSources.Count - 1;
+            var source = _activeSfxSources[index].source;
+            _activeSfxSources.RemoveAt(index);
             _sfxPool.Release(source);
         }
-        _activeSfxSources.Clear();
     }
 
     /// <summary>
