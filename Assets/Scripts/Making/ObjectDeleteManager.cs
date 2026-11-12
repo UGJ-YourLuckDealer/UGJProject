@@ -78,6 +78,12 @@ public class ObjectDeleteManager : MonoBehaviour
             Customer_Data data = new Customer_Data();
 
             data.InCrease_Account(selectedObject);
+            if (selectedObject.TryGetComponent<KeyringMaterialObject>(out var material) &&
+                selectedObject.transform.parent != null &&
+                selectedObject.transform.parent.TryGetComponent<KeyringMaterialObject>(out var chain))
+            {
+                chain.RemoveChild(material.keyringMaterialData);
+            }
             deleteSlider.gameObject.SetActive(false);
             Destroy(selectedObject);
             selectedObject = null;

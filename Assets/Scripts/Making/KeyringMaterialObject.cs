@@ -20,8 +20,18 @@ public class KeyringMaterialObject : MonoBehaviour
             Charm
         }
 
+        public enum CharmType
+        {
+            Unknown,
+            Clover,
+            Note,
+            Rainbow,
+            Number
+        }
+
         public readonly int id;
         public Category category;
+        public CharmType charmType;
 
         // TODO: 호환성 유지를 위해 이후 string으로 대체 바람
         public Receipt_Data.Main_Kiring? main;
@@ -39,6 +49,7 @@ public class KeyringMaterialObject : MonoBehaviour
         {
             this.id = id;
             this.category = category;
+            this.charmType = CharmType.Unknown;
             this.bindedObject = bindedObject;
             this.main = main;
             this.clasp = clasp;
@@ -62,15 +73,44 @@ public class KeyringMaterialObject : MonoBehaviour
     public void AddChild(KeyringMaterial child)
     {
         childs.Add(child.id, child);
-        child.bindedObject.transform.SetParent(transform);
+        if (child.category != KeyringMaterial.Category.Charm)
+        {
+            if (child.category == KeyringMaterial.Category.Clasp &&
+                child.bindedObject.TryGetComponent<Rigidbody2D>(out var claspBody))
+            {
+                claspBody.simulated = false;
+                Destroy(claspBody);
+            }
+            child.bindedObject.transform.SetParent(transform);
+        }
+
+        if (child.category == KeyringMaterial.Category.Charm)
+        {
+            var sway = child.bindedObject.GetComponent<KeyringCharmSway>();
+            if (sway == null)
+                sway = child.bindedObject.AddComponent<KeyringCharmSway>();
+            sway.Initialize(transform, child.id);
+        }
     }
 
     public void RemoveChild(KeyringMaterial child)
     {
         childs.Remove(child.id);
+        if (child.bindedObject == null)
+            return;
+        if (child.bindedObject.TryGetComponent<KeyringCharmSway>(out var sway))
+            sway.Detach();
         child.bindedObject.transform.SetParent(null);
     }
 
+    internal void ForgetChild(int id)
+    {
+        childs.Remove(id);
+    }
+
+    private Rigidbody2D chainBody;
+    private Vector2 dragTarget;
+    private bool hasDragTarget;
     private bool canDrag;
     private bool isDragging;
     private Vector3 dragOffset;
@@ -80,6 +120,11 @@ public class KeyringMaterialObject : MonoBehaviour
     public void EnableDragging(ObjectDragManager manager, Check_Board board)
     {
         dragManager = manager;
+        chainBody = GetComponent<Rigidbody2D>();
+        if (chainBody == null)
+            chainBody = gameObject.AddComponent<Rigidbody2D>();
+        chainBody.bodyType = RigidbodyType2D.Kinematic;
+        chainBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         boardArea = board != null ? board.BoardArea : null;
         canDrag = boardArea != null;
         if (!canDrag)
@@ -127,14 +172,39 @@ public class KeyringMaterialObject : MonoBehaviour
         {
             Vector3 targetPosition = worldPosition + dragOffset;
             Vector2 constrainedPosition = boardArea.ClosestPoint(targetPosition);
-            transform.position = new Vector3(constrainedPosition.x, constrainedPosition.y, targetPosition.z);
+            dragTarget = constrainedPosition;
+            hasDragTarget = true;
         }
         else if (isDragging)
             isDragging = false;
     }
 
+    private void FixedUpdate()
+    {
+        if (hasDragTarget && chainBody != null)
+        {
+            chainBody.MovePosition(dragTarget);
+            hasDragTarget = false;
+        }
+    }
+
     private void OnDisable()
     {
         isDragging = false;
+        hasDragTarget = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (keyringMaterialData.category != KeyringMaterial.Category.Chain)
+            return;
+
+        foreach (var entry in childs)
+        {
+            var child = entry.Value;
+            if (child.category == KeyringMaterial.Category.Charm && child.bindedObject != null)
+                Destroy(child.bindedObject);
+        }
+        childs.Clear();
     }
 }

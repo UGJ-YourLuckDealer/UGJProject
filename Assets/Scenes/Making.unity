@@ -2859,6 +2859,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectDragManager
   initialplacementArea: {fileID: 913579597}
+  charmAttachmentSpacing: 0.5
+  charmMinimumDistance: 1
+  charmGravity: 3
+  charmLinearDamping: 0.5
+  charmAngularDamping: 3
+  showCharmAttachmentDebug: 1
 --- !u!4 &1535715358
 Transform:
   m_ObjectHideFlags: 0
