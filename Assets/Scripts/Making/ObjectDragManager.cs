@@ -7,10 +7,26 @@ public class ObjectDragManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Collider2D initialplacementArea;
 
+    [Header("Charm Attachment (World Units)")]
+    [SerializeField, Min(0.01f)] private float charmAttachmentSpacing = 0.5f;
+    [SerializeField, Min(0f)] private float charmMinimumDistance = 5f;
+
+    [Header("Charm Physics")]
+    [SerializeField, Min(0f)] private float charmGravity = 9.81f;
+    [SerializeField, Min(0f)] private float charmLinearDamping = 0.5f;
+    [SerializeField, Min(0f)] private float charmAngularDamping = 1f;
+    public float CharmGravity => Mathf.Max(0f, charmGravity);
+    public float CharmLinearDamping => Mathf.Max(0f, charmLinearDamping);
+    public float CharmAngularDamping => Mathf.Max(0f, charmAngularDamping);
+
+    [SerializeField] private bool showCharmAttachmentDebug = true;
+    public bool ShowCharmAttachmentDebug => showCharmAttachmentDebug;
+
     /// <summary>
     /// 현재 배치된 체인을 추적하는 변수
     /// </summary>
     KeyringMaterialObject currentBatchedChain;
+    public KeyringMaterialObject CurrentChain => currentBatchedChain;
     private GameObject draggingObject;
     private bool isDragging;
     public bool IsDragging => isDragging;
@@ -103,26 +119,35 @@ public class ObjectDragManager : MonoBehaviour
         switch (data.category)
         {
             case KeyringMaterialObject.KeyringMaterial.Category.Chain:
-                if (prefab.name.ToLower().Contains("normal"))
+                if (prefab.CompareTag("Normal"))
                 {
                     data.main = Receipt_Data.Main_Kiring.Normal;
                 }
-                else
+                else if (prefab.CompareTag("Heart"))
                 {
                     data.main = Receipt_Data.Main_Kiring.Heart;
                 }
                 break;
             case KeyringMaterialObject.KeyringMaterial.Category.Clasp:
-                if (prefab.name.ToLower().Contains("a"))
+                if (prefab.CompareTag("A"))
                 {
                     data.clasp = Receipt_Data.Clasp.A;
                 }
-                else
+                else if (prefab.CompareTag("B"))
                 {
                     data.clasp = Receipt_Data.Clasp.B;
                 }
                 break;
             case KeyringMaterialObject.KeyringMaterial.Category.Charm:
+                if (prefab.CompareTag("Clover"))
+                    data.charmType = KeyringMaterialObject.KeyringMaterial.CharmType.Clover;
+                else if (prefab.CompareTag("Note"))
+                    data.charmType = KeyringMaterialObject.KeyringMaterial.CharmType.Note;
+                else if (prefab.CompareTag("Rainbow"))
+                    data.charmType = KeyringMaterialObject.KeyringMaterial.CharmType.Rainbow;
+                else if (prefab.CompareTag("Number"))
+                    data.charmType = KeyringMaterialObject.KeyringMaterial.CharmType.Number;
+
                 if (prefab.name.ToLower().Contains("four"))
                 {
                     data.special = Receipt_Data.Special.Four;
@@ -239,8 +264,15 @@ public class ObjectDragManager : MonoBehaviour
                 // 현재 배치된 키링 체인이 있다면...
                 if (currentBatchedChain != null && currentBatchedChain != materialObj)
                 {
+                    bool isCharm = materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Charm;
+                    Vector3 attachment = isCharm
+                        ? FindCharmAttachment(draggingObject.transform, _bodyPlacementArea)
+                        : Vector3.zero;
+
                     // 나머지는 현재 배치된 체인의 자식으로 추가
                     currentBatchedChain.AddChild(materialObj.keyringMaterialData);
+                    if (isCharm)
+                        draggingObject.GetComponent<KeyringCharmSway>().SetDebugAttachment(this, attachment);
                 }
 
                 if (currentBatchedChain == materialObj)
@@ -274,6 +306,43 @@ public class ObjectDragManager : MonoBehaviour
 
 
         isDragging = false;
+    }
+
+    private Vector3 FindCharmAttachment(Transform charm, Collider2D bodyArea)
+    {
+        Vector3 start;
+        Vector3 end;
+        if (bodyArea is BoxCollider2D box)
+        {
+            Vector2 center = box.offset;
+            start = box.transform.TransformPoint(center + Vector2.down * box.size.y * 0.5f);
+            end = box.transform.TransformPoint(center + Vector2.up * box.size.y * 0.5f);
+        }
+        else
+        {
+            Bounds bounds = bodyArea.bounds;
+            start = new Vector3(bounds.center.x, bounds.min.y, charm.position.z);
+            end = new Vector3(bounds.center.x, bounds.max.y, charm.position.z);
+        }
+
+        Vector2 axis = (Vector2)(end - start);
+        float length = axis.magnitude;
+        Vector2 direction = length > 0f ? axis / length : Vector2.up;
+        float projected = Vector2.Dot((Vector2)(charm.position - start), direction);
+        int steps = Mathf.Max(1, Mathf.RoundToInt(length / Mathf.Max(0.01f, charmAttachmentSpacing)));
+        float stepLength = length / steps;
+        int index = stepLength > 0f ? Mathf.Clamp(Mathf.RoundToInt(projected / stepLength), 0, steps) : 0;
+        Vector2 attachment = (Vector2)start + direction * (stepLength * index);
+        Vector2 offset = (Vector2)charm.position - attachment;
+        float distance = offset.magnitude;
+        if (distance < charmMinimumDistance)
+        {
+            Vector2 outward = distance > 0.000001f ? offset / distance : new Vector2(direction.y, -direction.x);
+            Vector2 position = attachment + outward * charmMinimumDistance;
+            charm.position = new Vector3(position.x, position.y, charm.position.z);
+        }
+
+        return new Vector3(attachment.x, attachment.y, charm.position.z);
     }
 
     Vector3 GetMouseWorldPosition()

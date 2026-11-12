@@ -4,7 +4,6 @@ using UnityEngine;
 public class Result : MonoBehaviour
 {
     public Receipt_Data receipt_data;
-    Check_Board check;
 
     int clover;
     int note;
@@ -19,34 +18,51 @@ public class Result : MonoBehaviour
 
     int main = 0;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        check = FindAnyObjectByType<Check_Board>();
-
         receipt_data = Customer_Data.receipt;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CountAttachedMaterials()
     {
-        
+        heart = normal = clover = note = rainbow = number = a = b = 0;
+        ObjectDragManager manager = FindAnyObjectByType<ObjectDragManager>();
+        KeyringMaterialObject chain = manager != null ? manager.CurrentChain : null;
+        if (chain == null || chain.keyringMaterialData.category != KeyringMaterialObject.KeyringMaterial.Category.Chain)
+            return;
+
+        if (chain.keyringMaterialData.main == Receipt_Data.Main_Kiring.Heart) heart++;
+        else if (chain.keyringMaterialData.main == Receipt_Data.Main_Kiring.Normal) normal++;
+
+        foreach (var entry in chain.childs)
+        {
+            var material = entry.Value;
+            if (material.bindedObject == null)
+                continue;
+
+            if (material.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
+            {
+                if (material.clasp == Receipt_Data.Clasp.A) a++;
+                else if (material.clasp == Receipt_Data.Clasp.B) b++;
+            }
+            else if (material.category == KeyringMaterialObject.KeyringMaterial.Category.Charm)
+            {
+                switch (material.charmType)
+                {
+                    case KeyringMaterialObject.KeyringMaterial.CharmType.Clover: clover++; break;
+                    case KeyringMaterialObject.KeyringMaterial.CharmType.Note: note++; break;
+                    case KeyringMaterialObject.KeyringMaterial.CharmType.Rainbow: rainbow++; break;
+                    case KeyringMaterialObject.KeyringMaterial.CharmType.Number: number++; break;
+                }
+            }
+        }
     }
 
     public void Result_Kiring()
     {
         int correct = 0;
         int incorrect = 0;
-        heart = check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Heart");
-        normal = check.GetCount(LayerMask.NameToLayer("Main_Kiring"), "Normal");
-
-        clover = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Clover");
-        note = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Note");
-        rainbow = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Rainbow");
-        number = check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Number");
-
-        a = check.GetCount(LayerMask.NameToLayer("Clasp"), "A");
-        b = check.GetCount(LayerMask.NameToLayer("Clasp"), "B");
+        CountAttachedMaterials();
 
         correct += Mathf.Min(clover, receipt_data.clover);
         incorrect += Mathf.Max(0, clover - receipt_data.clover);
@@ -61,20 +77,20 @@ public class Result : MonoBehaviour
         incorrect += Mathf.Max(0, number - receipt_data.number);
 
         switch (receipt_data.main_kiring)
-            {
-                case Receipt_Data.Main_Kiring.Normal:
+        {
+            case Receipt_Data.Main_Kiring.Normal:
                 if (normal == 1)
                     correct += 1;
                 else
                     incorrect += 1;
                 break;
-                case Receipt_Data.Main_Kiring.Heart:
-                    if (heart == 1)
+            case Receipt_Data.Main_Kiring.Heart:
+                if (heart == 1)
                     correct += 1;
                 else
                     incorrect += 1;
                 break;
-            }
+        }
 
         switch (receipt_data.clasp)
         {
@@ -91,7 +107,7 @@ public class Result : MonoBehaviour
                     incorrect += 1;
                 break;
             case Receipt_Data.Clasp.Null:
-                if (a == 0 && b==0)
+                if (a == 0 && b == 0)
                     correct += 1;
                 else
                     incorrect += 1;
@@ -151,7 +167,7 @@ public class Result : MonoBehaviour
         GameEvents.RaiseKeyringJudged(null, judgement);
 
         Debug.Log("Result: " + sum);
-        Debug.Log(check.GetCount(LayerMask.NameToLayer("Sub_Acrill"), "Clover"));
+        Debug.Log(clover);
         Debug.Log(heart);
         Debug.Log(note);
         Debug.Log(rainbow);
