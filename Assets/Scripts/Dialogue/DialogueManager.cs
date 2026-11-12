@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections;
-using Unity.VisualScripting;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI.Extensions;
 
