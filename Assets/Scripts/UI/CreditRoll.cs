@@ -25,9 +25,11 @@ public class CreditRoll : MonoBehaviour
     [SerializeField] private string title = "Credits";
     [SerializeField] private Section[] sections =
     {
+        new Section { role = "Team", names = new[] { "Luckers" } },
         new Section { role = "Developer", names = new[] { "hermit", "macro_t0713", "Hook" } },
         new Section { role = "Game Design", names = new[] { "Hook" } },
         new Section { role = "Art", names = new[] { "Gaeun Park", "Sun Kim (k.sun.artist@gmail.com)" } },
+        new Section { role = "Music", names = new[] { "\"School Time\" by 東月 (Dongnguyet)" } },
     };
     [SerializeField] private string closing = "Thank you for playing!";
 

@@ -54,6 +54,9 @@ MonoBehaviour:
   content: {fileID: 5023155173774345132}
   title: Credits
   sections:
+  - role: Team
+    names:
+    - Luckers
   - role: Developer
     names:
     - hermit
@@ -66,8 +69,11 @@ MonoBehaviour:
     names:
     - Gaeun Park
     - Sun Kim (k.sun.artist@gmail.com)
+  - role: Music
+    names:
+    - "\"School Time\" by \u6771\u6708 (Dongnguyet)"
   closing: Thank you for playing!
-  font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  font: {fileID: 11400000, guid: dd44fe66b99f841499f5ac78b4f10222, type: 2}
   titleColor: {r: 1, g: 0.85, b: 0.45, a: 1}
   roleColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   nameColor: {r: 1, g: 1, b: 1, a: 1}
