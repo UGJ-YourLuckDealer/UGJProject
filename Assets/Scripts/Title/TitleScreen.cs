@@ -262,6 +262,7 @@ public class TitleScreen : MonoBehaviour
 
     void OnCreditButtonClicked()
     {
+        _popupService.ShowPopup("popup_title_credit");
         AudioService.Instance.PlaySfx("sfx_ui_btn_click");
     }
 
