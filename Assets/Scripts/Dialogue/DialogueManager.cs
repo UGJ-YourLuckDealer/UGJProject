@@ -40,7 +40,7 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         Debug.Log("Start");
-        isWaiting = false;
+        isWaiting = true;
 
         customer = Customer_Data.customer;
 
