@@ -99,12 +99,12 @@ public class DialogueManager : MonoBehaviour
     public void LastDialogue()
     {
 
-        
+
         TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
 
         panelScaleUp.StartScaleUp();
         Debug.Log(currentIndex);
-        Debug.Log("customer:" +customer);
+        Debug.Log("customer:" + customer);
 
         if (Customer_Data.state == 0)
             bifurcation = dialogueData[customer].dialogueBifurcations[0];

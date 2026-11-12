@@ -5,21 +5,37 @@ public class Customer_Data
 {
     public static Receipt_Data receipt;
 
-    public static int customer = 0;
+    public static int customer;
 
-    public static int heart = 10;
-    public static int normal = 10;
+    public static int heart;
+    public static int normal;
 
-    public static int clover = 10;
-    public static int number = 10;
-    public static int rainbow = 10;
-    public static int note = 10;
-    public static int A = 10;
-    public static int B = 10;
+    public static int clover;
+    public static int number;
+    public static int rainbow;
+    public static int note;
+    public static int A;
+    public static int B;
 
     public static int state;
 
-    public static bool isfinish = true;
+    public static bool isfinish;
+
+    public static void ResetStaticState()
+    {
+        receipt = null;
+        customer = 0;
+        heart = 10;
+        normal = 10;
+        clover = 10;
+        number = 10;
+        rainbow = 10;
+        note = 10;
+        A = 10;
+        B = 10;
+        state = 0;
+        isfinish = true;
+    }
 
     public static void ResetCustomer()
     {
@@ -55,19 +71,19 @@ public class Customer_Data
 
     public void NotFinished()
     {
-        isfinish= false;
+        isfinish = false;
     }
 
     public static void TipState(int tipState)
     {
 
-        if(state < tipState)
+        if (state < tipState)
         {
             while (state != tipState)
                 state++;
         }
 
-        else if(state >tipState)
+        else if (state > tipState)
         {
             while (state != tipState)
                 state--;
