@@ -5,6 +5,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI.Extensions;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject textPanel;
 
     [SerializeField] private int currentIndex = 0;
+    [SerializeField] Vector2 makeKeyringTooltipOffset;
 
     private float typingSpeed = 0.05f;
 
@@ -42,7 +44,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Start");
         isWaiting = false;
 
-        
+
 
         Debug.Log(Customer_Data.isfinish);
 
@@ -117,7 +119,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ReStartDialogue()
     {
-        
+
         isEndDialogue = false;
         //customer++;
 
@@ -135,7 +137,7 @@ public class DialogueManager : MonoBehaviour
     }
     void DisplayDialogue()
     {
-        
+
 
         isWaiting = false;
         textPanel.SetActive(true);
@@ -146,7 +148,7 @@ public class DialogueManager : MonoBehaviour
 
 
         typingCoroutine = StartCoroutine(TypeDialogue(line.dialogueText));
-        
+
     }
 
     void DisplayLastDialogue()
@@ -157,7 +159,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue()
     {
-        
+
         Debug.Log("StartDialogue");
         AudioService.Instance.PlaySfx("sfx_ui_btn_click");
 
@@ -169,7 +171,7 @@ public class DialogueManager : MonoBehaviour
 
         StartCoroutine(CharacterImageColor());
         characterImage.color = color;
-        
+
     }
 
     //CharacterImageColor Black -> White
@@ -195,7 +197,7 @@ public class DialogueManager : MonoBehaviour
         characterImage.color = Color.white;
 
         DisplayDialogue();
-        
+
 
     }
 
@@ -207,7 +209,9 @@ public class DialogueManager : MonoBehaviour
         {
             Customer_Data.isfinish = false;
             isWaiting = true;
-            GuideTooltip.Instance.Show(GameObject.Find("ToolTip").transform, "");
+
+            ToolTip.Instance.SetTooltip("Make Keyring!", makeKeyringTooltipOffset);
+            // GuideTooltip.Instance.Show(GameObject.Find("ToolTip").transform, "");
 
             return;
         }
