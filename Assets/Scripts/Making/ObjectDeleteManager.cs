@@ -1,10 +1,20 @@
+<<<<<<< Updated upstream
 using Unity.Android.Gradle.Manifest;
+=======
+
+>>>>>>> Stashed changes
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ObjectDeleteManager : MonoBehaviour
 {
+    [SerializeField] private Color outlineColor = Color.black;
+    [SerializeField] private float outlineScale = 1.1f;
+
+    private GameObject outlineObject;
+    private SpriteRenderer spriteRenderer;
+
     [Header("Delete Settings")]
     public LayerMask deleteLayer;
     public float deleteDuration = 3f;
@@ -27,8 +37,6 @@ public class ObjectDeleteManager : MonoBehaviour
         deleteSlider.gameObject.SetActive(false);
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         DetectObject();
@@ -50,8 +58,15 @@ public class ObjectDeleteManager : MonoBehaviour
 
             if(hit!= null)
             {
+                // 기존 선택 초기화
+                if (outlineObject != null)
+                    Destroy(outlineObject);
+
                 selectedObject = hit.gameObject;
                 holdTimer = 0f;
+
+                // 외곽선 생성
+                CreateOutline(selectedObject);
             }
         }
     }
@@ -69,19 +84,28 @@ public class ObjectDeleteManager : MonoBehaviour
         if(Mouse.current.rightButton.isPressed)
         {
             holdTimer += Time.deltaTime;
+
             UpdateDeleteUI();
+
             Debug.Log((holdTimer / deleteDuration * 100).ToString("F1") + "%");
         }
 
         if(holdTimer >= deleteDuration)
         {
             Debug.Log("Delete Object");
-            Customer_Data data = new Customer_Data();
 
+            Customer_Data data = new Customer_Data();
             data.InCrease_Account(selectedObject);
+
             deleteSlider.gameObject.SetActive(false);
+
+            if (outlineObject != null)
+                Destroy(outlineObject);
+
             Destroy(selectedObject);
+
             selectedObject = null;
+            outlineObject = null;
             holdTimer = 0f;
         }
     }
@@ -103,8 +127,36 @@ public class ObjectDeleteManager : MonoBehaviour
 
     void CancelDelete()
     {
+        if (outlineObject != null)
+            Destroy(outlineObject);
+
         deleteSlider.gameObject.SetActive(false);
+
         selectedObject = null;
-        holdTimer = 0;
+        outlineObject = null;
+        holdTimer = 0f;
+    }
+
+    void CreateOutline(GameObject target)
+    {
+        spriteRenderer = target.GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer == null)
+            return;
+
+        outlineObject = new GameObject("Outline");
+
+        outlineObject.transform.SetParent(target.transform);
+        outlineObject.transform.localPosition = Vector3.zero;
+        outlineObject.transform.localRotation = Quaternion.identity;
+        outlineObject.transform.localScale = Vector3.one * outlineScale;
+
+        SpriteRenderer outlineRenderer = outlineObject.AddComponent<SpriteRenderer>();
+
+        outlineRenderer.sprite = spriteRenderer.sprite;
+        outlineRenderer.color = outlineColor;
+
+        outlineRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
+        outlineRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
     }
 }

@@ -24,27 +24,27 @@ public class MakingBook : MonoBehaviour
                 break;
         }
 
-        if (receipt_data.clover != 0)
+        if (_loadedReceipt.clover != 0)
         {
-            receipt.Add("Clover: " + receipt_data.clover);
+            receipt.Add("Clover: " + _loadedReceipt.clover);
         }
 
-        if (receipt_data.note != 0)
+        if (_loadedReceipt.note != 0)
         {
-            receipt.Add("Note: " + receipt_data.note);
+            receipt.Add("Note: " + _loadedReceipt.note);
         }
 
-        if (receipt_data.number != 0)
+        if (_loadedReceipt.number != 0)
         {
-            receipt.Add("Number: " + receipt_data.number);
+            receipt.Add("Number: " + _loadedReceipt.number);
         }
 
-        if (receipt_data.rainbow != 0)
+        if (_loadedReceipt.rainbow != 0)
         {
-            receipt.Add("Rainbow: " + receipt_data.rainbow);
+            receipt.Add("Rainbow: " + _loadedReceipt.rainbow);
         }
 
-        switch (receipt_data.clasp)
+        switch (_loadedReceipt.clasp)
         {
             case Receipt_Data.Clasp.A:
                 receipt.Add("Clasp: A");
@@ -60,12 +60,22 @@ public class MakingBook : MonoBehaviour
 
     private void Start()
     {
+<<<<<<< Updated upstream
         for(int i=0;i< receipt.Count;i++)
         {
             TMP_Text newText = Instantiate(receiptPrefab, receiptParent);
 
             newText.text = receipt[i].ToString();
         }    
+=======
+        //for (int i = 0; i < receipt.Count; i++)
+        //{
+        //    TMP_Text newText = Instantiate(receiptPrefab, receiptParent);
+
+        //    newText.text = receipt[i].ToString();
+        //}
+
+>>>>>>> Stashed changes
 
         
     }
