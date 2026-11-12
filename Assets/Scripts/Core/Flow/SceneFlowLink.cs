@@ -22,6 +22,11 @@ public class SceneFlowLink : MonoBehaviour
     [Tooltip("Counter: 하루 마지막 팁 대사를 클릭해 대사·초상화가 사라진 뒤 정산 팝업을 열기까지 기다리는 시간(초)")]
     [SerializeField, Min(0f)] private float settlementDelay = 0.8f;
 
+    [Tooltip("Making: 보드에 아무것도 없이 Submit을 눌렀을 때 보여 줄 문구")]
+    [SerializeField] private string emptyBoardMessage = "Make a keyring first!";
+    [SerializeField, Min(0.1f)] private float emptyBoardHintSeconds = 1.5f;
+    [Tooltip("안내 말풍선 위치 (Submit 버튼 기준점 기준). 버튼이 오른쪽 위 구석(기준점 = 버튼 오른쪽 위)이라 버튼 바로 아래 가운데로")]
+    [SerializeField] private Vector2 emptyBoardHintOffset = new Vector2(-125f, -170f);
 
     private const string CounterMoneyBarPath = "CounterMoneyBar"; // Resources/CounterMoneyBar.prefab
 
@@ -113,16 +118,55 @@ public class SceneFlowLink : MonoBehaviour
 
     private void HookSubmitButtons()
     {
-        // 결산 팝업이 있으면 Submit → 결산 → (팝업 버튼) → ReturnFromMaking, 없으면 바로 ReturnFromMaking
+        // 결산 팝업이 있으면 Submit → 결산 → (팝업 버튼) → ReturnFromMaking, 없으면 바로 ReturnFromMaking.
+        // 보드에 아무것도 없으면 제출하지 않도록, 팀원 판정(Result_Kiring) 연결은 이번 실행에서만 끄고
+        // 확인 후 직접 부른다 (프리팹·씬 파일은 그대로).
         var settlement = FindAnyObjectByType<SettlementPopup>();
         foreach (var b in FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             for (int i = 0; i < b.onClick.GetPersistentEventCount(); i++)
                 if (b.onClick.GetPersistentMethodName(i) == "Result_Kiring")
                 {
-                    if (settlement != null) b.onClick.AddListener(settlement.Show); // 팀원 판정(Result_Kiring) 다음에 실행됨
-                    else b.onClick.AddListener(ReturnFromMaking);
+                    var result = b.onClick.GetPersistentTarget(i) as Result;
+                    if (result == null) break; // 알 수 없는 대상이면 원래 동작 그대로
+                    b.onClick.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
+                    var button = b;
+                    b.onClick.AddListener(() => Submit(button, result, settlement));
                     break;
                 }
+    }
+
+    private void Submit(Button button, Result result, SettlementPopup settlement)
+    {
+        if (IsBoardEmpty())
+        {
+            ShowEmptyBoardHint(button.transform);
+            return;
+        }
+        result.Result_Kiring(); // 팀원 판정
+        if (settlement != null) settlement.Show();
+        else ReturnFromMaking();
+    }
+
+    // 보드에 키링 본체(체인)가 없으면 아무것도 만들지 않은 것으로 본다
+    private static bool IsBoardEmpty()
+    {
+        var manager = FindAnyObjectByType<ObjectDragManager>();
+        return manager == null || manager.CurrentChain == null;
+    }
+
+    private void ShowEmptyBoardHint(Transform target)
+    {
+        var tooltip = GuideTooltip.Instance;
+        if (tooltip == null) return;
+        tooltip.Show(target, emptyBoardMessage, emptyBoardHintOffset);
+        StopCoroutine(nameof(HideHintLater));
+        StartCoroutine(nameof(HideHintLater));
+    }
+
+    private System.Collections.IEnumerator HideHintLater()
+    {
+        yield return new WaitForSecondsRealtime(emptyBoardHintSeconds);
+        if (GuideTooltip.Instance != null) GuideTooltip.Instance.Hide();
     }
 
     public void StartNewGame() => SceneFlow.StartNewGame();
