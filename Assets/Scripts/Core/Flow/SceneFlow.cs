@@ -23,7 +23,9 @@ public static class SceneFlow
     public static void StartNewGame()
     {
         if (ScreenFader.IsBusy) return; // 전환 중 중복 입력 무시
+
         PersistentSystems.ResetSession();
+        Customer_Data.ResetStaticState();
         GameSession.ResetCustomerProgress();
         ScreenFader.LoadScene(CounterScene);
     }
