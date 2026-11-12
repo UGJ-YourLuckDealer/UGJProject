@@ -41,6 +41,7 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("Start");
         isWaiting = true;
+        
 
         customer = Customer_Data.customer;
 
@@ -159,6 +160,7 @@ public class DialogueManager : MonoBehaviour
 
     void DisplayLastDialogue()
     {
+        isWaiting = false;
         typingCoroutine = StartCoroutine(TypeDialogue(bifurcation.bifuractionText));
         characterImage.sprite = bifurcation.characterImage;
     }

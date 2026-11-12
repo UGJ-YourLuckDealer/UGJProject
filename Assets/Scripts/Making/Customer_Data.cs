@@ -23,12 +23,15 @@ public class Customer_Data
 
     public static void ResetCustomer()
     {
+        Debug.Log("Reset static Values");
+        isfinish = true;
         while (customer > 0)
             customer--;
     }
 
     public static void IncreaseCustomer()
     {
+        
         customer++;
     }
 
