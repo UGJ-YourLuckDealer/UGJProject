@@ -5,6 +5,8 @@ public class Customer_Data
 {
     public static Receipt_Data receipt;
 
+    public static int customer = 0;
+
     public static int heart = 10;
     public static int normal = 10;
 
@@ -15,15 +17,28 @@ public class Customer_Data
     public static int A = 10;
     public static int B = 10;
 
+    public static int state;
+
     public static bool isfinish = true;
 
-    public enum State
+    public static void ResetCustomer()
     {
-        Best,
-        Good,
-        Bad
+        while (customer > 0)
+            customer--;
     }
-    public State state;
+
+    public static void IncreaseCustomer()
+    {
+        customer++;
+    }
+
+    //public enum State
+    //{
+    //    Best,
+    //    Good,
+    //    Bad
+    //}
+    //public State state;
 
     public bool IsFinished()
     {
@@ -40,6 +55,26 @@ public class Customer_Data
         isfinish= false;
     }
 
+    public static void TipState(int tipState)
+    {
+
+        if(state < tipState)
+        {
+            while (state != tipState)
+                state++;
+        }
+
+        else if(state >tipState)
+        {
+            while (state != tipState)
+                state--;
+        }
+    }
+
+    public int Get_TipState()
+    {
+        return state;
+    }
 
     public static void Set_CustomerReceipt(DialogueData dialogue)
     {
