@@ -176,10 +176,8 @@ public class SettlementPopupView : MonoBehaviour
         if (ScreenFader.IsBusy) return;
         leaving = true;
 
-        if (gameOver || lastDay)
-            SceneFlow.ReturnFromMaking(); // 게임 종료 → Result (WIN / LOSE)
-        else
-            DayCycle.GoToNextDay();       // 바로 다음 날 손님 대기(Counter)
+        // 손님 처리 완료는 Making에서 돌아올 때 이미 셌으므로 여기서는 화면만 넘긴다
+        SettlementPopup.FinishDay(!(gameOver || lastDay)); // 다음 날 Counter, 게임 종료면 Result (WIN / LOSE)
 
         Destroy(gameObject); // 화면 전환(Fade)보다 위에 남지 않게
     }

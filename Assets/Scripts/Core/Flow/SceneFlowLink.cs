@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
 /// 씬과 SceneFlow를 잇는 hermit 연결 컴포넌트. 팀원 스크립트·오브젝트는 수정하지 않는다.
 /// - Counter: 시작 손님 번호를 DialogueManager에 넣고, 씬을 떠날 때(팀원 코드가 직접 Making을 불러도) 손님 번호를 기억한다.
-///   오른쪽 위에 돈 표시 UI(Resources/CounterMoneyBar)를 띄운다.
+///   오른쪽 위에 돈 표시 UI(Resources/CounterMoneyBar)를 띄우고, 하루 마지막 손님이면 팁 대사를 클릭한 뒤 하루 정산 팝업을 연다.
 /// - Making: 팀원 Submit 버튼(Result.Result_Kiring)에 실행 중에만 ReturnFromMaking을 붙인다.
 ///   지금 손님 번호에 맞는 레시피(customerReceipts)를 팀원 판정(Result.receipt_data)에 넣는다.
 /// - 버튼 OnClick에서 SceneFlow 함수를 부르는 용도로도 쓴다.
@@ -24,6 +25,11 @@ public class SceneFlowLink : MonoBehaviour
     private int cachedCustomer = -1;
     private int cachedCustomerCount;
     private bool isCounter;
+    private bool settlementOpened;
+    private string lastDialogueText;
+    private bool tipDialogueShown; // 하루 마지막 손님의 팁 대사가 끝까지 나왔는지
+    private float dialogueStableSeconds;
+    private const float typingDoneSeconds = 0.15f; // 대사 타이핑 간격(0.05초)보다 충분히 길게
 
     private void Awake()
     {
@@ -47,6 +53,45 @@ public class SceneFlowLink : MonoBehaviour
         if (prefab == null) return;
         var bar = Instantiate(prefab);
         bar.name = prefab.name;
+    }
+
+    private void Update()
+    {
+        // 하루 마지막 손님: Counter로 돌아와 나온 팁(반응) 대사를 끝까지 보고 클릭하면 하루 정산 팝업.
+        // Customer_Data.isfinish는 책상 클릭 때 이미 바뀌어 있을 수 있어 쓰지 않고, 화면의 대사 텍스트로 판단한다.
+        if (!isCounter || settlementOpened || !GameSession.SettlementPending) return;
+        if (dialogue == null || dialogue.dialogueText == null) { OpenSettlement(); return; }
+
+        var text = dialogue.dialogueText;
+        string shown = text.isActiveAndEnabled ? text.text : null;
+
+        if (tipDialogueShown)
+        {
+            // 팁 대사를 다 본 뒤의 클릭. 팀원 DialogueManager가 같은 프레임에 먼저 클릭을 받아 대사를 지웠을 수도 있으므로
+            // 클릭이 보이거나 대사가 사라졌으면 바로 연다 (이때 예약된 다음 대화 시작은 OpenSettlement가 취소)
+            var mouse = Mouse.current;
+            bool clicked = mouse != null && mouse.leftButton.wasPressedThisFrame && !GameSession.IsUIBlockingInput;
+            if (clicked || shown != lastDialogueText) OpenSettlement();
+            return;
+        }
+
+        if (string.IsNullOrEmpty(shown) || shown != lastDialogueText)
+        {
+            lastDialogueText = shown; // 아직 대사가 없거나 타이핑 중
+            dialogueStableSeconds = 0f;
+            return;
+        }
+
+        // 글자가 더 이상 바뀌지 않으면 타이핑이 끝난 것 (타이핑 도중 클릭은 대사를 한 번에 보여 주는 클릭이라 제외)
+        dialogueStableSeconds += Time.unscaledDeltaTime;
+        if (dialogueStableSeconds >= typingDoneSeconds) tipDialogueShown = true;
+    }
+
+    private void OpenSettlement()
+    {
+        settlementOpened = true;
+        if (dialogue != null) dialogue.CancelInvoke(); // 대사가 끝난 뒤 예약된 다음 대화 시작(ReStartDialogue)이 팝업 뒤에서 돌지 않게
+        SettlementPopup.OpenDaySettlement();
     }
 
     private void ApplyCustomerReceipt()

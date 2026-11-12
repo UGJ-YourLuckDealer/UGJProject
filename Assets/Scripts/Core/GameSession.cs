@@ -32,6 +32,9 @@ public static class GameSession
     /// <summary>마지막 게임·하루 결과 (Result 씬 표시용). 없으면 null.</summary>
     public static GameResult? LastResult { get; internal set; }
 
+    /// <summary>하루 마지막 손님 제출 후 Counter에서 팁 대사가 끝나면 하루 정산 팝업을 띄워야 하는지.</summary>
+    public static bool SettlementPending { get; internal set; }
+
     // ---- 일차 (DayCycle) ----
 
     public static int CurrentDay { get; internal set; } = 1;
@@ -221,6 +224,7 @@ public static class GameSession
         NextCustomerIndex = 0;
         CustomerCount = int.MaxValue;
         LastResult = null;
+        SettlementPending = false;
         ResetVisit();
         ResetDaySettlement();
     }

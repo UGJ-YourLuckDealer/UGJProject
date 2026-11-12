@@ -50,7 +50,10 @@ public static class SceneFlow
         if (count > 0) GameSession.CustomerCount = count;
     }
 
-    /// <summary>Making에서 제출 → 손님 처리 완료. 손님이 남았으면 Counter, 아니면 Result.</summary>
+    /// <summary>
+    /// Making에서 제출 → 손님 처리 완료. 손님이 남았으면 Counter, 아니면 Result.
+    /// 하루 정산이 남아 있으면(SettlementPending) 하루가 끝났어도 Counter로 가서 팁 대사 → 정산 팝업 순서로 보여 준다.
+    /// </summary>
     public static void ReturnFromMaking()
     {
         if (ScreenFader.IsBusy) return; // 손님 처리 완료가 두 번 세지지 않게
@@ -59,7 +62,16 @@ public static class SceneFlow
         if (LastResult == null && NextCustomerIndex >= GameSession.CustomerCount)
             GameSession.LastResult = BuildResultNow(); // 대사 데이터가 손님 수보다 적어 먼저 끝난 경우
 
-        ScreenFader.LoadScene(LastResult != null ? ResultScene : CounterScene); // Fade Out → 로드 → Fade In
+        bool toResult = LastResult != null && !GameSession.SettlementPending;
+        ScreenFader.LoadScene(toResult ? ResultScene : CounterScene); // Fade Out → 로드 → Fade In
+    }
+
+    /// <summary>정산 팝업을 닫은 뒤 게임 종료(게임 오버·마지막 날)일 때: Result로.</summary>
+    public static void GoToResult()
+    {
+        if (ScreenFader.IsBusy) return;
+        if (LastResult == null) GameSession.LastResult = BuildResultNow();
+        ScreenFader.LoadScene(ResultScene);
     }
 
     /// <summary>Result의 타이틀 버튼.</summary>
