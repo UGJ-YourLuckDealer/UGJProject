@@ -74,13 +74,71 @@ public class ChainRenderer : MonoBehaviour
             _chainCount <= 0 || _chainWidth <= 0f)
             return false;
 
-        Vector3 bodyEnd = bodyArea.transform.TransformPoint(bodyArea.offset + Vector2.down * bodyArea.size.y * 0.5f);
-        Vector3 headEnd = headArea.transform.TransformPoint(headArea.offset);
+        GetBodyEndpoints(bodyArea, out Vector3 bodyEnd, out _);
+        Vector3 headEnd = GetHeadPosition(headArea);
         Vector3 localBodyEnd = transform.InverseTransformPoint(bodyEnd);
         Vector3 localHeadEnd = transform.InverseTransformPoint(headEnd);
         Initialize(transform, localBodyEnd, transform, _sprite, _material, _chainCount, _chainWidth, _preserveAspect, _chainPadding);
         _endLocalPoint = localHeadEnd;
         return _mesh != null;
+    }
+
+    public static void GetBodyEndpoints(BoxCollider2D bodyArea, out Vector3 bottom, out Vector3 top)
+    {
+        Vector2 center = bodyArea.offset;
+        bottom = bodyArea.transform.TransformPoint(center + Vector2.down * bodyArea.size.y * 0.5f);
+        top = bodyArea.transform.TransformPoint(center + Vector2.up * bodyArea.size.y * 0.5f);
+    }
+
+    public static Vector3 GetHeadPosition(Collider2D headArea)
+    {
+        return headArea.transform.TransformPoint(headArea.offset);
+    }
+
+    void OnDrawGizmos()
+    {
+        Transform body = transform.Find("BodyArea");
+        Transform head = transform.Find("HeadArea");
+        if (body == null || head == null || !body.TryGetComponent<BoxCollider2D>(out var bodyArea) ||
+            !head.TryGetComponent<Collider2D>(out var headArea))
+            return;
+
+        GetBodyEndpoints(bodyArea, out Vector3 bottom, out Vector3 top);
+        Vector3 headCenter = GetHeadPosition(headArea);
+        Matrix4x4 previousMatrix = Gizmos.matrix;
+        Color previousColor = Gizmos.color;
+
+        Gizmos.color = Color.green;
+        Gizmos.matrix = body.localToWorldMatrix;
+        Gizmos.DrawWireCube(bodyArea.offset, bodyArea.size);
+        Gizmos.matrix = Matrix4x4.identity;
+        Gizmos.DrawLine(bottom, top);
+
+        Gizmos.color = Color.cyan;
+        Vector3 renderStart = _initialized && _start == transform && _end == transform
+            ? transform.TransformPoint(_startLocalPoint) : bottom;
+        Vector3 renderEnd = _initialized && _start == transform && _end == transform
+            ? transform.TransformPoint(_endLocalPoint) : headCenter;
+        Gizmos.DrawLine(renderStart, renderEnd);
+        Gizmos.DrawWireSphere(renderStart, 0.04f);
+        Gizmos.DrawWireSphere(renderEnd, 0.04f);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.matrix = head.localToWorldMatrix;
+        if (headArea is BoxCollider2D headBox)
+            Gizmos.DrawWireCube(headBox.offset, headBox.size);
+        else if (headArea is CircleCollider2D headCircle)
+            Gizmos.DrawWireSphere(headCircle.offset, headCircle.radius);
+        Gizmos.matrix = Matrix4x4.identity;
+        Gizmos.DrawWireSphere(headCenter, 0.07f);
+
+#if UNITY_EDITOR
+        UnityEditor.Handles.Label(top, "Charm axis (BodyArea)");
+        UnityEditor.Handles.Label(headCenter, "Clasp snap (HeadArea)");
+        UnityEditor.Handles.Label(renderStart, "Chain render start");
+#endif
+        Gizmos.matrix = previousMatrix;
+        Gizmos.color = previousColor;
     }
 
     void LateUpdate()
@@ -178,3 +236,45 @@ public class ChainRenderer : MonoBehaviour
         _properties = null;
     }
 }
+
+#if UNITY_EDITOR
+[UnityEditor.CustomEditor(typeof(ChainRenderer))]
+public class ChainRendererEditor : UnityEditor.Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        var chain = (ChainRenderer)target;
+        Transform body = chain.transform.Find("BodyArea");
+        Transform head = chain.transform.Find("HeadArea");
+        if (body == null || head == null || !body.TryGetComponent<BoxCollider2D>(out var bodyArea) ||
+            !head.TryGetComponent<Collider2D>(out _))
+            return;
+
+        UnityEditor.EditorGUILayout.Space();
+        UnityEditor.EditorGUILayout.LabelField("체인 길이 조절", UnityEditor.EditorStyles.boldLabel);
+        UnityEditor.EditorGUILayout.HelpBox("위쪽과 잠금장치는 고정하고 BodyArea를 아래로 늘리거나 줄입니다. 단위는 BodyArea의 로컬 단위입니다.", UnityEditor.MessageType.Info);
+        using (new UnityEditor.EditorGUI.DisabledScope(UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode))
+        {
+            var serializedBody = new UnityEditor.SerializedObject(bodyArea);
+            serializedBody.Update();
+            var size = serializedBody.FindProperty("m_Size");
+            var offset = serializedBody.FindProperty("m_Offset");
+            Vector2 oldSize = size.vector2Value;
+            UnityEditor.EditorGUI.BeginChangeCheck();
+            float length = UnityEditor.EditorGUILayout.DelayedFloatField("BodyArea 길이", oldSize.y);
+            if (UnityEditor.EditorGUI.EndChangeCheck())
+            {
+                length = Mathf.Max(0.01f, length);
+                Vector2 newOffset = offset.vector2Value;
+                newOffset.y += (oldSize.y - length) * 0.5f;
+                offset.vector2Value = newOffset;
+                size.vector2Value = new Vector2(oldSize.x, length);
+                serializedBody.ApplyModifiedProperties();
+                UnityEditor.SceneView.RepaintAll();
+            }
+        }
+    }
+}
+#endif

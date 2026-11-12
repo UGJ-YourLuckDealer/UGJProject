@@ -397,7 +397,7 @@ public class ObjectDragManager : MonoBehaviour
 
     private void PlaceClaspAtChainTop(Transform clasp, Collider2D headArea)
     {
-        Vector3 attachment = headArea.transform.TransformPoint(headArea.offset);
+        Vector3 attachment = ChainRenderer.GetHeadPosition(headArea);
         Vector2 offset = (Vector2)(attachment - GetClaspBottom(clasp));
         clasp.position += new Vector3(offset.x, offset.y, 0f);
     }
@@ -448,9 +448,7 @@ public class ObjectDragManager : MonoBehaviour
         Vector3 end;
         if (bodyArea is BoxCollider2D box)
         {
-            Vector2 center = box.offset;
-            start = box.transform.TransformPoint(center + Vector2.down * box.size.y * 0.5f);
-            end = box.transform.TransformPoint(center + Vector2.up * box.size.y * 0.5f);
+            ChainRenderer.GetBodyEndpoints(box, out start, out end);
         }
         else
         {
