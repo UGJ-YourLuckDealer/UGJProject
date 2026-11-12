@@ -7,6 +7,7 @@ public class ObjectDragManager : MonoBehaviour
     public float CharmGravity => Mathf.Max(0f, charmGravity);
     public float CharmLinearDamping => Mathf.Max(0f, charmLinearDamping);
     public float CharmAngularDamping => Mathf.Max(0f, charmAngularDamping);
+    public float CharmCollisionRadiusFactor => Mathf.Clamp(charmCollisionRadiusFactor, 0.1f, 1f);
 
     [Header("References")]
     [SerializeField] private Collider2D initialplacementArea;
@@ -15,17 +16,26 @@ public class ObjectDragManager : MonoBehaviour
     [SerializeField, Min(0.01f)] private float charmAttachmentSpacing = 0.5f;
     [SerializeField, Min(0f)] private float charmMinimumDistance = 5f;
 
+    [Header("Clasp Placement (World Units)")]
+    [SerializeField, Min(0f), Tooltip("잠금장치 또는 커서가 체인 상단에 얼마나 가까우면 배치를 허용할지 정합니다.")]
+    private float claspPlacementTolerance = 0.35f;
+
     [Header("Attachment Chain Visual")]
     [SerializeField] private Sprite chainLinkSprite;
     [SerializeField] private Material chainLinkMaterial;
     [SerializeField, Min(1)] private int chainLinkCount = 5;
     [SerializeField, Min(0.001f)] private float chainLinkWidth = 0.15f;
+    [SerializeField] private bool preserveChainLinkAspect = true;
+    [SerializeField, Tooltip("인접한 체인 조각 중심 사이에 추가할 간격 (월드 단위)")]
+    private float chainLinkPadding;
     private bool warnedMissingChainSprite;
 
     [Header("Charm Physics")]
     [SerializeField, Min(0f)] private float charmGravity = 9.81f;
     [SerializeField, Min(0f)] private float charmLinearDamping = 0.5f;
     [SerializeField, Min(0f)] private float charmAngularDamping = 1f;
+    [SerializeField, Range(0.1f, 1f), Tooltip("부적 크기에 대한 충돌 반경 비율")]
+    private float charmCollisionRadiusFactor = 0.8f;
 
     [Header("Charm Collision SFX")]
     [SerializeField] private string charmCollisionSfx = "sfx_place_charm";
@@ -229,7 +239,7 @@ public class ObjectDragManager : MonoBehaviour
         else if (materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Charm)
             canPlace = _bodyPlacementArea != null && _bodyPlacementArea.OverlapPoint(_mousePosition);
         else if (materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
-            canPlace = _headPlacementArea != null && _headPlacementArea.OverlapPoint(_mousePosition);
+            canPlace = CanPlaceClasp(draggingObject.transform, _mousePosition, _headPlacementArea);
         else
         {
             Debug.Log(materialObj.keyringMaterialData);
@@ -312,6 +322,8 @@ public class ObjectDragManager : MonoBehaviour
                     Vector3 attachment = isCharm
                         ? FindCharmAttachment(draggingObject.transform, _bodyPlacementArea)
                         : Vector3.zero;
+                    if (materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
+                        PlaceClaspAtChainTop(draggingObject.transform, _headPlacementArea);
 
                     // 나머지는 현재 배치된 체인의 자식으로 추가
                     currentBatchedChain.AddChild(materialObj.keyringMaterialData);
@@ -319,14 +331,8 @@ public class ObjectDragManager : MonoBehaviour
                     {
                         AudioService.Instance.PlaySfx("sfx_place_charm");
                         draggingObject.GetComponent<KeyringCharmSway>().SetDebugAttachment(this, attachment);
-                    }
-                    else if (materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
-                    {
-                        attachment = _headPlacementArea.bounds.center;
-                    }
-
-                    if (isCharm || materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
                         AddAttachmentChain(draggingObject, attachment);
+                    }
                 }
 
                 if (currentBatchedChain == materialObj)
@@ -377,6 +383,44 @@ public class ObjectDragManager : MonoBehaviour
             spriteRenderer.enabled = false;
     }
 
+    private bool CanPlaceClasp(Transform clasp, Vector2 cursorPosition, Collider2D headArea)
+    {
+        if (headArea == null || !headArea.enabled || !headArea.gameObject.activeInHierarchy)
+            return false;
+
+        Physics2D.SyncTransforms();
+        float tolerance = Mathf.Max(0f, claspPlacementTolerance);
+        Vector2 bottom = GetClaspBottom(clasp);
+        return (headArea.ClosestPoint(cursorPosition) - cursorPosition).sqrMagnitude <= tolerance * tolerance ||
+               (headArea.ClosestPoint(bottom) - bottom).sqrMagnitude <= tolerance * tolerance;
+    }
+
+    private void PlaceClaspAtChainTop(Transform clasp, Collider2D headArea)
+    {
+        Vector3 attachment = headArea.transform.TransformPoint(headArea.offset);
+        Vector2 offset = (Vector2)(attachment - GetClaspBottom(clasp));
+        clasp.position += new Vector3(offset.x, offset.y, 0f);
+    }
+
+    private static Vector3 GetClaspBottom(Transform clasp)
+    {
+        Vector3 claspBottom = clasp.position;
+        Transform bottom = clasp.Find("Bottom");
+        if (bottom != null)
+        {
+            claspBottom = bottom.position;
+        }
+        else if (clasp.TryGetComponent<SpriteRenderer>(out var spriteRenderer) && spriteRenderer.sprite != null)
+        {
+            Bounds bounds = spriteRenderer.sprite.bounds;
+            float bottomY = spriteRenderer.flipY ? -bounds.max.y : bounds.min.y;
+            float centerX = spriteRenderer.flipX ? -bounds.center.x : bounds.center.x;
+            claspBottom = spriteRenderer.transform.TransformPoint(new Vector3(centerX, bottomY, bounds.center.z));
+        }
+
+        return claspBottom;
+    }
+
     private void AddAttachmentChain(GameObject target, Vector3 worldAttachment)
     {
         if (chainLinkSprite == null)
@@ -394,7 +438,8 @@ public class ObjectDragManager : MonoBehaviour
             renderer = target.AddComponent<ChainRenderer>();
         Transform chain = currentBatchedChain.transform;
         renderer.Initialize(chain, chain.InverseTransformPoint(worldAttachment), target.transform,
-            chainLinkSprite, chainLinkMaterial, Mathf.Max(1, chainLinkCount), Mathf.Max(0.001f, chainLinkWidth));
+            chainLinkSprite, chainLinkMaterial, Mathf.Max(1, chainLinkCount), Mathf.Max(0.001f, chainLinkWidth),
+            preserveChainLinkAspect, chainLinkPadding);
     }
 
     private Vector3 FindCharmAttachment(Transform charm, Collider2D bodyArea)

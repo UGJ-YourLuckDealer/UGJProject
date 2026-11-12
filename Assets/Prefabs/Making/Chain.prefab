@@ -161,7 +161,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.754717, y: 1}
+    oldSize: {x: 0.4, y: 0.53}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -184,7 +184,9 @@ MonoBehaviour:
   _sprite: {fileID: 21300000, guid: 85b8259d20f7fdc438d53d3a75a7fa5f, type: 3}
   _material: {fileID: 2100000, guid: 4536cd77d01584c4fbec242cf728918a, type: 2}
   _chainCount: 10
-  _chainWidth: 0.15
+  _chainWidth: 0.25
+  _preserveAspect: 1
+  _chainPadding: 0.2
 --- !u!1 &5415074430023456832
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8627465109074525361}
   - component: {fileID: 6968471924598429676}
   m_Layer: 6
-  m_Name: clover
+  m_Name: Clover
   m_TagString: Clover
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1700134033415425999}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.20855, y: 2.81126, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

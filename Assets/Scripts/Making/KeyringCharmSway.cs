@@ -17,12 +17,13 @@ public class KeyringCharmSway : MonoBehaviour
     private float previousGravityScale;
     private float previousLinearDamping;
     private float previousAngularDamping;
-    private HingeJoint2D joint;
+    private DistanceJoint2D joint;
     private CircleCollider2D physicalCollider;
     private PhysicsMaterial2D collisionMaterial;
     private Collider2D[] originalColliders;
     private Vector3 localAttachment;
     private Vector2 localCharmAnchor;
+    private float attachmentDistance;
     private bool hasAttachment;
     private bool attached;
 
@@ -44,7 +45,9 @@ public class KeyringCharmSway : MonoBehaviour
 
         dragManager = manager;
         localAttachment = chain.InverseTransformPoint(worldAttachment);
-        localCharmAnchor = transform.InverseTransformPoint(worldAttachment);
+        Vector3 charmAttachment = ChainRenderer.GetAttachmentPosition(transform);
+        localCharmAnchor = transform.InverseTransformPoint(charmAttachment);
+        attachmentDistance = Mathf.Max(0.01f, Vector2.Distance(worldAttachment, charmAttachment));
         hasAttachment = true;
         if (isActiveAndEnabled)
             ActivatePhysics();
@@ -113,7 +116,8 @@ public class KeyringCharmSway : MonoBehaviour
             }
             physicalCollider.offset = transform.InverseTransformPoint(bounds.center);
             float scale = Mathf.Max(0.0001f, Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.y)));
-            physicalCollider.radius = Mathf.Max(0.01f, Mathf.Min(bounds.extents.x, bounds.extents.y) * 0.5f / scale);
+            float radiusFactor = dragManager != null ? dragManager.CharmCollisionRadiusFactor : 0.8f;
+            physicalCollider.radius = Mathf.Max(0.01f, Mathf.Min(bounds.extents.x, bounds.extents.y) * radiusFactor / scale);
             collisionMaterial = new PhysicsMaterial2D("Charm collision") { friction = 0f, bounciness = 0.05f };
             physicalCollider.sharedMaterial = collisionMaterial;
         }
@@ -121,11 +125,14 @@ public class KeyringCharmSway : MonoBehaviour
         charmColliders.Add(physicalCollider);
 
         if (joint == null)
-            joint = gameObject.AddComponent<HingeJoint2D>();
+            joint = gameObject.AddComponent<DistanceJoint2D>();
         joint.autoConfigureConnectedAnchor = false;
+        joint.autoConfigureDistance = false;
         joint.connectedBody = chainBody;
         joint.anchor = localCharmAnchor;
         joint.connectedAnchor = localAttachment;
+        joint.distance = attachmentDistance;
+        joint.maxDistanceOnly = false;
         joint.enableCollision = false;
         joint.enabled = true;
         attached = true;
@@ -185,7 +192,7 @@ public class KeyringCharmSway : MonoBehaviour
     private void LateUpdate()
     {
         if (attached && chain != null && dragManager != null && dragManager.ShowCharmAttachmentDebug)
-            Debug.DrawLine(chain.TransformPoint(localAttachment), transform.position, Color.cyan, 0f, false);
+            Debug.DrawLine(chain.TransformPoint(localAttachment), transform.TransformPoint(localCharmAnchor), Color.cyan, 0f, false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
