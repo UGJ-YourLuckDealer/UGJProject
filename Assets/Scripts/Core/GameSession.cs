@@ -183,8 +183,11 @@ public static class GameSession
 
     public static void ClearDialogueLog() => dialogueLog.Clear();
 
-    /// <summary>지금 주문(키링 제작 중인 손님)의 번호. Counter에서 Making으로 넘어갈 때 기록된 다음 손님 번호 - 1.</summary>
-    public static int CurrentOrderCustomer => NextCustomerIndex - 1;
+    /// <summary>
+    /// 지금 주문(키링 제작 중인 손님)의 번호. Counter에서 Making으로 넘어갈 때 기록된 손님 번호 그대로
+    /// (8e53bf2부터 Making에 갈 때 +1 하지 않음. 손님 번호는 Counter에서 반응 대사가 나온 뒤에 올라간다).
+    /// </summary>
+    public static int CurrentOrderCustomer => NextCustomerIndex;
 
     /// <summary>지금 주문에서 나눈 대화만 (오늘, 지금 손님, 제출 후 반응 대사 제외).</summary>
     public static List<DialogueLogEntry> CurrentOrderDialogue()
