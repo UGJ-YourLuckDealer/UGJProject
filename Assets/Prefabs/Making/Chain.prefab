@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4045726335776741206}
   - component: {fileID: 8627465109074525361}
   - component: {fileID: -4212149010102844396}
+  - component: {fileID: 3328184482594837099}
   m_Layer: 3
   m_Name: Chain
   m_TagString: Heart
@@ -85,8 +86,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.9528302, g: 0.56181026, b: 0.88032633, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 85b8259d20f7fdc438d53d3a75a7fa5f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -160,7 +161,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.754717, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -168,6 +169,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3328184482594837099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700134033415425999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 368c3b257b6f95345a17cc17d230a8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainRenderer
+  _sprite: {fileID: 21300000, guid: 85b8259d20f7fdc438d53d3a75a7fa5f, type: 3}
+  _material: {fileID: 2100000, guid: 4536cd77d01584c4fbec242cf728918a, type: 2}
+  _chainCount: 10
+  _chainWidth: 0.15
 --- !u!1 &5415074430023456832
 GameObject:
   m_ObjectHideFlags: 0

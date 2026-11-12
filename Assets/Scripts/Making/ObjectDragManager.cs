@@ -15,6 +15,13 @@ public class ObjectDragManager : MonoBehaviour
     [SerializeField, Min(0.01f)] private float charmAttachmentSpacing = 0.5f;
     [SerializeField, Min(0f)] private float charmMinimumDistance = 5f;
 
+    [Header("Attachment Chain Visual")]
+    [SerializeField] private Sprite chainLinkSprite;
+    [SerializeField] private Material chainLinkMaterial;
+    [SerializeField, Min(1)] private int chainLinkCount = 5;
+    [SerializeField, Min(0.001f)] private float chainLinkWidth = 0.15f;
+    private bool warnedMissingChainSprite;
+
     [Header("Charm Physics")]
     [SerializeField, Min(0f)] private float charmGravity = 9.81f;
     [SerializeField, Min(0f)] private float charmLinearDamping = 0.5f;
@@ -62,8 +69,24 @@ public class ObjectDragManager : MonoBehaviour
             nextCharmCollisionSfxTime = Time.unscaledTime + Mathf.Max(0f, charmCollisionSfxCooldown);
     }
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (chainLinkSprite == null)
+            chainLinkSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/desk/Item_b_chain_01.png");
+        if (chainLinkMaterial == null)
+            chainLinkMaterial = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Chain_Element.mat");
+    }
+#endif
+
     void Awake()
     {
+#if UNITY_EDITOR
+        if (chainLinkSprite == null)
+            chainLinkSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/desk/Item_b_chain_01.png");
+        if (chainLinkMaterial == null)
+            chainLinkMaterial = UnityEditor.AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Chain_Element.mat");
+#endif
         _id = 0;
         // 카메라 캐싱
         _mainCamera = Camera.main;
@@ -104,6 +127,9 @@ public class ObjectDragManager : MonoBehaviour
         draggingObject = data.bindedObject;
         draggingObject.transform.position = mousePosition;
         draggingObject.AddComponent<KeyringMaterialObject>().SetKeyringMaterialData(data);
+
+        if (data.category == KeyringMaterialObject.KeyringMaterial.Category.Chain)
+            InitializeMainChainVisual(draggingObject);
 
         isDragging = true;
     }
@@ -294,6 +320,13 @@ public class ObjectDragManager : MonoBehaviour
                         AudioService.Instance.PlaySfx("sfx_place_charm");
                         draggingObject.GetComponent<KeyringCharmSway>().SetDebugAttachment(this, attachment);
                     }
+                    else if (materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
+                    {
+                        attachment = _headPlacementArea.bounds.center;
+                    }
+
+                    if (isCharm || materialObj.keyringMaterialData.category == KeyringMaterialObject.KeyringMaterial.Category.Clasp)
+                        AddAttachmentChain(draggingObject, attachment);
                 }
 
                 if (currentBatchedChain == materialObj)
@@ -327,6 +360,41 @@ public class ObjectDragManager : MonoBehaviour
 
 
         isDragging = false;
+    }
+
+    private void InitializeMainChainVisual(GameObject chain)
+    {
+        var renderer = chain.GetComponent<ChainRenderer>();
+        Transform body = chain.transform.Find("BodyArea");
+        Transform head = chain.transform.Find("HeadArea");
+        if (renderer == null || body == null || head == null ||
+            !body.TryGetComponent<BoxCollider2D>(out var bodyArea) ||
+            !head.TryGetComponent<Collider2D>(out var headArea))
+            return;
+
+        if (renderer.InitializeMainChain(bodyArea, headArea) &&
+            chain.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+            spriteRenderer.enabled = false;
+    }
+
+    private void AddAttachmentChain(GameObject target, Vector3 worldAttachment)
+    {
+        if (chainLinkSprite == null)
+        {
+            if (!warnedMissingChainSprite)
+            {
+                Debug.LogWarning("체인 연결을 표시하려면 ObjectDragManager의 Chain Link Sprite를 지정하세요.", this);
+                warnedMissingChainSprite = true;
+            }
+            return;
+        }
+
+        var renderer = target.GetComponent<ChainRenderer>();
+        if (renderer == null)
+            renderer = target.AddComponent<ChainRenderer>();
+        Transform chain = currentBatchedChain.transform;
+        renderer.Initialize(chain, chain.InverseTransformPoint(worldAttachment), target.transform,
+            chainLinkSprite, chainLinkMaterial, Mathf.Max(1, chainLinkCount), Mathf.Max(0.001f, chainLinkWidth));
     }
 
     private Vector3 FindCharmAttachment(Transform charm, Collider2D bodyArea)

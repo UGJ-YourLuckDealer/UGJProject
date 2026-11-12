@@ -100,6 +100,8 @@ public class KeyringMaterialObject : MonoBehaviour
             return;
         if (child.bindedObject.TryGetComponent<KeyringCharmSway>(out var sway))
             sway.Detach();
+        if (child.bindedObject.TryGetComponent<ChainRenderer>(out var renderer))
+            Destroy(renderer);
         child.bindedObject.transform.SetParent(null);
     }
 
