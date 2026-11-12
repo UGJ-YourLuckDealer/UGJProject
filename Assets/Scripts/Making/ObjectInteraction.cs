@@ -7,7 +7,6 @@ public class ObjectInteraction : MonoBehaviour
     private Vector3 originalScale;
     public bool isHovering;
 
-    [SerializeField] private float hoverScale = 1.1f;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Color outlineColor = Color.yellow;
 
@@ -30,9 +29,7 @@ public class ObjectInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 targetScale = isHovering ? originalScale * hoverScale : originalScale;
 
-        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * 10f);
 
 
         if (Mouse.current == null) return;
