@@ -73,12 +73,12 @@ public class MakingBook : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < receipt.Count; i++)
-        {
-            TMP_Text newText = Instantiate(receiptPrefab, receiptParent);
+        //for (int i = 0; i < receipt.Count; i++)
+        //{
+        //    TMP_Text newText = Instantiate(receiptPrefab, receiptParent);
 
-            newText.text = receipt[i].ToString();
-        }
+        //    newText.text = receipt[i].ToString();
+        //}
 
 
     }
