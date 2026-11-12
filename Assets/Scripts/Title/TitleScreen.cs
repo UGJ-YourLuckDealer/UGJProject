@@ -18,6 +18,8 @@ public class TitleScreen : MonoBehaviour
     [SerializeField] GameObject _startButtonEffect;
     [SerializeField] Button _settingsButton;
     [SerializeField] GameObject _settingsButtonEffect;
+    [SerializeField] Button _creditButton;
+    [SerializeField] GameObject _creditButtonEffect;
     [SerializeField] Button _quitButton;
     [SerializeField] GameObject _quitButtonEffect;
 
@@ -135,6 +137,18 @@ public class TitleScreen : MonoBehaviour
 
         SubscribeButtonAnim(_settingsButton, _settingsButtonEffect);
 
+        _creditButton
+            .OnSubmitAsObservable()
+            .Subscribe(_ => OnCreditButtonClicked())
+            .AddTo(this);
+
+        _creditButton
+            .OnPointerClickAsObservable()
+            .Subscribe(_ => OnCreditButtonClicked())
+            .AddTo(this);
+
+        SubscribeButtonAnim(_creditButton, _creditButtonEffect);
+
 #if UNITY_WEBGL
         _quitButton.gameObject.SetActive(false);
         _quitButtonEffect.SetActive(false);
@@ -237,6 +251,11 @@ public class TitleScreen : MonoBehaviour
     void OnSettingsButtonClicked()
     {
         _popupService.ShowPopup("popup_title_settings");
+        AudioService.Instance.PlaySfx("sfx_ui_btn_click");
+    }
+
+    void OnCreditButtonClicked()
+    {
         AudioService.Instance.PlaySfx("sfx_ui_btn_click");
     }
 

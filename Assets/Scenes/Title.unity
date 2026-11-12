@@ -403,6 +403,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7930256822431302215, guid: 2639a2cb866569144a0b78e6cb84b2fe, type: 3}
   m_PrefabInstance: {fileID: 312012608494756452}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &851212848 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1473615983824680630, guid: 2639a2cb866569144a0b78e6cb84b2fe, type: 3}
+  m_PrefabInstance: {fileID: 312012608494756452}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &918571323
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,6 +602,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39887daf7ef28924d86fd3ebb4487885, type: 3}
+--- !u!114 &1044264600 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 313642721197031654, guid: 2639a2cb866569144a0b78e6cb84b2fe, type: 3}
+  m_PrefabInstance: {fileID: 312012608494756452}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &1051994339 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4213697702056216821, guid: 2639a2cb866569144a0b78e6cb84b2fe, type: 3}
@@ -723,6 +739,8 @@ MonoBehaviour:
   _startButtonEffect: {fileID: 849282336}
   _settingsButton: {fileID: 4383597972083486457}
   _settingsButtonEffect: {fileID: 269404258}
+  _creditButton: {fileID: 1044264600}
+  _creditButtonEffect: {fileID: 851212848}
   _quitButton: {fileID: 2123924596}
   _quitButtonEffect: {fileID: 1051994339}
 --- !u!1 &1588875494
