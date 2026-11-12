@@ -42,7 +42,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Start");
         isWaiting = false;
 
-
+        customer = Customer_Data.customer;
 
         Debug.Log(Customer_Data.isfinish);
 
@@ -98,14 +98,19 @@ public class DialogueManager : MonoBehaviour
     public void LastDialogue()
     {
 
-
+        
         TextPanelScaleUp panelScaleUp = textPanel.GetComponent<TextPanelScaleUp>();
 
         panelScaleUp.StartScaleUp();
         Debug.Log(currentIndex);
-        Debug.Log(customer);
+        Debug.Log("customer:" +customer);
 
-        bifurcation = dialogueData[customer].dialogueBifurcations[currentIndex];
+        if (Customer_Data.state == 0)
+            bifurcation = dialogueData[customer].dialogueBifurcations[0];
+        if (Customer_Data.state == 1)
+            bifurcation = dialogueData[customer].dialogueBifurcations[1];
+        if (Customer_Data.state == 2)
+            bifurcation = dialogueData[customer].dialogueBifurcations[2];
 
         characterName.text = line.character_Name;
         color.a = 255f;
@@ -113,6 +118,9 @@ public class DialogueManager : MonoBehaviour
         characterImage.color = color;
         textPanel.SetActive(true);
         DisplayLastDialogue();
+
+        Customer_Data.IncreaseCustomer();
+        customer = Customer_Data.customer;
     }
 
     public void ReStartDialogue()

@@ -51,7 +51,19 @@ public class DayClock : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+
         if (mode == LoadSceneMode.Single) Refresh(scene);
+
+        if (scene.name == "Counter")
+        {
+            Debug.Log("실행됨");
+            canvasObject.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("실행안됨" + canvasObject);
+            canvasObject.SetActive(false);
+        }
     }
 
     private void Refresh(Scene scene)

@@ -128,32 +128,38 @@ public class Result : MonoBehaviour
         float sum = (float)(correct - incorrect) /
             (float)(_loadedReceipt.clover + _loadedReceipt.note + _loadedReceipt.rainbow + _loadedReceipt.number + 1 + 1);
 
-        // ·¹½ÃÇÇ ¿ä¼Ò ÃÑ °³¼ö (= ºĞ¸ğ¿Í °°Àº °ª)
+        // ë ˆì‹œí”¼ ìš”ì†Œ ì´ ê°œìˆ˜ (= ë¶„ëª¨ì™€ ê°™ì€ ê°’)
         int total = _loadedReceipt.clover + _loadedReceipt.note + _loadedReceipt.rainbow + _loadedReceipt.number + 1 + 1;
 
-        // ÆÇ¸Å°¡ = ¿ä¼Ò¸¶´Ù $3 (±âÈ¹: ¸ğµç ¿ä¼Ò ÆÇ¸Å°¡°İ $3)
+        // íŒë§¤ê°€ = ìš”ì†Œë§ˆë‹¤ $3 (ê¸°íš: ëª¨ë“  ìš”ì†Œ íŒë§¤ê°€ê²© $3)
         float salePrice = total * 3f;
 
         float earned;
         string grade;
         JudgementResult judgement = new JudgementResult();
-        if (sum >= 1f)                    // 100%: ÆÇ¸Å°¡ + ÆÇ¸Å°¡ÀÇ 10% ÆÁ
+        if (sum >= 1f)                    // 100%: íŒë§¤ê°€ + íŒë§¤ê°€ì˜ 10% íŒ
         {
+            int state = 0;
             earned = salePrice * 1.1f;
             grade = "Perfect (Tip)";
             judgement.grade = JudgementGrade.Perfect;
+            Customer_Data.TipState(state);
         }
-        else if (sum >= 0.8f - 0.0001f)   // 80% ÀÌ»ó: ÆÇ¸Å°¡¸¸
+        else if (sum >= 0.8f - 0.0001f)   // 80% ì´ìƒ: íŒë§¤ê°€ë§Œ
         {
+            int state = 1;
             earned = salePrice;
             grade = "Pass";
             judgement.grade = JudgementGrade.Pass;
+            Customer_Data.TipState(state);
         }
-        else                              // 80% ¹Ì¸¸: È¯ºÒ (¼öÀÍ ¾øÀ½)
+        else                              // 80% ë¯¸ë§Œ: í™˜ë¶ˆ (ìˆ˜ìµ ì—†ìŒ)
         {
+            int state = 2;
             earned = 0f;
             grade = "Refund";
             judgement.grade = JudgementGrade.Refund;
+            Customer_Data.TipState(state);
         }
 
         CapitalSystem capital = FindAnyObjectByType<CapitalSystem>();
@@ -161,14 +167,14 @@ public class Result : MonoBehaviour
         {
             float before = capital.Current;
             capital.Add(earned);
-            Debug.Log($"[ÆÇÁ¤ ¼öÀÍ] {grade}: {before:0.00} ¡æ {capital.Current:0.00} (+{earned:0.00})");
+            Debug.Log($"[íŒì • ìˆ˜ìµ] {grade}: {before:0.00} â†’ {capital.Current:0.00} (+{earned:0.00})");
         }
         else
         {
-            Debug.LogWarning("[ÆÇÁ¤ ¼öÀÍ] ¾À¿¡ CapitalSystemÀÌ ¾ø½À´Ï´Ù. GameSystems ÇÁ¸®ÆÕÀ» ¹èÄ¡ÇØ ÁÖ¼¼¿ä.");
+            Debug.LogWarning("[íŒì • ìˆ˜ìµ] ì”¬ì— CapitalSystemì´ ì—†ìŠµë‹ˆë‹¤. GameSystems í”„ë¦¬íŒ¹ì„ ë°°ì¹˜í•´ ì£¼ì„¸ìš”.");
         }
 
-        // ÆÁ À¯¹« Ç¥½Ã¿ë ÆÇÁ¤ °á°ú ¾Ë¸² (¼öÀÍÀº À§¿¡¼­ ÀÌ¹Ì ´õÇßÀ¸¹Ç·Î ±İ¾×Àº ³ÖÁö ¾ÊÀ½)
+        // íŒ ìœ ë¬´ í‘œì‹œìš© íŒì • ê²°ê³¼ ì•Œë¦¼ (ìˆ˜ìµì€ ìœ„ì—ì„œ ì´ë¯¸ ë”í–ˆìœ¼ë¯€ë¡œ ê¸ˆì•¡ì€ ë„£ì§€ ì•ŠìŒ)
         judgement.matched = correct;
         judgement.mismatched = incorrect;
         judgement.total = total;

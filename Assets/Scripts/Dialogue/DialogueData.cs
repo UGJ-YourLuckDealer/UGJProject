@@ -33,7 +33,4 @@ public class DialogueData : ScriptableObject
     public DialogueBifurcation[] dialogueBifurcations;
 
     public Receipt_Data receiptData;
-
-
-    
 }
