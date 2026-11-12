@@ -4,6 +4,10 @@ using UnityEngine.InputSystem;
 
 public class ObjectDragManager : MonoBehaviour
 {
+    public float CharmGravity => Mathf.Max(0f, charmGravity);
+    public float CharmLinearDamping => Mathf.Max(0f, charmLinearDamping);
+    public float CharmAngularDamping => Mathf.Max(0f, charmAngularDamping);
+
     [Header("References")]
     [SerializeField] private Collider2D initialplacementArea;
 
@@ -15,9 +19,13 @@ public class ObjectDragManager : MonoBehaviour
     [SerializeField, Min(0f)] private float charmGravity = 9.81f;
     [SerializeField, Min(0f)] private float charmLinearDamping = 0.5f;
     [SerializeField, Min(0f)] private float charmAngularDamping = 1f;
-    public float CharmGravity => Mathf.Max(0f, charmGravity);
-    public float CharmLinearDamping => Mathf.Max(0f, charmLinearDamping);
-    public float CharmAngularDamping => Mathf.Max(0f, charmAngularDamping);
+
+    [Header("Charm Collision SFX")]
+    [SerializeField] private string charmCollisionSfx = "sfx_place_charm";
+    [SerializeField, Min(0f)] private float charmCollisionMinSpeed = 0.5f;
+    [SerializeField, Min(0f)] private float charmCollisionSfxCooldown = 0.15f;
+    [SerializeField, Min(1)] private int charmCollisionMaxVoices = 2;
+    private float nextCharmCollisionSfxTime;
 
     [SerializeField] private bool showCharmAttachmentDebug = true;
     public bool ShowCharmAttachmentDebug => showCharmAttachmentDebug;
@@ -43,6 +51,16 @@ public class ObjectDragManager : MonoBehaviour
     Camera _mainCamera;
     Collider2D _bodyPlacementArea;
     Collider2D _headPlacementArea;
+
+    public void PlayCharmCollisionSfx(float speed)
+    {
+        if (speed < Mathf.Max(0f, charmCollisionMinSpeed) || Time.unscaledTime < nextCharmCollisionSfxTime ||
+            string.IsNullOrEmpty(charmCollisionSfx))
+            return;
+
+        if (AudioService.Instance.TryPlaySfx(charmCollisionSfx, Mathf.Max(1, charmCollisionMaxVoices), "charm_collision"))
+            nextCharmCollisionSfxTime = Time.unscaledTime + Mathf.Max(0f, charmCollisionSfxCooldown);
+    }
 
     void Awake()
     {

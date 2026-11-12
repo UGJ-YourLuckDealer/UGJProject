@@ -188,6 +188,17 @@ public class KeyringCharmSway : MonoBehaviour
             Debug.DrawLine(chain.TransformPoint(localAttachment), transform.position, Color.cyan, 0f, false);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<KeyringCharmSway>(out var other))
+        {
+            if (attached && other.attached && dragManager != null && GetInstanceID() < other.GetInstanceID())
+            {
+                dragManager.PlayCharmCollisionSfx(collision.relativeVelocity.magnitude);
+            }
+        }
+    }
+
     private void OnDisable()
     {
         DeactivatePhysics();
