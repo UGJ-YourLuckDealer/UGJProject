@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 씬과 SceneFlow를 잇는 hermit 연결 컴포넌트. 팀원 스크립트·오브젝트는 수정하지 않는다.
-/// - Counter: 시작 손님 번호를 DialogueManager에 넣고, 씬을 떠날 때(팀원 코드가 직접 Making을 불러도) 다음 손님 번호를 기억한다.
+/// - Counter: 시작 손님 번호를 DialogueManager에 넣고, 씬을 떠날 때(팀원 코드가 직접 Making을 불러도) 손님 번호를 기억한다.
 /// - Making: 팀원 Submit 버튼(Result.Result_Kiring)에 실행 중에만 ReturnFromMaking을 붙인다.
 ///   지금 손님 번호에 맞는 레시피(customerReceipts)를 팀원 판정(Result.receipt_data)에 넣는다.
 /// - 버튼 OnClick에서 SceneFlow 함수를 부르는 용도로도 쓴다.
@@ -35,8 +35,8 @@ public class SceneFlowLink : MonoBehaviour
 
     private void ApplyCustomerReceipt()
     {
-        // Counter에서 GoToMaking/NoteCounterLeft가 다음 손님 번호를 기록하므로 지금 손님 = NextCustomerIndex - 1
-        int current = SceneFlow.NextCustomerIndex - 1;
+        // Counter에서 GoToMaking/NoteCounterLeft가 지금 손님 번호를 기록한다
+        int current = SceneFlow.NextCustomerIndex;
         if (customerReceipts == null || current < 0 || current >= customerReceipts.Length) return;
         if (customerReceipts[current] == null) return;
         var result = FindAnyObjectByType<Result>();

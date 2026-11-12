@@ -28,13 +28,13 @@ public static class SceneFlow
         ScreenFader.LoadScene(CounterScene);
     }
 
-    /// <summary>Counter에서 주문 수락 → Making. 현재 손님 다음 번호를 기억한다.</summary>
+    /// <summary>Counter에서 주문 수락 → Making. 현재 손님 번호를 기억한다 (돌아오면 같은 손님의 반응 대사).</summary>
     public static void GoToMaking(DialogueManager dialogue)
     {
         if (ScreenFader.IsBusy) return;
         if (dialogue != null)
         {
-            GameSession.NextCustomerIndex = dialogue.customer + 1;
+            GameSession.NextCustomerIndex = dialogue.customer;
             if (dialogue.dialogueData != null) GameSession.CustomerCount = dialogue.dialogueData.Length;
         }
         ScreenFader.LoadSceneRising(MakingScene); // 책상이 올라오며 Making으로 (Fade 아님)
@@ -42,11 +42,11 @@ public static class SceneFlow
 
     /// <summary>
     /// Counter를 떠날 때(SceneFlowLink.OnDestroy) 호출. SceneFlow를 거치지 않은 전환(팀원 코드의 직접 로드)도
-    /// 다음 손님 번호가 이어지도록 기록한다.
+    /// 손님 번호가 이어지도록 기록한다.
     /// </summary>
     public static void NoteCounterLeft(int currentCustomer, int count)
     {
-        GameSession.NextCustomerIndex = currentCustomer + 1;
+        GameSession.NextCustomerIndex = currentCustomer;
         if (count > 0) GameSession.CustomerCount = count;
     }
 
