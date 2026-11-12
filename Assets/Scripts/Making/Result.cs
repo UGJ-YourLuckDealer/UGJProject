@@ -18,9 +18,18 @@ public class Result : MonoBehaviour
 
     int main = 0;
 
+    Receipt_Data _loadedReceipt;
+
     void Start()
     {
-        receipt_data = Customer_Data.receipt;
+        if (Customer_Data.receipt != null)
+        {
+            _loadedReceipt = Customer_Data.receipt;
+        }
+        else
+        {
+            _loadedReceipt = receipt_data;
+        }
     }
 
     private void CountAttachedMaterials()
@@ -64,19 +73,19 @@ public class Result : MonoBehaviour
         int incorrect = 0;
         CountAttachedMaterials();
 
-        correct += Mathf.Min(clover, receipt_data.clover);
-        incorrect += Mathf.Max(0, clover - receipt_data.clover);
+        correct += Mathf.Min(clover, _loadedReceipt.clover);
+        incorrect += Mathf.Max(0, clover - _loadedReceipt.clover);
 
-        correct += Mathf.Min(note, receipt_data.note);
-        incorrect += Mathf.Max(0, note - receipt_data.note);
+        correct += Mathf.Min(note, _loadedReceipt.note);
+        incorrect += Mathf.Max(0, note - _loadedReceipt.note);
 
-        correct += Mathf.Min(rainbow, receipt_data.rainbow);
-        incorrect += Mathf.Max(0, rainbow - receipt_data.rainbow);
+        correct += Mathf.Min(rainbow, _loadedReceipt.rainbow);
+        incorrect += Mathf.Max(0, rainbow - _loadedReceipt.rainbow);
 
-        correct += Mathf.Min(number, receipt_data.number);
-        incorrect += Mathf.Max(0, number - receipt_data.number);
+        correct += Mathf.Min(number, _loadedReceipt.number);
+        incorrect += Mathf.Max(0, number - _loadedReceipt.number);
 
-        switch (receipt_data.main_kiring)
+        switch (_loadedReceipt.main_kiring)
         {
             case Receipt_Data.Main_Kiring.Normal:
                 if (normal == 1)
@@ -92,7 +101,7 @@ public class Result : MonoBehaviour
                 break;
         }
 
-        switch (receipt_data.clasp)
+        switch (_loadedReceipt.clasp)
         {
             case Receipt_Data.Clasp.A:
                 if (a == 1)
@@ -117,10 +126,10 @@ public class Result : MonoBehaviour
 
 
         float sum = (float)(correct - incorrect) /
-            (float)(receipt_data.clover + receipt_data.note + receipt_data.rainbow + receipt_data.number + 1 + 1);
+            (float)(_loadedReceipt.clover + _loadedReceipt.note + _loadedReceipt.rainbow + _loadedReceipt.number + 1 + 1);
 
         // 레시피 요소 총 개수 (= 분모와 같은 값)
-        int total = receipt_data.clover + receipt_data.note + receipt_data.rainbow + receipt_data.number + 1 + 1;
+        int total = _loadedReceipt.clover + _loadedReceipt.note + _loadedReceipt.rainbow + _loadedReceipt.number + 1 + 1;
 
         // 판매가 = 요소마다 $3 (기획: 모든 요소 판매가격 $3)
         float salePrice = total * 3f;

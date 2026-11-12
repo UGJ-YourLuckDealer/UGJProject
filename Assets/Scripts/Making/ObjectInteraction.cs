@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI.Extensions;
 
 public class ObjectInteraction : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] private GameObject heldPrefab;
     [SerializeField] private ObjectDragManager dragManager;
 
-    [SerializeField] private ObjectInfoTooltip infoTooltip;
+    [SerializeField] private string tooltipText = "None";
+    [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
     private GameObject outlineObject;
 
@@ -44,24 +46,23 @@ public class ObjectInteraction : MonoBehaviour
 
         bool isOver = hit != null && hit.gameObject == gameObject;
 
-        if(isOver && !isHovering) //Enter
+        if (isOver && !isHovering) //Enter
         {
-
             isHovering = true;
             outlineObject.SetActive(true);
-
-            if (infoTooltip != null) infoTooltip.Show(gameObject);
+            ToolTip.Instance.SetTooltip(
+                tooltipText,
+                ToolTip.Instance.GuiCamera.WorldToScreenPoint(transform.position + (Vector3)tooltipOffset));
         }
 
-        if(!isOver && isHovering) //Exit
+        if (!isOver && isHovering) //Exit
         {
             isHovering = false;
             outlineObject.SetActive(false);
-
-            if (infoTooltip != null) infoTooltip.Hide();
+            ToolTip.Instance.HideTooltip();
         }
 
-        if(isOver && Mouse.current.leftButton.wasPressedThisFrame) // OnMouseDown
+        if (isOver && Mouse.current.leftButton.wasPressedThisFrame) // OnMouseDown
         {
             if (dragManager == null || heldPrefab == null) return;
 
@@ -83,7 +84,7 @@ public class ObjectInteraction : MonoBehaviour
         outlineRenderer.sprite = spriteRenderer.sprite;
         outlineRenderer.color = outlineColor;
         outlineRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
-        outlineRenderer.sortingOrder = spriteRenderer.sortingOrder -1;
+        outlineRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
 
         outlineObject.SetActive(false);
     }
