@@ -100,6 +100,8 @@ public class KeyringMaterialObject : MonoBehaviour
             return;
         if (child.bindedObject.TryGetComponent<KeyringCharmSway>(out var sway))
             sway.Detach();
+        if (child.bindedObject.TryGetComponent<ChainRenderer>(out var renderer))
+            Destroy(renderer);
         child.bindedObject.transform.SetParent(null);
     }
 
@@ -155,7 +157,7 @@ public class KeyringMaterialObject : MonoBehaviour
         Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
         worldPosition.z = transform.position.z;
 
-        if (mouse.leftButton.wasPressedThisFrame)
+        if (mouse.leftButton.wasPressedThisFrame && !ObjectInteraction.IsPointerOverMaterialUI(mouse.position.ReadValue()))
         {
             foreach (Collider2D hit in Physics2D.OverlapPointAll(worldPosition))
             {

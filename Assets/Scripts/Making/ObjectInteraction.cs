@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using UnityEngine.UI.Extensions;
 
-public class ObjectInteraction : MonoBehaviour
+public class ObjectInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     private Vector3 originalScale;
     public bool isHovering;
@@ -17,13 +19,26 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] private Vector2 tooltipOffset = Vector2.zero;
 
     private GameObject outlineObject;
+    private UnityEngine.UI.Image uiImage;
+    private UnityEngine.UI.Outline uiOutline;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         originalScale = transform.localScale;
+        uiImage = GetComponent<UnityEngine.UI.Image>();
 
-        CreateOutline();
+        if (uiImage != null)
+        {
+            uiOutline = GetComponent<UnityEngine.UI.Outline>();
+            if (uiOutline == null)
+                uiOutline = gameObject.AddComponent<UnityEngine.UI.Outline>();
+            uiOutline.effectColor = outlineColor;
+            uiOutline.enabled = false;
+        }
+        else
+        {
+            CreateOutline();
+        }
     }
 
     // Update is called once per frame
@@ -32,7 +47,7 @@ public class ObjectInteraction : MonoBehaviour
 
 
 
-        if (Mouse.current == null) return;
+        if (uiImage != null || Mouse.current == null) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
 
@@ -65,6 +80,70 @@ public class ObjectInteraction : MonoBehaviour
 
             dragManager.StartDrag(heldPrefab);
         }
+    }
+
+    public static bool IsPointerOverMaterialUI(Vector2 screenPosition)
+    {
+        var eventSystem = EventSystem.current;
+        if (eventSystem == null)
+            return false;
+
+        var hits = new List<RaycastResult>();
+        var pointer = new PointerEventData(eventSystem) { position = screenPosition };
+        eventSystem.RaycastAll(pointer, hits);
+        if (hits.Count == 0)
+            return false;
+
+        var interaction = hits[0].gameObject.GetComponentInParent<ObjectInteraction>();
+        return interaction != null && interaction.GetComponent<UnityEngine.UI.Image>() != null;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (uiImage == null || isHovering) return;
+
+        isHovering = true;
+        uiOutline.enabled = true;
+
+        ToolTip tooltip = ToolTip.Instance;
+        if (tooltip == null) return;
+
+
+        Canvas canvas = uiImage.canvas;
+        Camera eventCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+            ? canvas.worldCamera : null;
+        Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(eventCamera, transform.position);
+        tooltip.SetTooltip(tooltipText, screenPosition + tooltipOffset);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (uiImage != null)
+            ClearHover();
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (uiImage == null || eventData.button != PointerEventData.InputButton.Left) return;
+        if (dragManager == null || heldPrefab == null) return;
+
+        dragManager.StartDrag(heldPrefab);
+    }
+
+    void OnDisable()
+    {
+        ClearHover();
+    }
+
+    void ClearHover()
+    {
+        if (!isHovering) return;
+
+        isHovering = false;
+        if (uiOutline != null) uiOutline.enabled = false;
+        if (outlineObject != null) outlineObject.SetActive(false);
+        ToolTip tooltip = ToolTip.Instance;
+        if (tooltip != null) tooltip.HideTooltip();
     }
 
     void CreateOutline()
