@@ -132,6 +132,8 @@ MonoBehaviour:
   fadeOutSeconds: 0.5
   fadeInSeconds: 0.6
   holdBlackSeconds: 0.1
+  riseSeconds: 0.55
+  revealSeconds: 0.1
 --- !u!1 &9091987845588099777
 GameObject:
   m_ObjectHideFlags: 0

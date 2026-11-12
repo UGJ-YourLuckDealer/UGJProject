@@ -37,7 +37,7 @@ public static class SceneFlow
             GameSession.NextCustomerIndex = dialogue.customer + 1;
             if (dialogue.dialogueData != null) GameSession.CustomerCount = dialogue.dialogueData.Length;
         }
-        ScreenFader.LoadScene(MakingScene);
+        ScreenFader.LoadSceneRising(MakingScene); // 책상이 올라오며 Making으로 (Fade 아님)
     }
 
     /// <summary>
