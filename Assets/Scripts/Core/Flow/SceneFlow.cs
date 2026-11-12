@@ -53,6 +53,7 @@ public static class SceneFlow
     /// <summary>Making에서 제출 → 손님 처리 완료. 손님이 남았으면 Counter, 아니면 Result.</summary>
     public static void ReturnFromMaking()
     {
+
         if (ScreenFader.IsBusy) return; // 손님 처리 완료가 두 번 세지지 않게
         GameEvents.RaiseCustomerFinished(null); // GameFlowManager가 처리 수를 세고, 마지막이면 GameEnded를 보낸다
 
