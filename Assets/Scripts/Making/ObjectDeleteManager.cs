@@ -48,6 +48,8 @@ public class ObjectDeleteManager : MonoBehaviour
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             Vector2 mousePosition = Mouse.current.position.ReadValue();
+            if (ObjectInteraction.IsPointerOverMaterialUI(mousePosition))
+                return;
 
             Vector2 worldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
 
