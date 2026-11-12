@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -20,16 +19,22 @@ public class SceneFlowLink : MonoBehaviour
     [Tooltip("Making: 손님 번호(DialogueManager.customer) 순서대로 판정할 레시피. 비어 있으면 Result에 넣어 둔 기본 레시피를 쓴다")]
     [SerializeField] private Receipt_Data[] customerReceipts;
 
+    [Tooltip("Counter: 하루 마지막 팁 대사를 클릭해 대사·초상화가 사라진 뒤 정산 팝업을 열기까지 기다리는 시간(초)")]
+    [SerializeField, Min(0f)] private float settlementDelay = 0.8f;
+
+    [Tooltip("Making: 보드에 아무것도 없이 Submit을 눌렀을 때 보여 줄 문구")]
+    [SerializeField] private string emptyBoardMessage = "Make a keyring first!";
+    [SerializeField, Min(0.1f)] private float emptyBoardHintSeconds = 1.5f;
+    [Tooltip("안내 말풍선 위치 (Submit 버튼 기준점 기준). 버튼이 오른쪽 위 구석(기준점 = 버튼 오른쪽 위)이라 버튼 바로 아래 가운데로")]
+    [SerializeField] private Vector2 emptyBoardHintOffset = new Vector2(-125f, -170f);
+
     private const string CounterMoneyBarPath = "CounterMoneyBar"; // Resources/CounterMoneyBar.prefab
 
     private int cachedCustomer = -1;
     private int cachedCustomerCount;
     private bool isCounter;
     private bool settlementOpened;
-    private string lastDialogueText;
-    private bool tipDialogueShown; // 하루 마지막 손님의 팁 대사가 끝까지 나왔는지
-    private float dialogueStableSeconds;
-    private const float typingDoneSeconds = 0.15f; // 대사 타이핑 간격(0.05초)보다 충분히 길게
+    private const string RestartDialogueMethod = "ReStartDialogue"; // DialogueManager가 대사를 닫은 뒤 Invoke로 예약하는 메서드
 
     private void Awake()
     {
@@ -57,40 +62,33 @@ public class SceneFlowLink : MonoBehaviour
 
     private void Update()
     {
-        // 하루 마지막 손님: Counter로 돌아와 나온 팁(반응) 대사를 끝까지 보고 클릭하면 하루 정산 팝업.
-        // Customer_Data.isfinish는 책상 클릭 때 이미 바뀌어 있을 수 있어 쓰지 않고, 화면의 대사 텍스트로 판단한다.
+        // 하루 마지막 손님: Counter로 돌아와 나온 팁(반응) 대사를 클릭하면 하루 정산 팝업.
+        // 팁 대사를 클릭하면 팀원 DialogueManager.EndDialogue가 대사를 닫고 2초 뒤 다음 대화(ReStartDialogue)를 예약한다.
+        // 그 예약이 생긴 순간을 '팁 대사 클릭'으로 보고 예약은 바로 취소한 뒤,
+        // 대사창·초상화가 사라진 빈 화면을 잠깐(settlementDelay) 보여 주고 팝업을 연다 (팀원 코드는 수정하지 않음).
         if (!isCounter || settlementOpened || !GameSession.SettlementPending) return;
-        if (dialogue == null || dialogue.dialogueText == null) { OpenSettlement(); return; }
-
-        var text = dialogue.dialogueText;
-        string shown = text.isActiveAndEnabled ? text.text : null;
-
-        if (tipDialogueShown)
-        {
-            // 팁 대사를 다 본 뒤의 클릭. 팀원 DialogueManager가 같은 프레임에 먼저 클릭을 받아 대사를 지웠을 수도 있으므로
-            // 클릭이 보이거나 대사가 사라졌으면 바로 연다 (이때 예약된 다음 대화 시작은 OpenSettlement가 취소)
-            var mouse = Mouse.current;
-            bool clicked = mouse != null && mouse.leftButton.wasPressedThisFrame && !GameSession.IsUIBlockingInput;
-            if (clicked || shown != lastDialogueText) OpenSettlement();
-            return;
-        }
-
-        if (string.IsNullOrEmpty(shown) || shown != lastDialogueText)
-        {
-            lastDialogueText = shown; // 아직 대사가 없거나 타이핑 중
-            dialogueStableSeconds = 0f;
-            return;
-        }
-
-        // 글자가 더 이상 바뀌지 않으면 타이핑이 끝난 것 (타이핑 도중 클릭은 대사를 한 번에 보여 주는 클릭이라 제외)
-        dialogueStableSeconds += Time.unscaledDeltaTime;
-        if (dialogueStableSeconds >= typingDoneSeconds) tipDialogueShown = true;
+        if (dialogue == null || dialogue.IsInvoking(RestartDialogueMethod)) OpenSettlement();
     }
 
     private void OpenSettlement()
     {
         settlementOpened = true;
         if (dialogue != null) dialogue.CancelInvoke(); // 대사가 끝난 뒤 예약된 다음 대화 시작(ReStartDialogue)이 팝업 뒤에서 돌지 않게
+        StartCoroutine(OpenSettlementAfterDelay());
+    }
+
+    private System.Collections.IEnumerator OpenSettlementAfterDelay()
+    {
+        // 기다리는 동안 책상 클릭으로 Making에 들어가지 않게 잠시 끈다 (팝업이 열리면 팝업이 다시 막는다)
+        var desks = FindObjectsByType<DeskInteraction>(FindObjectsSortMode.None);
+        var disabled = new System.Collections.Generic.List<DeskInteraction>();
+        foreach (var d in desks)
+            if (d.enabled) { d.enabled = false; disabled.Add(d); }
+
+        if (settlementDelay > 0f) yield return new WaitForSecondsRealtime(settlementDelay);
+
+        foreach (var d in disabled)
+            if (d != null) d.enabled = true;
         SettlementPopup.OpenDaySettlement();
     }
 
@@ -120,16 +118,55 @@ public class SceneFlowLink : MonoBehaviour
 
     private void HookSubmitButtons()
     {
-        // 결산 팝업이 있으면 Submit → 결산 → (팝업 버튼) → ReturnFromMaking, 없으면 바로 ReturnFromMaking
+        // 결산 팝업이 있으면 Submit → 결산 → (팝업 버튼) → ReturnFromMaking, 없으면 바로 ReturnFromMaking.
+        // 보드에 아무것도 없으면 제출하지 않도록, 팀원 판정(Result_Kiring) 연결은 이번 실행에서만 끄고
+        // 확인 후 직접 부른다 (프리팹·씬 파일은 그대로).
         var settlement = FindAnyObjectByType<SettlementPopup>();
         foreach (var b in FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             for (int i = 0; i < b.onClick.GetPersistentEventCount(); i++)
                 if (b.onClick.GetPersistentMethodName(i) == "Result_Kiring")
                 {
-                    if (settlement != null) b.onClick.AddListener(settlement.Show); // 팀원 판정(Result_Kiring) 다음에 실행됨
-                    else b.onClick.AddListener(ReturnFromMaking);
+                    var result = b.onClick.GetPersistentTarget(i) as Result;
+                    if (result == null) break; // 알 수 없는 대상이면 원래 동작 그대로
+                    b.onClick.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
+                    var button = b;
+                    b.onClick.AddListener(() => Submit(button, result, settlement));
                     break;
                 }
+    }
+
+    private void Submit(Button button, Result result, SettlementPopup settlement)
+    {
+        if (IsBoardEmpty())
+        {
+            ShowEmptyBoardHint(button.transform);
+            return;
+        }
+        result.Result_Kiring(); // 팀원 판정
+        if (settlement != null) settlement.Show();
+        else ReturnFromMaking();
+    }
+
+    // 보드에 키링 본체(체인)가 없으면 아무것도 만들지 않은 것으로 본다
+    private static bool IsBoardEmpty()
+    {
+        var manager = FindAnyObjectByType<ObjectDragManager>();
+        return manager == null || manager.CurrentChain == null;
+    }
+
+    private void ShowEmptyBoardHint(Transform target)
+    {
+        var tooltip = GuideTooltip.Instance;
+        if (tooltip == null) return;
+        tooltip.Show(target, emptyBoardMessage, emptyBoardHintOffset);
+        StopCoroutine(nameof(HideHintLater));
+        StartCoroutine(nameof(HideHintLater));
+    }
+
+    private System.Collections.IEnumerator HideHintLater()
+    {
+        yield return new WaitForSecondsRealtime(emptyBoardHintSeconds);
+        if (GuideTooltip.Instance != null) GuideTooltip.Instance.Hide();
     }
 
     public void StartNewGame() => SceneFlow.StartNewGame();
