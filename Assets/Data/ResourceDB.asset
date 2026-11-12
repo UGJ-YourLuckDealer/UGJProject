@@ -56,6 +56,20 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
+    - value: sfx_charm_collision
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
     _wrapTypeKey: 4
     _saintsValues:
     - valueField:
@@ -78,6 +92,19 @@ MonoBehaviour:
         stringValue: 
         intValues: 
         V: {fileID: 6418180475301049370, guid: 4fdd3ad931f676e459208daf0e7938be, type: 2}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 1
+    - valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 6418180475301049370, guid: 89707550cb9679842a52913322837693, type: 2}
         VRef:
           rid: -2
         IsVRef: 0

@@ -2864,6 +2864,10 @@ MonoBehaviour:
   charmGravity: 3
   charmLinearDamping: 0.5
   charmAngularDamping: 3
+  charmCollisionSfx: sfx_charm_collision
+  charmCollisionMinSpeed: 0.5
+  charmCollisionSfxCooldown: 0.15
+  charmCollisionMaxVoices: 2
   showCharmAttachmentDebug: 1
 --- !u!4 &1535715358
 Transform:
