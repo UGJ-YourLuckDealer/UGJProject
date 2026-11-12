@@ -4,6 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 씬과 SceneFlow를 잇는 hermit 연결 컴포넌트. 팀원 스크립트·오브젝트는 수정하지 않는다.
 /// - Counter: 시작 손님 번호를 DialogueManager에 넣고, 씬을 떠날 때(팀원 코드가 직접 Making을 불러도) 손님 번호를 기억한다.
+///   오른쪽 위에 돈 표시 UI(Resources/CounterMoneyBar)를 띄운다.
 /// - Making: 팀원 Submit 버튼(Result.Result_Kiring)에 실행 중에만 ReturnFromMaking을 붙인다.
 ///   지금 손님 번호에 맞는 레시피(customerReceipts)를 팀원 판정(Result.receipt_data)에 넣는다.
 /// - 버튼 OnClick에서 SceneFlow 함수를 부르는 용도로도 쓴다.
@@ -18,8 +19,11 @@ public class SceneFlowLink : MonoBehaviour
     [Tooltip("Making: 손님 번호(DialogueManager.customer) 순서대로 판정할 레시피. 비어 있으면 Result에 넣어 둔 기본 레시피를 쓴다")]
     [SerializeField] private Receipt_Data[] customerReceipts;
 
+    private const string CounterMoneyBarPath = "CounterMoneyBar"; // Resources/CounterMoneyBar.prefab
+
     private int cachedCustomer = -1;
     private int cachedCustomerCount;
+    private bool isCounter;
 
     private void Awake()
     {
@@ -31,6 +35,18 @@ public class SceneFlowLink : MonoBehaviour
 
         if (hookResultSubmit) HookSubmitButtons();
         ApplyCustomerReceipt();
+
+        isCounter = gameObject.scene.name == SceneFlow.CounterScene;
+        if (isCounter) SpawnCounterMoneyBar();
+    }
+
+    // Counter 씬 파일은 건드리지 않고 실행 중에 돈 표시 UI를 붙인다 (씬 오브젝트라 씬을 떠나면 함께 사라짐)
+    private void SpawnCounterMoneyBar()
+    {
+        var prefab = Resources.Load<GameObject>(CounterMoneyBarPath);
+        if (prefab == null) return;
+        var bar = Instantiate(prefab);
+        bar.name = prefab.name;
     }
 
     private void ApplyCustomerReceipt()
