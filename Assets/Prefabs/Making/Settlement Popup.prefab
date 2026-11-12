@@ -636,9 +636,9 @@ MonoBehaviour:
   normalColor: {r: 0.3, g: 0.2, b: 0.15, a: 1}
   goodColor: {r: 0.18039216, g: 0.61960787, b: 0.22745098, a: 1}
   badColor: {r: 0.8509804, g: 0.23137255, b: 0.18039216, a: 1}
-  slideSeconds: 0.5
+  slideSeconds: 0.8
   slideFromX: 1400
-  lineInterval: 0.35
+  lineInterval: 0.5
   sfxVolume: 0.6
   blockWhileOpen:
   - ObjectInteraction

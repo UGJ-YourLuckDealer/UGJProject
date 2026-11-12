@@ -39,10 +39,10 @@ public class SettlementPopupView : MonoBehaviour
     [SerializeField] private Color badColor = new Color32(0xD9, 0x3B, 0x2E, 0xFF);   // 불리한 값
 
     [Header("Timing")]
-    [SerializeField, Min(0.05f)] private float slideSeconds = 0.5f;
+    [SerializeField, Min(0.05f)] private float slideSeconds = 0.8f;
     [SerializeField] private float slideFromX = 1400f;
     [Tooltip("정산 값이 하나씩 나오는 간격")]
-    [SerializeField, Min(0f)] private float lineInterval = 0.35f;
+    [SerializeField, Min(0f)] private float lineInterval = 0.5f;
     [SerializeField, Range(0f, 1f)] private float sfxVolume = 0.6f;
 
     [Tooltip("팝업이 떠 있는 동안 꺼 둘 컴포넌트 (마우스를 직접 읽어 팝업 뒤로 클릭이 새는 팀원 스크립트)")]
