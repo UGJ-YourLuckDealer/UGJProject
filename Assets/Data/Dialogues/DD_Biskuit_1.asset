@@ -46,10 +46,10 @@ MonoBehaviour:
     dialogueText: Hurry up before someone sees us!
     isEnd: 1
   dialogueBifurcations:
-  - characterImage: {fileID: 21300000, guid: fbb52a8ebe361f44988925f973692ae1, type: 3}
+  - characterImage: {fileID: 21300000, guid: 98d258dfb9f09394c8acdd83eb604b66, type: 3}
     bifuractionText: ...This is perfect. My friend will love it. Thanks.
-  - characterImage: {fileID: 21300000, guid: fbb52a8ebe361f44988925f973692ae1, type: 3}
+  - characterImage: {fileID: 21300000, guid: 98d258dfb9f09394c8acdd83eb604b66, type: 3}
     bifuractionText: This should do. Thanks...
-  - characterImage: {fileID: 21300000, guid: b7ea062bf234a2f4092c02278dbf1efa, type: 3}
+  - characterImage: {fileID: 21300000, guid: d3d77f0c7b0609047b4c7f3525622380, type: 3}
     bifuractionText: ...This is not what I asked for.
   receiptData: {fileID: 11400000, guid: 3e3fb4acbb22c5549bf6a97ca63b79b0, type: 2}
