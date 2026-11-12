@@ -6,9 +6,9 @@ public class ObjectInfoTooltip : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private RectTransform tooltipPanel;
     [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text typeText;
-    [SerializeField] private TMP_Text priceText;
-    [SerializeField] private TMP_Text accountText;
+    //[SerializeField] private TMP_Text typeText;
+    //[SerializeField] private TMP_Text priceText;
+    //[SerializeField] private TMP_Text accountText;
 
 
 
@@ -45,9 +45,9 @@ public class ObjectInfoTooltip : MonoBehaviour
 
 
         nameText.text = "Name: " + target.tag;
-        typeText.text = "Category: " + LayerMask.LayerToName(target.layer);
-        priceText.text = "Sell Price: 1$";
-        accountText.text = "Account: "+ account;
+        //typeText.text = "Category: " + LayerMask.LayerToName(target.layer);
+        //priceText.text = "Sell Price: 1$";
+        //accountText.text = "Account: "+ account;
 
         tooltipPanel.gameObject.SetActive(true);
 
