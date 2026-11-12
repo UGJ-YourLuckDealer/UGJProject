@@ -213,12 +213,18 @@ public class TitleScreen : MonoBehaviour
             .OnComplete(() => button.transform.localScale = Vector2.one)
             .Play();
 
+        var effectRect = buttonEffect.GetComponent<RectTransform>();
+
+        // 같은 이펙트에 이전 애니메이션이 남아 있으면 정리하고 원래 자리로 (상대 이동이 겹치면 이펙트가 계속 밀려남)
+        effectRect.DOKill();
+        effectRect.anchoredPosition = effectOrigin;
+
         buttonEffect.gameObject.SetActive(true);
-        buttonEffect.GetComponent<RectTransform>()
+        effectRect
             .DOAnchorPos(Vector2.one * 12f, 0.2f)
             .SetEase(Ease.InOutBounce)
             .SetLoops(-1, LoopType.Yoyo)
-            .SetTarget(this)
+            .SetTarget(effectRect)
             .SetLink(buttonEffect, LinkBehaviour.KillOnDisable)
             .OnKill(() =>
             {
