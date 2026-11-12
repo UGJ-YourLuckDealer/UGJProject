@@ -272,7 +272,10 @@ public class ObjectDragManager : MonoBehaviour
                     // 나머지는 현재 배치된 체인의 자식으로 추가
                     currentBatchedChain.AddChild(materialObj.keyringMaterialData);
                     if (isCharm)
+                    {
+                        AudioService.Instance.PlaySfx("sfx_place_charm");
                         draggingObject.GetComponent<KeyringCharmSway>().SetDebugAttachment(this, attachment);
+                    }
                 }
 
                 if (currentBatchedChain == materialObj)
