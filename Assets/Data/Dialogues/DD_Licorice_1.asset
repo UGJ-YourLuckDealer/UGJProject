@@ -65,4 +65,4 @@ MonoBehaviour:
     bifuractionText: Oh, this looks nice... Thank you.
   - characterImage: {fileID: 21300000, guid: 6eaae92465fadef4ba545caa824867bb, type: 3}
     bifuractionText: Um... I was hoping for something a little different...
-  receiptData: {fileID: 11400000, guid: 3e3fb4acbb22c5549bf6a97ca63b79b0, type: 2}
+  receiptData: {fileID: 11400000, guid: 4c07b54cf1fbe5c4bb6a59db6e267974, type: 2}

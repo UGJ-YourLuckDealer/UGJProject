@@ -55,4 +55,4 @@ MonoBehaviour:
     bifuractionText: This should do. Thanks...
   - characterImage: {fileID: 21300000, guid: d3d77f0c7b0609047b4c7f3525622380, type: 3}
     bifuractionText: ...This is not what I asked for.
-  receiptData: {fileID: 11400000, guid: 3e3fb4acbb22c5549bf6a97ca63b79b0, type: 2}
+  receiptData: {fileID: 11400000, guid: 6180b6e41fbd3e749a033104b98231a2, type: 2}
