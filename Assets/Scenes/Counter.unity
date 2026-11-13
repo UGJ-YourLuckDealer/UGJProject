@@ -462,7 +462,7 @@ MonoBehaviour:
   nextButton: {fileID: 1855980527}
   textPanel: {fileID: 1000854279}
   currentIndex: 0
-  makeKeyringTooltipText: Make Key Ring!
+  makeKeyringTooltipText: Make the key Charm
   makeKeyringTooltipPos: {fileID: 6287631446634620245}
   line:
     characterImage: {fileID: 0}
@@ -2059,6 +2059,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1521380956554614629, guid: 9ad8cdb3c8da2a14b9221092947e375d, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 1546755613355159246, guid: 9ad8cdb3c8da2a14b9221092947e375d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2238,6 +2242,10 @@ PrefabInstance:
     - target: {fileID: 6632996269365194214, guid: 9ad8cdb3c8da2a14b9221092947e375d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6860545485511188594, guid: 9ad8cdb3c8da2a14b9221092947e375d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 7970278840791633675, guid: 9ad8cdb3c8da2a14b9221092947e375d, type: 3}
       propertyPath: m_Name
