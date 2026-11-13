@@ -48,7 +48,37 @@ public class SceneFlowLink : MonoBehaviour
         ApplyCustomerReceipt();
 
         isCounter = gameObject.scene.name == SceneFlow.CounterScene;
-        if (isCounter) SpawnCounterMoneyBar();
+        if (isCounter)
+        {
+            SpawnCounterMoneyBar();
+            FillReactionSpeakerName();
+        }
+    }
+
+    // 손님 순서별 이름 (대화 데이터에 이름이 비어 있을 때만 사용)
+    private static readonly string[] customerNames = { "Candy", "Biskuit", "Licorice" };
+
+    /// <summary>
+    /// 키링 제출 뒤 Counter의 반응(팁) 대사에 손님 이름이 나오게 한다.
+    /// 팀원 DialogueManager.LastDialogue는 이름을 line.character_Name에서 읽는데, 씬이 새로 열리면 line이 비어 있어 이름이 빈칸이 된다.
+    /// DialogueManager.Start(→ LastDialogue)보다 먼저 지금 손님의 이름을 line에 넣어 둔다 (팀원 코드는 수정하지 않음).
+    /// </summary>
+    private void FillReactionSpeakerName()
+    {
+        if (dialogue == null || Customer_Data.isfinish) return; // isfinish == false일 때만 반응 대사
+        if (dialogue.line == null) dialogue.line = new DialogueLine();
+        if (!string.IsNullOrEmpty(dialogue.line.character_Name)) return;
+
+        int customer = Customer_Data.customer; // DialogueManager.Start가 같은 값을 쓴다
+        string name = null;
+        var data = dialogue.dialogueData;
+        if (data != null && customer >= 0 && customer < data.Length && data[customer] != null && data[customer].dialogueLines != null)
+        {
+            foreach (var l in data[customer].dialogueLines)
+                if (l != null && !string.IsNullOrEmpty(l.character_Name)) { name = l.character_Name; break; }
+        }
+        if (string.IsNullOrEmpty(name) && customer >= 0 && customer < customerNames.Length) name = customerNames[customer];
+        if (!string.IsNullOrEmpty(name)) dialogue.line.character_Name = name;
     }
 
     // Counter 씬 파일은 건드리지 않고 실행 중에 돈 표시 UI를 붙인다 (씬 오브젝트라 씬을 떠나면 함께 사라짐)
