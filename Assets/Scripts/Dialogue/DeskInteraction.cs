@@ -26,7 +26,7 @@ public class DeskInteraction : MonoBehaviour
 
 
 
-        if (!manager.line.isEnd)
+        if (manager == null || !manager.CanEnterMaking)
             return;
 
         if (Mouse.current == null)

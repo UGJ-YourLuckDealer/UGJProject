@@ -179,8 +179,8 @@ public class SceneFlowLink : MonoBehaviour
         int current = SceneFlow.NextCustomerIndex;
         if (customerReceipts == null || current < 0 || current >= customerReceipts.Length) return;
         if (customerReceipts[current] == null) return;
-        var result = FindAnyObjectByType<Result>();
-        if (result != null) result.receipt_data = customerReceipts[current];
+
+        Customer_Data.receipt = customerReceipts[current];
     }
 
     private void LateUpdate()

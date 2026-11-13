@@ -39,6 +39,8 @@ public class DialogueManager : MonoBehaviour
 
     private bool isEndDialogue = false;
 
+    public bool CanEnterMaking { get; private set; }
+
     private void Start()
     {
         Debug.Log("Start");
@@ -219,6 +221,7 @@ public class DialogueManager : MonoBehaviour
         {
             Customer_Data.isfinish = false;
             isWaiting = true;
+            CanEnterMaking = true;
 
             ToolTip.Instance.SetTooltip(makeKeyringTooltipText, ToolTip.Instance.GuiCamera.WorldToScreenPoint(makeKeyringTooltipPos.transform.position));
             // GuideTooltip.Instance.Show(GameObject.Find("ToolTip").transform, "");

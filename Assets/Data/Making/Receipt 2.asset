@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7be36c424ce80144ba0c53c6d885c885, type: 3}
   m_Name: Receipt 2
   m_EditorClassIdentifier: Assembly-CSharp::Receipt_Data
-  main_kiring: 0
-  clover: 0
+  main_kiring: 1
+  clover: 1
   note: 0
-  number: 1
-  rainbow: 1
+  number: 0
+  rainbow: 0
   special: 0
-  clasp: 2
+  clasp: 1

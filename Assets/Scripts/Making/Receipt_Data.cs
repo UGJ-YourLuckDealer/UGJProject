@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 
@@ -7,6 +8,7 @@ public class Receipt_Data : ScriptableObject
     public enum Main_Kiring
     {
         Normal,
+        [InspectorName("키링 체인")]
         Heart
     }
 
@@ -31,7 +33,9 @@ public class Receipt_Data : ScriptableObject
     public enum Clasp
     {
         Null,
+        [InspectorName("D형 잠금장치")]
         A,
+        [InspectorName("O형 잠금장치")]
         B
     }
 
