@@ -55,8 +55,6 @@ public class DialogueManager : MonoBehaviour
             StartDialogue();
         else
             LastDialogue();
-
-        Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
     }
 
     private void Update()
@@ -175,6 +173,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("StartDialogue");
         AudioService.Instance.PlaySfx("sfx_ui_btn_click");
 
+        Customer_Data.Set_CustomerReceipt(dialogueData[customer]);
         line = dialogueData[customer].dialogueLines[currentIndex++];
 
         characterName.text = line.character_Name;
