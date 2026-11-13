@@ -2586,10 +2586,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Board Background Layout
       objectReference: {fileID: 0}
-    - target: {fileID: 9062801333506109196, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
