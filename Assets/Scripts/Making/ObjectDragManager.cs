@@ -13,7 +13,6 @@ public class ObjectDragManager : MonoBehaviour
     [SerializeField] private Collider2D initialplacementArea;
 
     [Header("Charm Attachment (World Units)")]
-    [SerializeField, Min(0.01f)] private float charmAttachmentSpacing = 0.5f;
     [SerializeField, Min(0f)] private float charmMinimumDistance = 5f;
 
     [Header("Clasp Placement (World Units)")]
@@ -460,11 +459,7 @@ public class ObjectDragManager : MonoBehaviour
         Vector2 axis = (Vector2)(end - start);
         float length = axis.magnitude;
         Vector2 direction = length > 0f ? axis / length : Vector2.up;
-        float projected = Vector2.Dot((Vector2)(charm.position - start), direction);
-        int steps = Mathf.Max(1, Mathf.RoundToInt(length / Mathf.Max(0.01f, charmAttachmentSpacing)));
-        float stepLength = length / steps;
-        int index = stepLength > 0f ? Mathf.Clamp(Mathf.RoundToInt(projected / stepLength), 0, steps) : 0;
-        Vector2 attachment = (Vector2)start + direction * (stepLength * index);
+        Vector2 attachment = start;
         Vector2 offset = (Vector2)charm.position - attachment;
         float distance = offset.magnitude;
         if (distance < charmMinimumDistance)
