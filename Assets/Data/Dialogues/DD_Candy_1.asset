@@ -23,7 +23,7 @@ MonoBehaviour:
     isEnd: 0
   - characterImage: {fileID: 21300000, guid: fbb52a8ebe361f44988925f973692ae1, type: 3}
     character_Name: Candy
-    dialogueText: "You know what day it is? It\u2019s the fourth! The FOURTH! "
+    dialogueText: "You know what day it is? It\u2019s the fourth! \nThe FOURTH! "
     isEnd: 0
   - characterImage: {fileID: 21300000, guid: b7ea062bf234a2f4092c02278dbf1efa, type: 3}
     character_Name: Candy
