@@ -582,7 +582,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: D-ring
+  m_text: D shaped
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b67d3071079b31849abd6d86b66de026, type: 2}
   m_sharedMaterial: {fileID: 5027835224011772430, guid: b67d3071079b31849abd6d86b66de026, type: 2}
@@ -810,9 +810,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Sub: Clover
-
-'
+  m_text: Clover
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b67d3071079b31849abd6d86b66de026, type: 2}
   m_sharedMaterial: {fileID: 5027835224011772430, guid: b67d3071079b31849abd6d86b66de026, type: 2}
@@ -1532,7 +1530,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: O-ring
+  m_text: Round
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b67d3071079b31849abd6d86b66de026, type: 2}
   m_sharedMaterial: {fileID: 5027835224011772430, guid: b67d3071079b31849abd6d86b66de026, type: 2}
@@ -1962,7 +1960,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Lucky For 3
+  m_text: 'Lucky For 4
 
 '
   m_isRightToLeft: 0
@@ -2325,7 +2323,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectDragManager
   initialplacementArea: {fileID: 913579597}
-  charmAttachmentSpacing: 0.5
   charmMinimumDistance: 1
   claspPlacementTolerance: 0.35
   chainLinkSprite: {fileID: 21300000, guid: 85b8259d20f7fdc438d53d3a75a7fa5f, type: 3}
@@ -3117,7 +3114,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Sub: Rainbow
+  m_text: 'Rainbow
 
 '
   m_isRightToLeft: 0
