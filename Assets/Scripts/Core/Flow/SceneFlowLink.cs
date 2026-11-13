@@ -52,22 +52,61 @@ public class SceneFlowLink : MonoBehaviour
         {
             SpawnCounterMoneyBar();
             FillReactionSpeakerName();
+            KeepCharacterAspect();
             CreateCharacterWhiteFade();
         }
     }
 
+    /// <summary>
+    /// 캐릭터 그림은 손님마다 가로세로 비율이 다른데(Candy 0.89, Biskuit 0.71, Licorice 0.68),
+    /// Counter의 Character_Image 칸(700x725)은 Preserve Aspect가 꺼져 있어 2·3번 캐릭터가 가로로 늘어나 보였다.
+    /// 씬 파일은 그대로 두고 실행 중에 비율 유지를 켠다 (칸 안에서 비율을 지키며 가운데 정렬).
+    /// </summary>
+    private void KeepCharacterAspect()
+    {
+        var image = dialogue != null ? dialogue.characterImage : null;
+        if (image != null) image.preserveAspect = true;
+    }
+
     // ---- 캐릭터 등장 연출: 하얀 실루엣 → 원래 색 ----
     // 팀원 DialogueManager.CharacterImageColor는 3초 동안 캐릭터 이미지 색 RGB를 0→1로 올려 '검은 실루엣 → 원래 색'으로 보여 준다.
-    // 팀원 코드는 그대로 두고, 매 프레임 그 진행도(RGB 값)를 읽어 이미지는 원래 색으로 되돌리고
-    // 위에 겹친 하얀 실루엣(같은 스프라이트, UIWhiteSilhouette 셰이더)을 진행도만큼 서서히 투명하게 만든다.
-    private const string WhiteSilhouetteShader = "UIWhiteSilhouette"; // Resources/UIWhiteSilhouette.shader
-    private Image characterWhiteFade;
+    // 팀원 코드는 그대로 두고, 매 프레임 그 진행도(RGB 값)를 읽어 이미지 색은 원래대로 되돌리고 대신 하얗게 덮었다가 걷어 낸다.
+    // 1) 캐릭터 머티리얼이 AllIn1 Sprite Shader(Hand Drawing Portrait: 손그림 흔들림·외곽선·그림자)면
+    //    같은 설정에 Hit Effect(흰색 덮기)만 켠 머티리얼로 잠시 바꿔 그림 자체를 하얗게 → 흔들림·외곽선·그림자까지 정확히 겹친다.
+    //    빌드에 해당 셰이더 조합이 포함되도록 Resources/HandDrawingPortrait_White.mat을 원본으로 쓴다.
+    // 2) 그 외 머티리얼이면 위에 같은 스프라이트의 하얀 실루엣(UIWhiteSilhouette 셰이더)을 겹쳐 서서히 투명하게 한다.
+    private const string WhiteSilhouetteShader = "UIWhiteSilhouette";           // Resources/UIWhiteSilhouette.shader
+    private const string WhiteHitMaterialPath = "HandDrawingPortrait_White";    // Resources/HandDrawingPortrait_White.mat
+    private static readonly int HitEffectBlendId = Shader.PropertyToID("_HitEffectBlend");
+    private const string HitEffectKeyword = "HITEFFECT_ON";
+
+    private Image characterWhiteFade;       // 방법 2: 겹치는 하얀 실루엣
     private Material whiteSilhouetteMaterial;
+    private Material characterOriginalMaterial; // 방법 1: 원래 캐릭터 머티리얼
+    private Material characterWhiteMaterial;    // 방법 1: Hit Effect를 켠 실행 중 복사본
+    private bool characterWhiteApplied;
 
     private void CreateCharacterWhiteFade()
     {
         var target = dialogue != null ? dialogue.characterImage : null;
         if (target == null) return;
+
+        // 방법 1: 캐릭터 머티리얼에 Hit Effect가 있으면 그림 자체를 하얗게
+        var original = target.material;
+        var whiteSource = Resources.Load<Material>(WhiteHitMaterialPath);
+        if (original != null && original != target.defaultMaterial && original.HasProperty(HitEffectBlendId)
+            && whiteSource != null && whiteSource.shader == original.shader)
+        {
+            characterOriginalMaterial = original;
+            characterWhiteMaterial = new Material(whiteSource) { name = original.name + " (white fade, runtime)" };
+            characterWhiteMaterial.CopyPropertiesFromMaterial(original); // 팀원이 원본 값을 바꿔도 따라감
+            characterWhiteMaterial.EnableKeyword(HitEffectKeyword);
+            characterWhiteMaterial.SetColor("_HitEffectColor", Color.white);
+            characterWhiteMaterial.SetFloat("_HitEffectGlow", 1f);
+            return;
+        }
+
+        // 방법 2: 겹치는 하얀 실루엣
         var shader = Resources.Load<Shader>(WhiteSilhouetteShader);
         if (shader == null || !shader.isSupported) return; // 셰이더가 없으면 팀원 연출(검은 실루엣) 그대로
 
@@ -87,22 +126,45 @@ public class SceneFlowLink : MonoBehaviour
     // 팀원 코루틴(Update 뒤 실행)이 색을 바꾼 다음에 덮어쓴다
     private void UpdateCharacterWhiteFade()
     {
-        if (characterWhiteFade == null) return;
+        if (characterWhiteMaterial == null && characterWhiteFade == null) return;
         var target = dialogue != null ? dialogue.characterImage : null;
-        if (target == null) { characterWhiteFade.enabled = false; return; }
+        if (target == null) { SetCharacterWhite(null, false, 0f); return; }
 
         var c = target.color;
         float alpha = Mathf.Clamp01(c.a);
         bool fading = target.sprite != null && alpha > 0f && c.r < 0.999f; // RGB 0→1 진행 중 = 등장 연출 중
-        if (!fading) { characterWhiteFade.enabled = false; return; }
+        if (!fading) { SetCharacterWhite(target, false, 0f); return; }
 
         float progress = Mathf.Clamp01(c.r);
         target.color = new Color(1f, 1f, 1f, c.a); // 검게 칠하지 않고 원래 색 그대로
+        SetCharacterWhite(target, true, 1f - progress); // 흰색 정도: 1 → 0
+    }
 
+    private void SetCharacterWhite(Image target, bool on, float whiteness)
+    {
+        if (characterWhiteMaterial != null)
+        {
+            if (target == null) return;
+            if (on)
+            {
+                if (!characterWhiteApplied) { target.material = characterWhiteMaterial; characterWhiteApplied = true; }
+                characterWhiteMaterial.SetFloat(HitEffectBlendId, whiteness);
+                target.SetMaterialDirty();
+            }
+            else if (characterWhiteApplied)
+            {
+                target.material = characterOriginalMaterial;
+                characterWhiteApplied = false;
+            }
+            return;
+        }
+
+        if (characterWhiteFade == null) return;
+        if (!on || target == null) { characterWhiteFade.enabled = false; return; }
         characterWhiteFade.sprite = target.sprite;
         characterWhiteFade.type = target.type;
         characterWhiteFade.preserveAspect = target.preserveAspect;
-        characterWhiteFade.color = new Color(1f, 1f, 1f, alpha * (1f - progress)); // 하얀 실루엣이 서서히 사라짐
+        characterWhiteFade.color = new Color(1f, 1f, 1f, Mathf.Clamp01(target.color.a) * whiteness);
         characterWhiteFade.enabled = true;
     }
 
@@ -195,6 +257,7 @@ public class SceneFlowLink : MonoBehaviour
     private void OnDestroy()
     {
         if (whiteSilhouetteMaterial != null) Destroy(whiteSilhouetteMaterial);
+        if (characterWhiteMaterial != null) Destroy(characterWhiteMaterial);
         // 팀원 코드가 SceneManager로 직접 씬을 바꿔도 손님 진행이 이어지도록 기록
         if (cachedCustomer >= 0) SceneFlow.NoteCounterLeft(cachedCustomer, cachedCustomerCount);
     }
