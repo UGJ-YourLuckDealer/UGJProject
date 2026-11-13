@@ -39,7 +39,7 @@ public class MakingInputController : MonoBehaviour
 
     void OnShiftAction(InputAction.CallbackContext ctx)
     {
-        const string popupKey = "";
+        const string popupKey = "popup_making_recipe";
 
         if (popupService.IsPopupOpen(popupKey))
         {
@@ -48,6 +48,8 @@ public class MakingInputController : MonoBehaviour
         else
         {
             popupService.ShowPopup(popupKey);
+            var popup = popupService.GetPopup(popupKey);
+            popup.GetComponent<MakingNoteController>().OpenTab(MakingNoteController.Tab.Recipe);
         }
     }
 
@@ -62,6 +64,8 @@ public class MakingInputController : MonoBehaviour
         else
         {
             popupService.ShowPopup(popupKey);
+            var popup = popupService.GetPopup(popupKey);
+            popup.GetComponent<MakingNoteController>().OpenTab(MakingNoteController.Tab.DialogueHistory);
         }
     }
 }

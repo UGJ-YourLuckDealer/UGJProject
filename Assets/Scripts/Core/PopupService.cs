@@ -31,6 +31,8 @@ public class PopupService : MonoBehaviour
     public bool IsAnyPopupOpen => TopPopup != null;
     public bool IsPopupOpen(string key) => _activePopups.ContainsKey(key);
 
+    public GameObject GetPopup(string key) => _activePopups[key];
+
     public void ShowPopup(string key)
     {
         ClosePopup(key);
