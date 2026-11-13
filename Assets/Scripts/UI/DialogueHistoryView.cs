@@ -18,7 +18,17 @@ public class DialogueHistoryView : MonoBehaviour
     [Tooltip("열렸을 때 가장 최근 대화가 보이도록 맨 아래로 스크롤")]
     [SerializeField] private bool scrollToLatest = true;
 
-    private IEnumerator Start()
+    void OnEnable()
+    {
+        StartCoroutine(OnEnableCoroutine());
+    }
+
+    void OnDisable()
+    {
+        StopCoroutine(OnEnableCoroutine());
+    }
+
+    IEnumerator OnEnableCoroutine()
     {
         var scroll = GetComponent<ScrollRect>();
         if (content == null && scroll != null) content = scroll.content;
@@ -29,27 +39,24 @@ public class DialogueHistoryView : MonoBehaviour
         }
 
         // 원본: Content 안의 첫 번째 예시 줄(Hook이 꾸민 모양)을 꺼진 복사본으로 보관
-        if (lineTemplate == null && content.childCount > 0)
+        if (lineTemplate != null)
         {
-            lineTemplate = Instantiate(content.GetChild(0).gameObject, transform, false);
             lineTemplate.SetActive(false);
-            lineTemplate.name = "Dialogue Line Template (runtime)";
         }
-        if (lineTemplate == null) lineTemplate = FindTemplate();
-        if (lineTemplate == null)
+        else
         {
-            Debug.LogWarning("[DialogueHistory] 줄 원본(Dialogue Line Layout)을 찾지 못했습니다.");
+            Debug.LogError("[DialogueHistory] 줄 원본(Dialogue Line Layout)을 찾지 못했습니다.");
             yield break;
         }
 
-        // 프리팹에 들어 있던 예시 줄 지우기 (부모에서 바로 떼어 레이아웃 계산에서 빠지게)
-        for (int i = content.childCount - 1; i >= 0; i--)
-        {
-            var sample = content.GetChild(i).gameObject;
-            sample.SetActive(false);
-            sample.transform.SetParent(null, false);
-            Destroy(sample);
-        }
+        // // 프리팹에 들어 있던 예시 줄 지우기 (부모에서 바로 떼어 레이아웃 계산에서 빠지게)
+        // for (int i = content.childCount - 1; i >= 0; i--)
+        // {
+        //     var sample = content.GetChild(i).gameObject;
+        //     sample.SetActive(false);
+        //     sample.transform.SetParent(null, false);
+        //     Destroy(sample);
+        // }
 
         var log = GameSession.CurrentOrderDialogue();
         if (log.Count == 0)
@@ -65,14 +72,6 @@ public class DialogueHistoryView : MonoBehaviour
             Canvas.ForceUpdateCanvases();
             scroll.verticalNormalizedPosition = 0f;
         }
-    }
-
-    private GameObject FindTemplate()
-    {
-        foreach (Transform child in transform)
-            if (!child.gameObject.activeSelf && child.name.StartsWith("Dialogue Line Layout"))
-                return child.gameObject;
-        return null;
     }
 
     private void AddLine(string speaker, string text, Sprite portrait)

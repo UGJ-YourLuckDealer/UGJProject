@@ -193,6 +193,20 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
+    - value: popup_title_credit
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
     - value: popup_making_settings
       valueField:
         propertyType: 0
@@ -235,7 +249,7 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
-    - value: popup_title_credit
+    - value: popup_making_recipe
       valueField:
         propertyType: 0
         longValue: 0
@@ -265,7 +279,21 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
-    - value: {fileID: 8721504997365823939, guid: 0c4de706916b7d648a7855dd8caaede3, type: 3}
+    - value: {fileID: 9009211786824353859, guid: b2934b8ed5365284fa6929c3dfea2ad6, type: 3}
+      valueField:
+        propertyType: 0
+        longValue: 0
+        uLongValue: 0
+        stringValue: 
+        intValues: 
+        V: {fileID: 0}
+        VRef:
+          rid: -2
+        IsVRef: 0
+      valueArray: []
+      valueList: []
+      wrapType: 4
+    - value: {fileID: 734853128320099798, guid: 0c0b68ab45a9fd547839e8f5ffee4e74, type: 3}
       valueField:
         propertyType: 0
         longValue: 0
@@ -321,7 +349,7 @@ MonoBehaviour:
       valueArray: []
       valueList: []
       wrapType: 4
-    - value: {fileID: 734853128320099798, guid: 0c0b68ab45a9fd547839e8f5ffee4e74, type: 3}
+    - value: {fileID: 9009211786824353859, guid: b2934b8ed5365284fa6929c3dfea2ad6, type: 3}
       valueField:
         propertyType: 0
         longValue: 0
