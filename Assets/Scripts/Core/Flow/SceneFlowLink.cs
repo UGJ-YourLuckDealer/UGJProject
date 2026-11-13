@@ -52,7 +52,58 @@ public class SceneFlowLink : MonoBehaviour
         {
             SpawnCounterMoneyBar();
             FillReactionSpeakerName();
+            CreateCharacterWhiteFade();
         }
+    }
+
+    // ---- 캐릭터 등장 연출: 하얀 실루엣 → 원래 색 ----
+    // 팀원 DialogueManager.CharacterImageColor는 3초 동안 캐릭터 이미지 색 RGB를 0→1로 올려 '검은 실루엣 → 원래 색'으로 보여 준다.
+    // 팀원 코드는 그대로 두고, 매 프레임 그 진행도(RGB 값)를 읽어 이미지는 원래 색으로 되돌리고
+    // 위에 겹친 하얀 실루엣(같은 스프라이트, UIWhiteSilhouette 셰이더)을 진행도만큼 서서히 투명하게 만든다.
+    private const string WhiteSilhouetteShader = "UIWhiteSilhouette"; // Resources/UIWhiteSilhouette.shader
+    private Image characterWhiteFade;
+    private Material whiteSilhouetteMaterial;
+
+    private void CreateCharacterWhiteFade()
+    {
+        var target = dialogue != null ? dialogue.characterImage : null;
+        if (target == null) return;
+        var shader = Resources.Load<Shader>(WhiteSilhouetteShader);
+        if (shader == null || !shader.isSupported) return; // 셰이더가 없으면 팀원 연출(검은 실루엣) 그대로
+
+        whiteSilhouetteMaterial = new Material(shader) { name = "UIWhiteSilhouette (runtime)" };
+        var go = new GameObject("CharacterWhiteFade (runtime)", typeof(RectTransform), typeof(Image));
+        go.transform.SetParent(target.transform, false);
+        var rect = (RectTransform)go.transform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+        characterWhiteFade = go.GetComponent<Image>();
+        characterWhiteFade.material = whiteSilhouetteMaterial;
+        characterWhiteFade.raycastTarget = false;
+        characterWhiteFade.enabled = false;
+    }
+
+    // 팀원 코루틴(Update 뒤 실행)이 색을 바꾼 다음에 덮어쓴다
+    private void UpdateCharacterWhiteFade()
+    {
+        if (characterWhiteFade == null) return;
+        var target = dialogue != null ? dialogue.characterImage : null;
+        if (target == null) { characterWhiteFade.enabled = false; return; }
+
+        var c = target.color;
+        float alpha = Mathf.Clamp01(c.a);
+        bool fading = target.sprite != null && alpha > 0f && c.r < 0.999f; // RGB 0→1 진행 중 = 등장 연출 중
+        if (!fading) { characterWhiteFade.enabled = false; return; }
+
+        float progress = Mathf.Clamp01(c.r);
+        target.color = new Color(1f, 1f, 1f, c.a); // 검게 칠하지 않고 원래 색 그대로
+
+        characterWhiteFade.sprite = target.sprite;
+        characterWhiteFade.type = target.type;
+        characterWhiteFade.preserveAspect = target.preserveAspect;
+        characterWhiteFade.color = new Color(1f, 1f, 1f, alpha * (1f - progress)); // 하얀 실루엣이 서서히 사라짐
+        characterWhiteFade.enabled = true;
     }
 
     // 손님 순서별 이름 (대화 데이터에 이름이 비어 있을 때만 사용)
@@ -136,12 +187,14 @@ public class SceneFlowLink : MonoBehaviour
     {
         // 씬을 떠날 때는 DialogueManager가 이미 파괴됐을 수 있어 값을 미리 기억해 둔다
         if (dialogue == null) return;
+        UpdateCharacterWhiteFade();
         cachedCustomer = dialogue.customer;
         cachedCustomerCount = dialogue.dialogueData != null ? dialogue.dialogueData.Length : 0;
     }
 
     private void OnDestroy()
     {
+        if (whiteSilhouetteMaterial != null) Destroy(whiteSilhouetteMaterial);
         // 팀원 코드가 SceneManager로 직접 씬을 바꿔도 손님 진행이 이어지도록 기록
         if (cachedCustomer >= 0) SceneFlow.NoteCounterLeft(cachedCustomer, cachedCustomerCount);
     }
