@@ -23,7 +23,9 @@ public class DialogueManager : MonoBehaviour
     public GameObject textPanel;
 
     [SerializeField] private int currentIndex = 0;
-    [SerializeField] Vector2 makeKeyringTooltipOffset;
+
+    [SerializeField] string makeKeyringTooltipText = "Make Key Ring!";
+    [SerializeField] RectTransform makeKeyringTooltipPos;
 
     private float typingSpeed = 0.05f;
 
@@ -41,7 +43,7 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("Start");
         isWaiting = true;
-        
+
 
         customer = Customer_Data.customer;
 
@@ -218,7 +220,7 @@ public class DialogueManager : MonoBehaviour
             Customer_Data.isfinish = false;
             isWaiting = true;
 
-            ToolTip.Instance.SetTooltip("Make Keyring!", makeKeyringTooltipOffset);
+            ToolTip.Instance.SetTooltip(makeKeyringTooltipText, ToolTip.Instance.GuiCamera.WorldToScreenPoint(makeKeyringTooltipPos.transform.position));
             // GuideTooltip.Instance.Show(GameObject.Find("ToolTip").transform, "");
 
             return;
