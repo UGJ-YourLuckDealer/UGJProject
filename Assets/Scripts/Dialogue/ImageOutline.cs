@@ -9,6 +9,14 @@ public class ImageOutline : MonoBehaviour
 
     [SerializeField] Image _image;
 
+    Material _materialInst;
+
+    void Awake()
+    {
+        _materialInst = new Material(_image.material);
+        _image.material = _materialInst;
+    }
+
     public void Show_Outline()
     {
         _image.material.SetFloat(OutlineAlphaShaderParam, 1f);
@@ -17,5 +25,13 @@ public class ImageOutline : MonoBehaviour
     public void Hide()
     {
         _image.material.SetFloat(OutlineAlphaShaderParam, 0f);
+    }
+
+    void OnDestroy()
+    {
+        if (_materialInst != null)
+        {
+            Destroy(_materialInst);
+        }
     }
 }
