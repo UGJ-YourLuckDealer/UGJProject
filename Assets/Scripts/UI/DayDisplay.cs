@@ -19,6 +19,11 @@ public class DayDisplay : MonoBehaviour
     [SerializeField] private float labelFontSize = 56f;
     [SerializeField] private Vector2 labelPosition = new Vector2(40f, -30f); // 왼쪽 위 기준 (1920x1080)
     [SerializeField] private float bannerFontSize = 160f;
+
+    [Header("Style (크레딧 화면과 같은 스타일: Mochiy Pop One, 노란 글씨 + 폰트 머티리얼의 갈색 외곽선)")]
+    [Tooltip("비우면 TMP 기본 폰트 + 검정 외곽선")]
+    [SerializeField] private TMP_FontAsset font;
+    [SerializeField] private Color textColor = new Color(1f, 0.85f, 0.45f, 1f);
     [Tooltip("Counter 화면 Fade In이 끝난 뒤 날짜를 띄우기까지 기다리는 시간")]
     [SerializeField, Min(0f)] private float bannerDelay = 0.1f;
     [SerializeField, Min(0.1f)] private float bannerSeconds = 1.5f;
@@ -56,8 +61,16 @@ public class DayDisplay : MonoBehaviour
         text.fontSize = size;
         text.alignment = alignment;
         text.raycastTarget = false;
-        text.outlineWidth = 0.2f;
-        text.outlineColor = Color.black;
+        text.color = textColor;
+        if (font != null)
+        {
+            text.font = font; // 외곽선은 폰트 기본 머티리얼(갈색 외곽선)을 그대로 쓴다
+        }
+        else
+        {
+            text.outlineWidth = 0.2f;
+            text.outlineColor = Color.black;
+        }
         var rect = text.rectTransform;
         rect.anchorMin = rect.anchorMax = rect.pivot = anchor;
         rect.sizeDelta = new Vector2(500f, 120f);

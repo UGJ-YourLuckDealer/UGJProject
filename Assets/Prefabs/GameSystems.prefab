@@ -129,6 +129,8 @@ MonoBehaviour:
   bannerFontSize: 160
   bannerDelay: 0.1
   bannerSeconds: 1.5
+  font: {fileID: 11400000, guid: dd44fe66b99f841499f5ac78b4f10222, type: 2}
+  textColor: {r: 1, g: 0.85, b: 0.45, a: 1}
 --- !u!114 &6120458812345678903
 MonoBehaviour:
   m_ObjectHideFlags: 0
