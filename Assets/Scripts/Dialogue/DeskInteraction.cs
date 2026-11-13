@@ -18,26 +18,27 @@ public class DeskInteraction : MonoBehaviour
     {
         imageoutline = FindAnyObjectByType<ImageOutline>();
         manager = FindAnyObjectByType<DialogueManager>();
+        imageoutline.Hide();
     }
 
     void Update()
     {
-        
 
-        
+
+
         if (!manager.line.isEnd)
             return;
-        
+
         if (Mouse.current == null)
         {
-            
+
             return;
         }
 
 
-        
 
-        
+
+
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
 
@@ -54,7 +55,7 @@ public class DeskInteraction : MonoBehaviour
 
         isHovering = isOver;
 
-        if(isOver)
+        if (isOver)
         {
             imageoutline.Show_Outline();
         }
