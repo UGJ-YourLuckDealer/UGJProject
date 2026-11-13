@@ -44,7 +44,7 @@ MonoBehaviour:
   - characterImage: {fileID: 21300000, guid: b35605d5b3593a94a97ff1548ac56224, type: 3}
     character_Name: Licorice
     dialogueText: If you make those, could you make me one that has something to
-      do with the [color=orange]number four[/color]?
+      do with the number four?
     isEnd: 0
   - characterImage: {fileID: 21300000, guid: b35605d5b3593a94a97ff1548ac56224, type: 3}
     character_Name: Licorice
