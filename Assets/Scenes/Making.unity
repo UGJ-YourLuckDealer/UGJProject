@@ -1431,9 +1431,6 @@ MonoBehaviour:
   hookResultSubmit: 1
   customerReceipts: []
   settlementDelay: 0.8
-  emptyBoardMessage: Make a keyring first!
-  emptyBoardHintSeconds: 1.5
-  emptyBoardHintGap: 70
 --- !u!4 &1539927632
 Transform:
   m_ObjectHideFlags: 0
@@ -2737,6 +2734,30 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1535715359}
+    - target: {fileID: 1609831352040958374, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609831352040958374, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609831352040958374, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609831352040958374, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609831352040958374, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609831352040958374, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2356761212276600077, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
       propertyPath: dragManager
       value: 
@@ -2829,6 +2850,14 @@ PrefabInstance:
       propertyPath: dragManager
       value: 
       objectReference: {fileID: 1535715357}
+    - target: {fileID: 7316572900581882986, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7316572900581882986, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9062801333506109196, guid: 703dd0eabb92a064c8318c8f693dcc01, type: 3}
       propertyPath: m_Name
       value: Board Background Layout

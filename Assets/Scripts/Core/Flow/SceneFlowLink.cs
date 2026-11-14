@@ -22,11 +22,6 @@ public class SceneFlowLink : MonoBehaviour
     [Tooltip("Counter: 하루 마지막 팁 대사를 클릭해 대사·초상화가 사라진 뒤 정산 팝업을 열기까지 기다리는 시간(초)")]
     [SerializeField, Min(0f)] private float settlementDelay = 0.8f;
 
-    [Tooltip("Making: 보드에 아무것도 없이 Submit을 눌렀을 때 보여 줄 문구")]
-    [SerializeField] private string emptyBoardMessage = "Make a keyring first!";
-    [SerializeField, Min(0.1f)] private float emptyBoardHintSeconds = 1.5f;
-    [Tooltip("Submit 버튼 위쪽 끝에서 안내 말풍선 중심까지의 거리 (말풍선 높이 110의 절반 + 여백). 버튼이 어디로 옮겨져도 버튼 바로 위 가운데에 뜬다")]
-    [SerializeField] private float emptyBoardHintGap = 70f;
 
     private const string CounterMoneyBarPath = "CounterMoneyBar"; // Resources/CounterMoneyBar.prefab
 
@@ -275,19 +270,17 @@ public class SceneFlowLink : MonoBehaviour
                     var result = b.onClick.GetPersistentTarget(i) as Result;
                     if (result == null) break; // 알 수 없는 대상이면 원래 동작 그대로
                     b.onClick.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
-                    var button = b;
-                    b.onClick.AddListener(() => Submit(button, result, settlement));
+                    var guide = b.gameObject.AddComponent<SubmitButtonGuide>();
+                    guide.Initialize(b);
+                    b.onClick.AddListener(() => Submit(result, settlement, guide));
                     break;
                 }
     }
 
-    private void Submit(Button button, Result result, SettlementPopup settlement)
+    private void Submit(Result result, SettlementPopup settlement, SubmitButtonGuide guide)
     {
-        if (IsBoardEmpty())
-        {
-            ShowEmptyBoardHint(button.transform);
-            return;
-        }
+        if (IsBoardEmpty()) return;
+        guide.enabled = false;
         result.Result_Kiring(); // 팀원 판정
         if (settlement != null) settlement.Show();
         else ReturnFromMaking();
@@ -300,38 +293,6 @@ public class SceneFlowLink : MonoBehaviour
         return manager == null || manager.CurrentChain == null;
     }
 
-    private void ShowEmptyBoardHint(Transform target)
-    {
-        var tooltip = GuideTooltip.Instance;
-        if (tooltip == null) return;
-        tooltip.Show(target, emptyBoardMessage, HintOffsetAbove(target));
-        StopCoroutine(nameof(HideHintLater));
-        StartCoroutine(nameof(HideHintLater));
-    }
-
-    // 말풍선은 대상의 가운데를 기준으로 offset만큼 떨어져 뜬다 (GuideTooltip, Canvas 1920x1080·Match 0.5).
-    // 실행 중 버튼의 실제 화면 높이를 재서 '버튼 위쪽 끝 + gap' 위치가 되도록 offset을 만든다.
-    private Vector2 HintOffsetAbove(Transform target)
-    {
-        float halfHeight = 0f;
-        if (target is RectTransform rect)
-        {
-            var canvas = rect.GetComponentInParent<Canvas>();
-            Camera cam = canvas != null && canvas.rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.rootCanvas.worldCamera : null;
-            var corners = new Vector3[4];
-            rect.GetWorldCorners(corners); // 0 왼쪽 아래, 1 왼쪽 위
-            float screenHeight = RectTransformUtility.WorldToScreenPoint(cam, corners[1]).y - RectTransformUtility.WorldToScreenPoint(cam, corners[0]).y;
-            float tooltipScale = Mathf.Pow(2f, Mathf.Lerp(Mathf.Log(Screen.width / 1920f, 2f), Mathf.Log(Screen.height / 1080f, 2f), 0.5f));
-            if (tooltipScale > 0f) halfHeight = Mathf.Abs(screenHeight) / tooltipScale * 0.5f;
-        }
-        return new Vector2(0f, halfHeight + emptyBoardHintGap);
-    }
-
-    private System.Collections.IEnumerator HideHintLater()
-    {
-        yield return new WaitForSecondsRealtime(emptyBoardHintSeconds);
-        if (GuideTooltip.Instance != null) GuideTooltip.Instance.Hide();
-    }
 
     public void StartNewGame() => SceneFlow.StartNewGame();
     public void GoToMaking() => SceneFlow.GoToMaking(dialogue);
