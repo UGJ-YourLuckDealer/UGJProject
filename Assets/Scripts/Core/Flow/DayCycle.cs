@@ -2,13 +2,14 @@ using UnityEngine;
 
 /// <summary>
 /// 일차 카운트·하루 시작/종료 (v0.0.1 이후). 하루 = 손님 N명(GameFlowManager.customersPerGame).
-/// 하루가 끝나면 Result에서 다음 날로 넘어가고, TotalDays(7일차, 임시)를 자본 ≥ 0으로 마치면 승리.
+/// 하루가 끝나면 Result에서 다음 날로 넘어가고, TotalDays일차를 자본 ≥ 0으로 마치면 승리.
+/// (잼 제출 빌드: 같은 손님 루프가 반복되지 않도록 1일만 진행. 날을 늘리려면 TotalDays만 바꾸면 된다.)
 /// 다음 날은 SceneFlow.StartNewGame으로 손님 순서를 처음부터 다시 시작하되, 자본은 이어서 쓴다.
 /// </summary>
 public static class DayCycle
 {
-    /// <summary>승리까지 버텨야 하는 일수 (임시).</summary>
-    public const int TotalDays = 7;
+    /// <summary>승리까지 버텨야 하는 일수. 손님 데이터가 하루치(3명)뿐이라 1일만 진행한다.</summary>
+    public const int TotalDays = 1;
 
     // 값(현재 일차, 이어받을 자본)은 GameSession에 저장한다.
     public static int CurrentDay => GameSession.CurrentDay;

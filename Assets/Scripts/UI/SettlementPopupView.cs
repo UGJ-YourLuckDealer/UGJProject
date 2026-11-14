@@ -32,7 +32,7 @@ public class SettlementPopupView : MonoBehaviour
     [Header("Text·Color")]
     [SerializeField] private string titleFormat = "Day {0} Summary";
     [SerializeField] private string surviveMessage = "You made it through today!";
-    [SerializeField] private string clearMessage = "You survived all 7 days!";
+    [SerializeField] private string clearMessage = "You survived the day!";
     [SerializeField] private string gameOverMessage = "Game Over";
     [SerializeField] private Color normalColor = new Color(0.30f, 0.20f, 0.15f, 1f);
     [SerializeField] private Color goodColor = new Color32(0x2E, 0x9E, 0x3A, 0xFF);  // 유리한 값
