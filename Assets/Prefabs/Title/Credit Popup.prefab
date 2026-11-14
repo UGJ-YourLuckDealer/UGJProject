@@ -71,7 +71,7 @@ MonoBehaviour:
     - Sun Kim (k.sun.artist@gmail.com)
   - role: Music
     names:
-    - "\"School Time\" by \u6771\u6708 (Dongnguyet)"
+    - '"School Time" by Dongnguyet'
   closing: Thank you for playing!
   font: {fileID: 11400000, guid: dd44fe66b99f841499f5ac78b4f10222, type: 2}
   titleColor: {r: 1, g: 0.85, b: 0.45, a: 1}
@@ -83,6 +83,7 @@ MonoBehaviour:
   lineGap: 14
   sectionGap: 80
   scrollSpeed: 70
+  fastMultiplier: 3
   closeGuardSeconds: 0.5
 --- !u!1 &3907013120584576458
 GameObject:
