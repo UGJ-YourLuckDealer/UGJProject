@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,6 +27,7 @@ public class SettlementPopupView : MonoBehaviour
     [SerializeField] private TMP_Text[] values = new TMP_Text[6];
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text markText;
+    [SerializeField] private RectTransform markStamp;
     [SerializeField] private TMP_Text hintText;
     [SerializeField] private AudioSource audioSource;
 
@@ -46,7 +48,8 @@ public class SettlementPopupView : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float sfxVolume = 0.6f;
 
     [Tooltip("팝업이 떠 있는 동안 꺼 둘 컴포넌트 (마우스를 직접 읽어 팝업 뒤로 클릭이 새는 팀원 스크립트)")]
-    [SerializeField] private string[] blockWhileOpen =
+    [SerializeField]
+    private string[] blockWhileOpen =
     {
         "ObjectInteraction", "ObjectDragManager", "ObjectDeleteManager", "KeyringMaterialObject",
         "DialogueManager", "DeskInteraction",
@@ -146,8 +149,34 @@ public class SettlementPopupView : MonoBehaviour
             yield return Punch(markText.rectTransform);
         }
 
-        if (hintText != null) hintText.gameObject.SetActive(true);
+        if (hintText != null)
+        {
+            hintText.gameObject.SetActive(true);
+        }
+
+        if (markStamp != null)
+        {
+            yield return PlayStampAnimation();
+        }
+
         canClose = true;
+    }
+
+    private IEnumerator PlayStampAnimation()
+    {
+        if (markStamp == null) yield break;
+
+        Vector3 originalScale = markStamp.localScale;
+        markStamp.localScale = originalScale * 1.8f;
+        markStamp.gameObject.SetActive(true);
+
+        Sequence stamp = DOTween.Sequence()
+            .Append(markStamp.DOScale(originalScale * 0.9f, 0.12f).SetEase(Ease.InQuad))
+            .Append(markStamp.DOScale(originalScale, 0.1f).SetEase(Ease.OutBack))
+            .SetUpdate(true)
+            .SetLink(markStamp.gameObject);
+
+        yield return stamp.WaitForCompletion();
     }
 
     private IEnumerator Punch(RectTransform target)
