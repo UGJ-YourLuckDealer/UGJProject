@@ -17,6 +17,10 @@ public class ResultScreen : MonoBehaviour
     [SerializeField] private Button titleButton;
     [SerializeField] private string dayClearFormat = "Day {0} Clear";
     [SerializeField] private string nextDayLabel = "Next Day";
+    [Tooltip("게임이 끝났을 때(WIN/LOSE) Title 버튼을 누르면 이 크레딧을 보여 준 뒤 Title로 간다. 비우면 바로 Title")]
+    [SerializeField] private GameObject creditPopup;
+
+    private bool creditShown;
 
     [Header("하루 정산표 (기획: 잔액·수입·팁·환불·지출·합계·게임오버 여부)")]
     [SerializeField] private Color goodColor = new Color32(0x2E, 0x9E, 0x3A, 0xFF);  // 유리한 값
@@ -30,7 +34,7 @@ public class ResultScreen : MonoBehaviour
     private void Awake()
     {
         var result = SceneFlow.LastResult;
-        if (result == null || !result.Value.isDayEnd) return;
+        if (result == null) return;
 
         if (titleButton == null)
         {
@@ -39,6 +43,16 @@ public class ResultScreen : MonoBehaviour
         }
         if (titleButton == null) return;
 
+        // 게임 종료(WIN/LOSE): Title 버튼 → 크레딧 → (크레딧이 닫히면) Title
+        if (!result.Value.isDayEnd)
+        {
+            if (creditPopup == null) return; // 크레딧이 없으면 씬에 연결된 GoToTitle 그대로
+            for (int i = 0; i < titleButton.onClick.GetPersistentEventCount(); i++)
+                titleButton.onClick.SetPersistentListenerState(i, UnityEventCallState.Off);
+            titleButton.onClick.AddListener(ShowCreditsThenTitle);
+            return;
+        }
+
         // 씬에 연결된 GoToTitle은 이번 실행에서만 끄고 다음 날로 가는 동작을 붙인다 (씬 파일은 그대로)
         for (int i = 0; i < titleButton.onClick.GetPersistentEventCount(); i++)
             titleButton.onClick.SetPersistentListenerState(i, UnityEventCallState.Off);
@@ -46,6 +60,21 @@ public class ResultScreen : MonoBehaviour
 
         var label = titleButton.GetComponentInChildren<TMP_Text>(true);
         if (label != null) label.text = nextDayLabel;
+    }
+
+    private void ShowCreditsThenTitle()
+    {
+        if (creditShown) return;
+        creditShown = true;
+        titleButton.interactable = false;
+
+        var canvas = titleButton.GetComponentInParent<Canvas>();
+        var parent = canvas != null ? canvas.rootCanvas.transform : null;
+        var popup = Instantiate(creditPopup, parent, false);
+        popup.transform.SetAsLastSibling(); // 결과 화면 위에 덮기
+        var roll = popup.GetComponentInChildren<CreditRoll>();
+        if (roll == null) { SceneFlow.GoToTitle(); return; }
+        roll.Closed += SceneFlow.GoToTitle; // 끝까지 올라가거나 클릭·ESC로 닫으면 Title
     }
 
     private void Start()

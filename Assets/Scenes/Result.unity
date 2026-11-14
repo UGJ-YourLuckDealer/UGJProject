@@ -1141,6 +1141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResultScreen
   titleText: {fileID: 988371331}
   detailText: {fileID: 1105827146}
+  creditPopup: {fileID: 734853128320099798, guid: 0c0b68ab45a9fd547839e8f5ffee4e74, type: 3}
 --- !u!4 &1539927633
 Transform:
   m_ObjectHideFlags: 0

@@ -52,6 +52,9 @@ public class CreditRoll : MonoBehaviour
     [Tooltip("열린 직후 이 시간 동안은 클릭으로 닫히지 않음 (여는 클릭에 바로 닫히지 않게)")]
     [SerializeField, Min(0f)] private float closeGuardSeconds = 0.5f;
 
+    /// <summary>크레딧이 닫힐 때 한 번 호출 (자동 종료·클릭·ESC 모두). Result에서 크레딧 뒤 Title로 갈 때 쓴다.</summary>
+    public event Action Closed;
+
     private float contentHeight;
     private float elapsed;
     private bool isClosing;
@@ -120,9 +123,19 @@ public class CreditRoll : MonoBehaviour
         if (pressed) Close();
     }
 
+    private void OnDestroy() => NotifyClosed(); // 다른 코드가 팝업을 바로 지운 경우에도 알림
+
+    private void NotifyClosed()
+    {
+        var handler = Closed;
+        Closed = null; // 한 번만
+        handler?.Invoke();
+    }
+
     private void Close()
     {
         isClosing = true;
+        NotifyClosed();
         Destroy(gameObject); // PopupService는 사라진 팝업을 닫힌 것으로 본다
     }
 }
