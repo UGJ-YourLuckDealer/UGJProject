@@ -47,6 +47,11 @@ public class MakingInputController : MonoBehaviour
         }
         else
         {
+            if (popupService.IsPopupOpen("popup_making_dialogue_history"))
+            {
+                popupService.ClosePopup("popup_making_dialogue_history");
+            }
+
             popupService.ShowPopup(popupKey);
             var popup = popupService.GetPopup(popupKey);
             popup.GetComponent<MakingNoteController>().OpenTab(MakingNoteController.Tab.Recipe);
@@ -63,6 +68,11 @@ public class MakingInputController : MonoBehaviour
         }
         else
         {
+            if (popupService.IsPopupOpen("popup_making_recipe"))
+            {
+                popupService.ClosePopup("popup_making_recipe");
+            }
+
             popupService.ShowPopup(popupKey);
             var popup = popupService.GetPopup(popupKey);
             popup.GetComponent<MakingNoteController>().OpenTab(MakingNoteController.Tab.DialogueHistory);
